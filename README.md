@@ -18,7 +18,7 @@ les entendre, et surtout ne pas les perdre. Pensé pour l'iPad, au doigt.
 
 - PHP 8.3 ou plus, avec les extensions `ctype`, `iconv`, `json`, `pdo_mysql`
 - Composer 2
-- Node.js 20 ou plus, npm
+- Node.js 20 ou plus, Yarn 4 (`corepack enable` suffit à l'obtenir)
 - MariaDB 10.11 ou plus (ou MySQL 8)
 
 ## Installation
@@ -27,7 +27,7 @@ les entendre, et surtout ne pas les perdre. Pensé pour l'iPad, au doigt.
 git clone https://github.com/beeraw/croche.git
 cd croche
 composer install
-npm install
+yarn install
 ```
 
 Créez un fichier `.env.local` — jamais commité — avec vos identifiants réels :
@@ -57,19 +57,19 @@ php bin/console doctrine:fixtures:load --no-interaction
 Compilez les assets, puis démarrez le serveur :
 
 ```bash
-npm run dev
+yarn dev
 ```
 
 ```bash
 symfony server:start
 ```
 
-En développement, `npm run watch` recompile à la volée.
+En développement, `yarn watch` recompile à la volée.
 
 Pour la production :
 
 ```bash
-npm run build
+yarn build
 ```
 
 ## Comptes de démonstration
@@ -106,15 +106,15 @@ la feuille d'impression, et la mesure du timbre de piano rendu hors ligne.
 Elle a besoin d'une instance qui tourne et des fixtures chargées :
 
 ```bash
-php bin/console doctrine:fixtures:load --no-interaction && npm run build
+php bin/console doctrine:fixtures:load --no-interaction && yarn build
 ```
 
 ```bash
-npm run test:e2e
+yarn test:e2e
 ```
 
 L'adresse visée est `https://croche` ; passez `CROCHE_BASE_URL` pour en changer.
-La première fois, `npx playwright install` télécharge les navigateurs.
+La première fois, `yarn playwright install` télécharge les navigateurs.
 
 ### Navigateurs couverts
 
@@ -128,7 +128,7 @@ La première fois, `npx playwright install` télécharge les navigateurs.
 La suite Firefox est configurée mais n'a jamais tourné : sur la machine de
 développement, le bac à sable de macOS refusait de lancer le
 `plugin-container` de Firefox. Les trois autres projets passent intégralement.
-Si `npm run test:e2e` échoue au lancement de Firefox chez vous aussi, retirez
+Si `yarn test:e2e` échoue au lancement de Firefox chez vous aussi, retirez
 le projet de `playwright.config.js` — les trois autres suffisent à couvrir
 Blink et WebKit.
 
@@ -178,7 +178,7 @@ php bin/console ux:icons:import tabler:nom-de-licone
 
 C'est une contrainte structurante du projet, pas une préférence :
 
-- aucune librairie JS par CDN — tout passe par npm et Webpack Encore ;
+- aucune librairie JS par CDN — tout passe par Yarn et Webpack Encore ;
 - aucune police distante — Nunito est dans `assets/fonts/`, Bravura et Academico
   sont embarquées en base64 dans le bundle VexFlow ;
 - les icônes Tabler sont vendorisées dans `assets/icons/tabler/`, et
@@ -279,6 +279,16 @@ Choix tranchés en cours de route, à revoir librement.
 
 - **Symfony 7.4 (LTS)** plutôt qu'une 7.x plus ancienne : c'est la dernière
   branche 7 et elle supporte officiellement PHP 8.4 et 8.5.
+- **Yarn 4, mais avec `nodeLinker: node-modules`.** Le mode Plug'n'Play par
+  défaut supprime `node_modules` ; Encore, Babel et Playwright s'attendent tous
+  à trouver leurs paquets sur le disque, et les faire changer d'avis coûte des
+  rustines que le projet n'a aucune raison de porter. Aucune version de Yarn
+  n'est épinglée : `corepack enable` donne une 4.x, elles se valent ici.
+- **La quarantaine de Yarn est laissée en place.** Yarn refuse par défaut tout
+  paquet publié depuis moins de 24 h — le laps où une compromission de registre
+  fait le plus de dégâts. Deux dépendances de développement en sortaient
+  fraîches et ont été redescendues d'un cran (`@playwright/test` 1.61.1, `sass`
+  1.101.7) plutôt que d'abaisser la barrière pour tout le monde.
 - **VexFlow 5 via l'entrée `vexflow/bravura`** plutôt que l'entrée par défaut :
   elle embarque Bravura et Academico mais pas Petaluma ni Gonville, ce qui
   économise environ 300 Ko de bundle pour des polices qu'on n'utilise pas.

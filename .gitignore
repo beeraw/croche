@@ -21,6 +21,13 @@ yarn-error.log
 /.php-cs-fixer.cache
 ###< friendsofphp/php-cs-fixer ###
 
+###> yarn ###
+# Only the lockfile is versioned. .yarn/ holds the local install state, and
+# .pnp.* would appear if the linker ever switched to Plug'n'Play.
+/.yarn/
+/.pnp.*
+###< yarn ###
+
 ###> project ###
 /.env.local
 /.env.*.local
