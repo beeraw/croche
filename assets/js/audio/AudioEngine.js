@@ -24,26 +24,49 @@ import { keyToMidi, midiToFrequency } from '../score/pitch.js';
  */
 export default class AudioEngine {
     /**
-     * The knobs worth turning. `brightness` is the one to reach for first:
-     * 0 is felt-muted, 1 is a bright upright. The default aims at a rounded
-     * grand, heard on headphones or an iPad speaker.
+     * The three knobs to reach for first. Everything below them is detail.
      */
     static TONE = {
-        brightness: 0.6,
+        /**
+         * Overall brightness, 0 to 1. Drives the spectrum and both ends of the
+         * filter sweep. Below ~0.4 the tone turns felt-covered; above ~0.85 it
+         * starts to sound like an upright with the lid up.
+         */
+        brightness: 0.72,
+
+        /**
+         * Seconds a note at the very bottom of the keyboard takes to fade.
+         * Trebles are proportionally much shorter. Raise it and the left hand
+         * starts smearing under the melody.
+         */
+        resonance: 6,
+
+        /**
+         * Level of the hammer noise, relative to the note. This is what makes
+         * successive notes distinguishable in a fast run — too low and a scale
+         * turns into one continuous smear.
+         */
+        hammer: 0.34,
+
+        // --- Detail ------------------------------------------------------
+
         /** Harmonics in the wavetable. More costs nothing at build time. */
-        harmonics: 12,
-        /** Amplitude of harmonic n falls as 1 / n^partialRolloff. */
-        partialRolloff: 1.5,
-        /** Loudness of the hammer noise, relative to the note. */
-        hammerLevel: 0.11,
+        harmonics: 14,
+        /** Amplitude of harmonic n falls roughly as 1 / n^partialRolloff. */
+        partialRolloff: 1.2,
+        /** Extra lift on partials 2 to 4, where presence lives. */
+        presence: [1.35, 1.24, 1.14],
         /** Hammer burst length, seconds. */
-        hammerTime: 0.02,
+        hammerTime: 0.024,
         /** Attack, seconds. Short enough to read as a struck string. */
         attack: 0.004,
-        /** Peak gain of one voice. */
-        peak: 0.28,
-        /** Seconds a note near A1 takes to fade out; trebles are far shorter. */
-        decayAtLowEnd: 11,
+        /** Peak gain of one voice, before the register tilt. */
+        peak: 0.26,
+        /**
+         * How much quieter the bass is than the treble. Without this the left
+         * hand, which holds long notes, sits on top of the melody.
+         */
+        registerTilt: 0.18,
     };
 
     constructor() {
@@ -155,7 +178,7 @@ export default class AudioEngine {
         // Gentle slope: a resonant peak would sound synthetic.
         filter.Q.setValueAtTime(0.7, start);
         this.scheduleFilter(filter.frequency, frequency, hold, decay, start);
-        this.scheduleEnvelope(gain.gain, hold, release, decay, start);
+        this.scheduleEnvelope(gain.gain, hold, release, decay, start, this.tiltFor(frequency));
 
         oscillator.connect(filter);
         filter.connect(gain);
@@ -181,8 +204,9 @@ export default class AudioEngine {
      * released depends on the register, which is what makes a bass note carry
      * and a treble note evaporate.
      */
-    scheduleEnvelope(param, hold, release, decay, start) {
-        const { attack, peak } = AudioEngine.TONE;
+    scheduleEnvelope(param, hold, release, decay, start, tilt = 1) {
+        const { attack } = AudioEngine.TONE;
+        const peak = AudioEngine.TONE.peak * tilt;
         const knee = Math.min(0.12, hold * 0.3);
         // Time constant of the long decay. A quarter of the way through the
         // note the level must already be visibly down — anything slower reads
@@ -213,15 +237,20 @@ export default class AudioEngine {
     scheduleFilter(param, frequency, hold, decay, start) {
         const { brightness } = AudioEngine.TONE;
 
-        // Wide open at the strike, nearly down to the fundamental by the end:
-        // the note starts with bite and settles into something felt-covered.
-        const open = this.clamp(frequency * (5 + brightness * 16), 700, 11000);
-        const close = this.clamp(frequency * (1.1 + brightness * 1.2), 170, 2400);
+        // The absolute floors matter more than the ratios. Scaling the cutoff
+        // from the fundamental alone leaves the bass with almost no harmonics
+        // above its own pitch, which is exactly how a bass note loses its
+        // definition and turns into a rumble.
+        const open = this.clamp(frequency * (7 + brightness * 4), 4200 + brightness * 1200, 12000);
+        const close = this.clamp(frequency * (1.5 + brightness * 1.6), 950, 4200);
 
+        // Slow enough that the attack keeps its edge well into the note, but
+        // it does have to arrive: a sweep that never reaches its target is a
+        // static filter with extra steps.
         param.setValueAtTime(open, start);
         param.exponentialRampToValueAtTime(
             close,
-            start + Math.max(0.08, Math.min(hold, decay * 0.5)),
+            start + Math.max(0.25, Math.min(hold * 1.1, decay * 0.7)),
         );
     }
 
@@ -234,7 +263,7 @@ export default class AudioEngine {
             return null;
         }
 
-        const { hammerLevel, hammerTime, peak } = AudioEngine.TONE;
+        const { hammer, hammerTime, peak } = AudioEngine.TONE;
 
         const source = this.context.createBufferSource();
         const gain = this.context.createGain();
@@ -242,7 +271,7 @@ export default class AudioEngine {
         source.buffer = this.hammerBuffer;
         source.playbackRate.setValueAtTime(this.clamp(frequency / 220, 0.5, 2.6), start);
 
-        gain.gain.setValueAtTime(peak * hammerLevel, start);
+        gain.gain.setValueAtTime(peak * hammer * this.tiltFor(frequency), start);
         gain.gain.exponentialRampToValueAtTime(0.0001, start + hammerTime);
 
         source.connect(gain);
@@ -259,9 +288,19 @@ export default class AudioEngine {
      * octave upward, which is close enough to a real instrument.
      */
     decayFor(frequency) {
-        const { decayAtLowEnd } = AudioEngine.TONE;
+        const { resonance } = AudioEngine.TONE;
 
-        return this.clamp(decayAtLowEnd * (55 / frequency) ** 0.55, 0.9, decayAtLowEnd);
+        return this.clamp(resonance * (55 / frequency) ** 0.55, 0.8, resonance);
+    }
+
+    /**
+     * Level trim by register. Low notes are pulled down so the left hand, which
+     * usually holds the long values, stops sitting on top of the melody.
+     */
+    tiltFor(frequency) {
+        const { registerTilt } = AudioEngine.TONE;
+
+        return this.clamp((frequency / 260) ** registerTilt, 0.68, 1.12);
     }
 
     /**
@@ -269,18 +308,20 @@ export default class AudioEngine {
      * extra geometric roll-off so `brightness` has something to act on.
      */
     buildWave() {
-        const { harmonics, partialRolloff, brightness } = AudioEngine.TONE;
-        // Deliberately gentle: the spectrum should stay close to 1/n^1.5 and
-        // let the closing filter do the shaping. Damping the table hard here
-        // instead would leave the filter nothing to work on, and the note
-        // would sound the same from beginning to end.
-        const damping = 0.82 + brightness * 0.16;
+        const { harmonics, partialRolloff, presence, brightness } = AudioEngine.TONE;
+        // Kept gentle on purpose: the table supplies the material and the
+        // closing filter does the shaping. Damping hard here would leave the
+        // filter nothing to work on, and every note would sound the same from
+        // beginning to end.
+        const damping = 0.88 + brightness * 0.1;
 
         const real = new Float32Array(harmonics + 1);
         const imag = new Float32Array(harmonics + 1);
 
         for (let n = 1; n <= harmonics; n += 1) {
-            imag[n] = (1 / n ** partialRolloff) * damping ** (n - 1);
+            const lift = presence[n - 2] ?? 1;
+
+            imag[n] = (1 / n ** partialRolloff) * damping ** (n - 1) * lift;
         }
 
         return this.context.createPeriodicWave(real, imag, { disableNormalization: false });
@@ -297,12 +338,15 @@ export default class AudioEngine {
         const buffer = this.context.createBuffer(1, length, sampleRate);
         const data = buffer.getChannelData(0);
 
+        // Only lightly smoothed: the click needs its top end to cut through a
+        // fast run. Heavier filtering here turns the attack into a soft thud
+        // and consecutive notes stop being distinguishable.
         let previous = 0;
 
         for (let i = 0; i < length; i += 1) {
             const white = Math.random() * 2 - 1;
-            previous += 0.32 * (white - previous);
-            data[i] = previous * (1 - i / length) ** 3;
+            previous += 0.78 * (white - previous);
+            data[i] = previous * (1 - i / length) ** 2.2;
         }
 
         return buffer;

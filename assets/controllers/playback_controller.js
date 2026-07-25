@@ -105,7 +105,9 @@ export default class extends Controller {
                             keys: note.keys,
                             accidental: note.accidental,
                             at,
-                            duration: seconds * 0.92,
+                            // Shorter than the written value, so successive
+                            // notes breathe instead of running into each other.
+                            duration: seconds * 0.85,
                             rest: false,
                         });
                     }

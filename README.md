@@ -253,17 +253,24 @@ Choix tranchés en cours de route, à revoir librement.
   révision n'est créée que si le contenu a réellement changé.
 - **Audio v1 : synthèse additive par table d'ondes et filtre dynamique**, et
   non un simple oscillateur triangle avec enveloppe ADSR — ce dernier sonnait
-  « jouet ». Une `PeriodicWave` d'une douzaine d'harmoniques en 1/n^1.5,
-  construite une seule fois, traverse un passe-bas qui se referme pendant la
-  note : les aigus s'éteignent avant le fondamental, c'est le marqueur
-  perceptif décisif. L'enveloppe est percutante — attaque de 4 ms puis
-  décroissance exponentielle continue, jamais de plateau de sustain — et un
-  très court bruit de marteau habille l'attaque. Durée de décroissance et
-  coupure du filtre suivent le registre : un do grave tient encore 60 % de son
-  niveau après 0,9 s, un do aigu moins de 20 %. Budget : un oscillateur, un
-  filtre, un gain par note, plus deux nœuds éphémères pour le marteau.
-  `AudioEngine.TONE.brightness` règle la brillance d'ensemble si le rendu doit
-  être réajusté.
+  « jouet ». Une `PeriodicWave` de 14 harmoniques en 1/n^1.2, avec un léger
+  renfort des partiels 2 à 4 où se joue la présence, construite une seule fois.
+  Elle traverse un passe-bas qui s'ouvre large à l'attaque (7 à 11 × la
+  fondamentale, jamais sous 5 kHz pour que les graves gardent leur définition)
+  puis se referme lentement sur la note. L'enveloppe est percutante — attaque
+  de 4 ms puis décroissance exponentielle continue, jamais de plateau de
+  sustain — et un bruit de marteau assez présent détache chaque note dans un
+  trait rapide.
+
+  Trois réglages nommés en haut de la classe : `brightness`, `resonance` et
+  `hammer`. Le registre agit sur tout : durée de résonance, coupure du filtre,
+  et un `registerTilt` qui baisse le grave d'environ 3 dB pour que la main
+  gauche ne couvre pas la mélodie. Mesuré hors ligne sur un la4 : énergie des
+  harmoniques 4 à 10 divisée par deux entre le début et la fin de la note ;
+  un do grave garde 25 % de son niveau à 0,9 s, un do aigu moins de 1 %. Sur
+  « Ma première gamme », qui empile des croches sur une ronde de basse, la
+  crête reste à 0,39 sans un seul échantillon écrêté. Budget : un oscillateur,
+  un filtre, un gain par note, plus deux nœuds éphémères pour le marteau.
 - **Feuille de style d'impression en entrée Encore séparée**, chargée en
   `media="print"`. Elle ne peut pas polluer l'affichage écran.
 - **Jetons CSRF classiques, adossés à la session**, plutôt que le mode
