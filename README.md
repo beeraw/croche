@@ -15,6 +15,45 @@ les entendre, et surtout ne pas les perdre. Pensé pour l'iPad, au doigt.
 
 ---
 
+## À quoi ça ressemble
+
+Captures prises sur un iPad en paysage, avec les données des fixtures.
+
+L'accueil s'adresse au parent qui découvre le projet. L'enfant, elle, passe
+droit au bouton.
+
+![La page d'accueil : le nom, ce que fait l'application, et deux boutons — entrer, ou aller dans l'espace administrateur](docs/screenshots/home.png)
+
+Puis deux écrans, et c'est tout : sa tuile, son code à quatre chiffres. Pas
+d'adresse e-mail, pas de mot de passe à retenir.
+
+| Choisir son profil | Taper son code |
+| --- | --- |
+| ![L'écran de choix du profil, avec une tuile par enfant : une icône de chat et le prénom](docs/screenshots/profiles.png) | ![Le pavé numérique, avec quatre pastilles qui se remplissent au fur et à mesure](docs/screenshots/pin.png) |
+
+Ses morceaux, avec pour chacun le nombre de mesures et la date de la dernière
+retouche. Renommer, dupliquer, supprimer se font depuis la carte.
+
+![La liste des morceaux : deux cartes, et un gros bouton « Nouveau morceau »](docs/screenshots/library.png)
+
+L'éditeur : la grande portée en haut, les outils au milieu, le clavier de piano
+en bas — assez large pour deux mains, et il se fait glisser pour aller chercher
+les octaves voisines. La portée active est signalée par un bandeau, ici la clé
+de sol.
+
+![L'éditeur, avec « Au clair de la lune » sur les deux portées, la barre d'outils et le clavier de piano](docs/screenshots/editor.png)
+
+### La visite guidée
+
+Elle démarre toute seule la première fois, sur chaque écran, et le bouton d'aide
+la rejoue ensuite. Six étapes sur la liste, seize dans l'éditeur.
+
+| Sur la liste | Dans l'éditeur |
+| --- | --- |
+| ![La première bulle de la visite, pointant le bouton « Nouveau morceau »](docs/screenshots/library-tour.png) | ![Une bulle de la visite de l'éditeur, pointant le clavier de piano](docs/screenshots/editor-tour.png) |
+
+---
+
 ## Prérequis
 
 - PHP 8.3 ou plus, avec les extensions `ctype`, `iconv`, `json`, `pdo_mysql`
@@ -181,6 +220,16 @@ les PNG produits sont commités, donc c'est inutile pour une simple installation
 
 ```bash
 ./bin/build-icons.sh
+```
+
+Regénérer les captures d'écran du README. Le script pilote l'instance comme le
+ferait l'enfant — profil, code, liste, éditeur — et repasse deux écrans avec la
+visite guidée ouverte. Mêmes prérequis que la suite Playwright : une instance
+qui tourne et des fixtures fraîchement chargées, sans quoi un morceau resté d'un
+essai précédent se retrouverait sur l'image :
+
+```bash
+node bin/screenshots.mjs
 ```
 
 ---
