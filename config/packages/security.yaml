@@ -21,6 +21,13 @@ security:
             custom_authenticators:
                 - App\Security\AdminFormAuthenticator
                 - App\Security\PinCodeAuthenticator
+            # Guards the administrator password, which has no throttle of its
+            # own. The child's PIN keeps its per-profile lockout as the real
+            # defence: PinCodeThrottle locks at the fifth failure and
+            # PinCodeAuthenticator refuses locked profiles before this listener
+            # ever runs, so the two never contradict each other.
+            login_throttling:
+                max_attempts: 5
             logout:
                 path: security.logout
                 target: security.profiles
@@ -44,3 +51,11 @@ when@test:
             App\Entity\User:
                 algorithm: bcrypt
                 cost: 4
+        firewalls:
+            main:
+                # The rate limiter lives in the filesystem cache pool, so its
+                # counters would outlive a test and bleed into the next one —
+                # every case signs in from 127.0.0.1 as the same profile. The
+                # PIN lockout under test is PinCodeThrottle's, which is stored
+                # on the User row and reset with the schema.
+                login_throttling: false
