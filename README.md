@@ -33,7 +33,7 @@ npm install
 Créez un fichier `.env.local` — jamais commité — avec vos identifiants réels :
 
 ```dotenv
-DATABASE_URL="mysql://root:root@127.0.0.1:3306/croche?serverVersion=mariadb-10.11&charset=utf8mb4"
+DATABASE_URL="mysql://root:root@127.0.0.1:3306/croche?serverVersion=mariadb-10.11.0&charset=utf8mb4"
 APP_SECRET=une-chaine-aleatoire-de-32-caracteres
 ```
 
@@ -84,8 +84,14 @@ mise en ligne réelle.
 
 ## Commandes utiles
 
+Créer un administrateur, puis un profil enfant :
+
 ```bash
-php bin/console app:user:create-child Lison 1234
+php bin/console app:user:create admin motdepasse --display-name="Administration"
+```
+
+```bash
+php bin/console app:user:create lison 1234 --child --display-name=Lison --avatar=cat
 ```
 
 ```bash
