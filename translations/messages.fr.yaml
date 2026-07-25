@@ -1,0 +1,262 @@
+app:
+    name: Croche
+    tagline: Écris tes morceaux, écoute-les, imprime-les.
+
+nav:
+    my_scores: Mes morceaux
+    profiles: Profils
+    scores: Partitions
+    sign_out: Se déconnecter
+    admin_area: Espace administrateur
+    language: Langue
+
+home:
+    title: 'Croche — écrire de la musique, quand on a huit ans'
+    lead: >-
+        Croche est une petite application pour écrire de la musique. Elle est
+        née pour une enfant qui joue du piano, lit déjà des partitions simples,
+        et voulait composer ses propres morceaux sans les perdre.
+    enter: Entrer
+    what_title: Ce qu'elle sait faire
+    what_score: Une grande portée piano, clé de sol et clé de fa, comme dans un vrai cahier de musique.
+    what_input: Des notes posées au doigt, sur un clavier de piano à l'écran ou directement sur la portée.
+    what_listen: Une écoute des deux mains à la fois, avec un curseur qui suit la musique.
+    what_save: Une sauvegarde toute seule, sans bouton à penser à appuyer.
+    what_print: Une impression propre, pour transformer le morceau en vraie partition papier.
+    not_title: Ce qu'elle n'est pas
+    not_body: >-
+        Ce n'est pas un éditeur de partition professionnel, et elle n'essaie pas
+        de l'être. Pas de nuances, pas de liaisons, pas de paroles. Juste de
+        quoi écrire une mélodie et un accompagnement, les entendre, et les
+        garder.
+    offline_title: Rien ne sort d'ici
+    offline_body: >-
+        Aucune requête vers l'extérieur : pas de CDN, pas de police distante,
+        pas de son téléchargé. Les polices, les icônes et le timbre de piano
+        sont tous embarqués ou calculés sur place. Une fois la page ouverte,
+        l'application ne parle à personne.
+    source_title: Code source
+    source_body: 'Croche est un logiciel libre, publié sous licence MIT.'
+    source_link: Voir le projet sur GitHub
+
+security:
+    who_plays: Qui joue ?
+    pick_profile: Choisis ton profil pour écrire tes morceaux.
+    no_profile: |-
+        Aucun profil pour l'instant.
+        L'administrateur doit en créer un.
+    change_profile: Changer de profil
+    back_to_profiles: Retour aux profils
+    enter_pin: Tape ton code à 4 chiffres.
+    digits_entered: Chiffres saisis
+    clear_all: Tout effacer
+    erase_one: Effacer un chiffre
+    admin_title: Administration
+    username: Identifiant
+    password: Mot de passe
+    sign_in: Se connecter
+    bad_credentials: Identifiant ou mot de passe incorrect.
+    pin_wrong: Ce code n'est pas le bon.
+    pin_length: Le code fait 4 chiffres.
+    pin_unknown_profile: Ce profil n'existe pas.
+    pin_locked: Trop d'essais. Réessaie dans un petit moment.
+    pin_locked_minutes: 'Trop d''essais. Réessaie dans {minutes} minute(s).'
+
+score:
+    my_scores: Mes morceaux
+    new: Nouveau morceau
+    empty: |-
+        Tu n'as pas encore de morceau.
+        Appuie sur « Nouveau morceau » pour commencer.
+    measures: '{1}1 mesure|]1,Inf[ %count% mesures'
+    modified_on: 'modifié le %date%'
+    rename: Renommer
+    duplicate: Dupliquer
+    delete: Supprimer
+    rename_prompt: 'Nouveau nom du morceau :'
+    delete_confirm: 'Supprimer « %title% » ? C''est définitif.'
+    flash:
+        renamed: 'Renommé en « %title% ».'
+        duplicated: 'Copie créée : « %title% ».'
+        deleted: '« %title% » a été supprimé.'
+    untitled: Nouveau morceau
+    copy_suffix: copie
+
+editor:
+    back: Mes morceaux
+    title_label: Titre du morceau
+    saved: Enregistré
+    saving: Enregistrement…
+    modified: Modifié…
+    offline: Hors ligne — réessai…
+    undo: Annuler
+    redo: Rétablir
+    play: Écouter
+    stop: Arrêter
+    print: Imprimer
+    stave: Portée
+    stave_treble: Sol
+    stave_bass: Fa
+    active_stave: Portée active
+    duration: Durée
+    whole: Ronde
+    half: Blanche
+    quarter: Noire
+    eighth: Croche
+    accidental: Altération
+    sharp: Dièse
+    flat: Bémol
+    natural: Bécarre
+    rest: Silence
+    place_rest: Poser un silence
+    note: Note
+    delete_note: Supprimer la note sélectionnée
+    measures: Mesures
+    add_measure: Ajouter une mesure
+    remove_measure: Retirer une mesure
+    tempo: Tempo
+    notice:
+        measure_full: 'Cette mesure est pleine : la %duration% ne rentre pas.'
+        all_full: Toutes les mesures sont pleines. Ajoute une mesure.
+        max_measures: 'Maximum %count% mesures.'
+        last_measure: Il faut au moins une mesure.
+        not_empty: La dernière mesure n'est pas vide.
+        nothing_to_play: Il n'y a encore rien à écouter.
+    duration_name:
+        w: ronde
+        h: blanche
+        q: noire
+        '8': croche
+    recovered: |-
+        Une version non enregistrée du %date% a été retrouvée sur cet appareil.
+        La récupérer ? (Annuler garde la version enregistrée en ligne.)
+
+admin:
+    profiles: Profils
+    new_child: Nouveau profil enfant
+    first_name: Prénom
+    username: Identifiant
+    username_help: Minuscules, sans espace. Sert uniquement en interne.
+    role: Rôle
+    role_admin: Administrateur
+    role_child: Enfant
+    scores_count: Morceaux
+    state: État
+    unlock: Débloquer
+    failed_attempts: '%count% essai(s) raté(s)'
+    edit: Modifier
+    reset_pin: Réinitialiser le code
+    delete: Supprimer
+    delete_profile_confirm: 'Supprimer « %name% » et toutes ses partitions ?'
+    avatar: Avatar
+    pin: Code à 4 chiffres
+    create_profile: Créer le profil
+    save: Enregistrer
+    cancel: Annuler
+    edit_profile: 'Modifier « %name% »'
+    pin_of: 'Code de « %name% »'
+    pin_help: >-
+        Le code actuel n'est pas récupérable, il est haché en base. Saisir un
+        nouveau code le remplace et débloque le profil s'il était verrouillé.
+    new_pin: Nouveau code à 4 chiffres
+    save_pin: Enregistrer le code
+    change_pin_hint: 'Pour changer le code à 4 chiffres, %link%.'
+    change_pin_link: réinitialisez-le
+    all_scores: Toutes les partitions
+    no_scores: Aucune partition pour l'instant.
+    profile: Profil
+    modified: Modifiée
+    revisions: Révisions
+    open_in_editor: Ouvrir dans l'éditeur
+    history: Historique
+    history_title: Historique
+    history_intro: >-
+        Les %keep% dernières versions sont conservées. Restaurer remplace le
+        contenu actuel, qui devient lui-même une révision : rien n'est perdu.
+    no_history: Cette partition n'a pas encore d'historique.
+    version: Version
+    saved_at: Enregistrée
+    restore: Restaurer
+    restore_confirm: Restaurer cette version ?
+    back: Retour
+    delete_score_confirm: 'Supprimer « %title% » ?'
+    flash:
+        profile_created: 'Profil « %name% » créé.'
+        profile_updated: 'Profil « %name% » mis à jour.'
+        pin_saved: 'Nouveau code enregistré pour « %name% ».'
+        unlocked: '« %name% » peut réessayer.'
+        profile_deleted: 'Profil « %name% » supprimé, avec ses partitions.'
+        cannot_delete_self: Vous ne pouvez pas supprimer votre propre compte.
+        only_children_have_pin: Seuls les profils enfants ont un code.
+        score_deleted: '« %title% » supprimé.'
+        version_restored: 'Version du %date% restaurée.'
+
+form:
+    first_name_required: Le prénom est obligatoire.
+    username_required: L'identifiant est obligatoire.
+    username_format: 'Uniquement des minuscules, chiffres, point, tiret ou tiret bas.'
+    username_taken: Cet identifiant est déjà pris.
+    pin_required: Le code est obligatoire.
+    pin_format: Exactement 4 chiffres.
+    title_required: Le titre est obligatoire.
+
+api:
+    invalid_json: JSON invalide.
+    invalid_csrf: Jeton de sécurité invalide. Recharge la page.
+    content_not_object: Le contenu doit être un objet.
+    schema_version: 'Version de schéma non gérée (attendu %version%).'
+    invalid_value: 'Valeur invalide pour « %path% ».'
+    tempo_integer: Le tempo doit être un entier.
+    tempo_range: 'Le tempo doit être compris entre %min% et %max%.'
+    stave_count: 'Une partition compte exactement %count% portées.'
+    invalid_stave: Portée invalide.
+    wrong_clef: 'La portée %index% doit être en clé « %clef% ».'
+    measure_required: Une portée contient au moins une mesure.
+    too_many_measures: 'Une partition ne peut pas dépasser %max% mesures.'
+    measures_must_match: Les deux portées doivent avoir le même nombre de mesures.
+    invalid_measure: Mesure invalide.
+    too_many_notes: Trop de notes dans une mesure.
+    measure_overfull: 'La mesure %index% est trop remplie.'
+    invalid_note: Note invalide.
+    invalid_pitch: Hauteur de note invalide.
+
+note_name:
+    c: Do
+    d: Ré
+    e: Mi
+    f: Fa
+    g: Sol
+    a: La
+    b: Si
+    sharp_suffix: dièse
+
+avatar:
+    cat: Chat
+    dog: Chien
+    fish: Poisson
+    bug: Coccinelle
+    ghost: Fantôme
+    robot: Robot
+    alien: Extraterrestre
+    star: Étoile
+    heart: Cœur
+    crown: Couronne
+    diamond: Diamant
+    rocket: Fusée
+    planet: Planète
+    sun: Soleil
+    moon: Lune
+    cloud: Nuage
+    snowflake: Flocon
+    umbrella: Parapluie
+    leaf: Feuille
+    apple: Pomme
+    cherry: Cerise
+    'ice-cream': Glace
+    balloon: Ballon
+    feather: Plume
+    palette: Palette
+    brush: Pinceau
+    music: Note
+    headphones: Casque
+    'guitar-pick': Médiator

@@ -1,25 +1,22 @@
 {% extends 'layout.html.twig' %}
 
-{% block title %}Mes morceaux — Croche{% endblock %}
+{% block title %}{{ 'score.my_scores'|trans }} — {{ 'app.name'|trans }}{% endblock %}
 
 {% block content %}
     <div class="page-header">
-        <h1 class="page-header__title">Mes morceaux</h1>
+        <h1 class="page-header__title">{{ 'score.my_scores'|trans }}</h1>
 
         <form method="post" action="{{ path('score.new') }}">
             <input type="hidden" name="_token" value="{{ csrf_token('score-new') }}">
             <button class="btn btn--lg" type="submit">
                 {{ ux_icon('tabler:plus') }}
-                Nouveau morceau
+                {{ 'score.new'|trans }}
             </button>
         </form>
     </div>
 
     {% if scores is empty %}
-        <p class="empty-state">
-            Tu n'as pas encore de morceau.<br>
-            Appuie sur « Nouveau morceau » pour commencer.
-        </p>
+        <p class="empty-state">{{ 'score.empty'|trans|nl2br }}</p>
     {% else %}
         <ul class="card-grid">
             {% for score in scores %}
@@ -27,8 +24,8 @@
                     <a class="score-card__link" href="{{ path('score.edit', { id: score.id }) }}">
                         <h2 class="score-card__title">{{ score.title }}</h2>
                         <span class="score-card__meta">
-                            {{ score.measureCount }} mesure{{ score.measureCount > 1 ? 's' : '' }}
-                            · modifié le {{ score.updatedAt|date('d/m/Y') }}
+                            {{ 'score.measures'|trans({ '%count%': score.measureCount }) }}
+                            · {{ 'score.modified_on'|trans({ '%date%': score.updatedAt|format_date('short') }) }}
                         </span>
                     </a>
 
@@ -42,23 +39,25 @@
                         <button type="button" class="btn-icon"
                                 data-action="score-card#rename"
                                 data-score-card-current-param="{{ score.title }}"
-                                title="Renommer" aria-label="Renommer">
+                                data-score-card-prompt-param="{{ 'score.rename_prompt'|trans }}"
+                                title="{{ 'score.rename'|trans }}" aria-label="{{ 'score.rename'|trans }}">
                             {{ ux_icon('tabler:pencil') }}
                         </button>
 
                         <form method="post" action="{{ path('score.duplicate', { id: score.id }) }}">
                             <input type="hidden" name="_token" value="{{ csrf_token('score-duplicate' ~ score.id) }}">
-                            <button type="submit" class="btn-icon" title="Dupliquer" aria-label="Dupliquer">
+                            <button type="submit" class="btn-icon"
+                                    title="{{ 'score.duplicate'|trans }}" aria-label="{{ 'score.duplicate'|trans }}">
                                 {{ ux_icon('tabler:copy') }}
                             </button>
                         </form>
 
                         <form method="post" action="{{ path('score.delete', { id: score.id }) }}"
-                              data-action="score-card#confirmDelete"
-                              data-score-card-title-param="{{ score.title }}">
+                              data-controller="confirm"
+                              data-confirm-message-value="{{ 'score.delete_confirm'|trans({ '%title%': score.title }) }}">
                             <input type="hidden" name="_token" value="{{ csrf_token('score-delete' ~ score.id) }}">
                             <button type="submit" class="btn-icon btn-icon--danger"
-                                    title="Supprimer" aria-label="Supprimer">
+                                    title="{{ 'score.delete'|trans }}" aria-label="{{ 'score.delete'|trans }}">
                                 {{ ux_icon('tabler:trash') }}
                             </button>
                         </form>

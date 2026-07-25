@@ -1,21 +1,20 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Qui joue ? — Croche{% endblock %}
+{% block title %}{{ 'security.who_plays'|trans }} — {{ 'app.name'|trans }}{% endblock %}
 
 {% block body %}
     <div class="login">
-        <h1 class="login__title">Croche</h1>
-        <p class="login__subtitle">Choisis ton profil pour écrire tes morceaux.</p>
+        <div class="login__lang">{% include 'partial/_language.html.twig' with { locales: app_locales() } %}</div>
+
+        <h1 class="login__title">{{ 'app.name'|trans }}</h1>
+        <p class="login__subtitle">{{ 'security.pick_profile'|trans }}</p>
 
         <div class="container container--narrow">
             {% include 'partial/_flashes.html.twig' %}
         </div>
 
         {% if children is empty %}
-            <p class="empty-state">
-                Aucun profil pour l'instant.<br>
-                L'administrateur doit en créer un.
-            </p>
+            <p class="empty-state">{{ 'security.no_profile'|trans|nl2br }}</p>
         {% else %}
             <ul class="profile-grid">
                 {% for child in children %}
@@ -30,7 +29,9 @@
         {% endif %}
 
         <p class="login__footer">
-            <a href="{{ path('security.login') }}">Espace administrateur</a>
+            <a href="{{ path('security.login') }}">{{ 'nav.admin_area'|trans }}</a>
+            ·
+            <a href="{{ path('home') }}">{{ 'app.name'|trans }}</a>
         </p>
     </div>
 {% endblock %}

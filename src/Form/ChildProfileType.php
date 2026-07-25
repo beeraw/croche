@@ -24,16 +24,16 @@ final class ChildProfileType extends AbstractType
     {
         $builder
             ->add('displayName', TextType::class, [
-                'label' => 'Prénom',
+                'label' => 'admin.first_name',
                 'attr' => ['autocapitalize' => 'words'],
             ])
             ->add('username', TextType::class, [
-                'label' => 'Identifiant',
-                'help' => 'Minuscules, sans espace. Sert uniquement en interne.',
+                'label' => 'admin.username',
+                'help' => 'admin.username_help',
                 'attr' => ['autocapitalize' => 'none', 'spellcheck' => 'false'],
             ])
             ->add('avatarIcon', ChoiceType::class, [
-                'label' => 'Avatar',
+                'label' => 'admin.avatar',
                 'choices' => AvatarIcon::cases(),
                 'choice_label' => static fn (AvatarIcon $icon): string => $icon->label(),
                 'choice_value' => static fn (?AvatarIcon $icon): string => $icon?->value ?? '',
@@ -43,12 +43,12 @@ final class ChildProfileType extends AbstractType
 
         if ($options['require_pin']) {
             $builder->add('pin', PasswordType::class, [
-                'label' => 'Code à 4 chiffres',
+                'label' => 'admin.pin',
                 'mapped' => false,
                 'always_empty' => true,
                 'constraints' => [
-                    new Assert\NotBlank(message: 'Le code est obligatoire.'),
-                    new Assert\Regex(pattern: '/^\d{4}$/', message: 'Exactement 4 chiffres.'),
+                    new Assert\NotBlank(message: 'form.pin_required'),
+                    new Assert\Regex(pattern: '/^\d{4}$/', message: 'form.pin_format'),
                 ],
                 'attr' => ['inputmode' => 'numeric', 'maxlength' => 4, 'autocomplete' => 'off'],
             ]);

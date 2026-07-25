@@ -1,25 +1,25 @@
 {% extends 'layout.html.twig' %}
 
-{% block title %}Partitions — Croche{% endblock %}
+{% block title %}{{ 'nav.scores'|trans }} — {{ 'app.name'|trans }}{% endblock %}
 {% block container_class %}container--wide{% endblock %}
 
 {% block content %}
     <div class="page-header">
-        <h1 class="page-header__title">Toutes les partitions</h1>
+        <h1 class="page-header__title">{{ 'admin.all_scores'|trans }}</h1>
     </div>
 
     {% if scores is empty %}
-        <p class="empty-state">Aucune partition pour l'instant.</p>
+        <p class="empty-state">{{ 'admin.no_scores'|trans }}</p>
     {% else %}
         <div class="table-wrap">
             <table class="table">
                 <thead>
                 <tr>
-                    <th>Titre</th>
-                    <th>Profil</th>
-                    <th>Mesures</th>
-                    <th>Modifiée</th>
-                    <th>Révisions</th>
+                    <th>{{ 'editor.title_label'|trans }}</th>
+                    <th>{{ 'admin.profile'|trans }}</th>
+                    <th>{{ 'editor.measures'|trans }}</th>
+                    <th>{{ 'admin.modified'|trans }}</th>
+                    <th>{{ 'admin.revisions'|trans }}</th>
                     <th></th>
                 </tr>
                 </thead>
@@ -34,24 +34,25 @@
                             </span>
                         </td>
                         <td>{{ score.measureCount }}</td>
-                        <td>{{ score.updatedAt|date('d/m/Y à H\\hi') }}</td>
+                        <td>{{ score.updatedAt|format_datetime('short', 'short') }}</td>
                         <td>{{ score.revisions|length }}</td>
                         <td>
                             <div class="table__actions">
                                 <a class="btn-icon" href="{{ path('score.edit', { id: score.id }) }}"
-                                   title="Ouvrir dans l'éditeur" aria-label="Ouvrir dans l'éditeur">
+                                   title="{{ 'admin.open_in_editor'|trans }}"
+                                   aria-label="{{ 'admin.open_in_editor'|trans }}">
                                     {{ ux_icon('tabler:eye') }}
                                 </a>
                                 <a class="btn-icon" href="{{ path('admin.score.history', { id: score.id }) }}"
-                                   title="Historique" aria-label="Historique">
+                                   title="{{ 'admin.history'|trans }}" aria-label="{{ 'admin.history'|trans }}">
                                     {{ ux_icon('tabler:history') }}
                                 </a>
                                 <form method="post" action="{{ path('admin.score.delete', { id: score.id }) }}"
                                       data-controller="confirm"
-                                      data-confirm-message-value="Supprimer « {{ score.title }} » ?">
+                                      data-confirm-message-value="{{ 'admin.delete_score_confirm'|trans({ '%title%': score.title }) }}">
                                     <input type="hidden" name="_token" value="{{ csrf_token('score-delete' ~ score.id) }}">
                                     <button class="btn-icon btn-icon--danger" type="submit"
-                                            title="Supprimer" aria-label="Supprimer">
+                                            title="{{ 'admin.delete'|trans }}" aria-label="{{ 'admin.delete'|trans }}">
                                         {{ ux_icon('tabler:trash') }}
                                     </button>
                                 </form>

@@ -1,12 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ profile.displayName }} — Croche{% endblock %}
+{% block title %}{{ profile.displayName }} — {{ 'app.name'|trans }}{% endblock %}
 
 {% block body %}
     <div class="login">
+        <div class="login__lang">{% include 'partial/_language.html.twig' with { locales: app_locales() } %}</div>
+
         <a class="login__back" href="{{ path('security.profiles') }}">
             {{ ux_icon('tabler:arrow-left') }}
-            Changer de profil
+            {{ 'security.change_profile'|trans }}
         </a>
 
         <div class="login__profile">
@@ -20,10 +22,10 @@
 
         {% if lockedSeconds > 0 %}
             <p class="alert alert--error">
-                Trop d'essais. Réessaie dans {{ (lockedSeconds / 60)|round(0, 'ceil') }} minute(s).
+                {{ 'security.pin_locked_minutes'|trans({ '{minutes}': (lockedSeconds / 60)|round(0, 'ceil') }) }}
             </p>
         {% else %}
-            <p class="login__subtitle">Tape ton code à 4 chiffres.</p>
+            <p class="login__subtitle">{{ 'security.enter_pin'|trans }}</p>
 
             <form class="pin-pad"
                   method="post"
@@ -34,7 +36,7 @@
                 <input type="hidden" name="pin" data-pin-pad-target="input">
 
                 <div class="pin-pad__dots" role="status" aria-live="polite"
-                     aria-label="Chiffres saisis">
+                     aria-label="{{ 'security.digits_entered'|trans }}">
                     {% for i in 1..4 %}
                         <span class="pin-pad__dot" data-pin-pad-target="dot"></span>
                     {% endfor %}
@@ -47,7 +49,7 @@
                     {% endfor %}
 
                     <button type="button" class="pin-pad__key pin-pad__key--action"
-                            data-action="pin-pad#clear" aria-label="Tout effacer">
+                            data-action="pin-pad#clear" aria-label="{{ 'security.clear_all'|trans }}">
                         {{ ux_icon('tabler:x') }}
                     </button>
 
@@ -55,7 +57,7 @@
                             data-action="pin-pad#press" data-digit="0">0</button>
 
                     <button type="button" class="pin-pad__key pin-pad__key--action"
-                            data-action="pin-pad#backspace" aria-label="Effacer un chiffre">
+                            data-action="pin-pad#backspace" aria-label="{{ 'security.erase_one'|trans }}">
                         {{ ux_icon('tabler:backspace') }}
                     </button>
                 </div>

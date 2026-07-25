@@ -1,0 +1,16 @@
+{#
+  Language switcher. The locale lives in the session, so every URL stays the
+  same in both languages — the child's bookmark keeps working.
+#}
+<nav class="language" aria-label="{{ 'nav.language'|trans }}">
+    {% for locale in locales %}
+        {% if locale.value == app.request.locale %}
+            <span class="language__current" aria-current="true">{{ locale.short }}</span>
+        {% else %}
+            <a class="language__link"
+               href="{{ path('locale.switch', { locale: locale.value }) }}"
+               lang="{{ locale.value }}"
+               hreflang="{{ locale.value }}">{{ locale.label }}</a>
+        {% endif %}
+    {% endfor %}
+</nav>

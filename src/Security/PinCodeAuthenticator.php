@@ -49,11 +49,11 @@ final class PinCodeAuthenticator extends AbstractAuthenticator
         $pin = (string) $request->request->get('pin', '');
 
         if ($this->throttle->isLocked($user)) {
-            throw new CustomUserMessageAuthenticationException('Trop d\'essais. Réessaie dans un petit moment.');
+            throw new CustomUserMessageAuthenticationException('security.pin_locked');
         }
 
         if (1 !== preg_match('/^\d{4}$/', $pin)) {
-            throw new CustomUserMessageAuthenticationException('Le code fait 4 chiffres.');
+            throw new CustomUserMessageAuthenticationException('security.pin_length');
         }
 
         $badge = new UserBadge(
@@ -108,7 +108,7 @@ final class PinCodeAuthenticator extends AbstractAuthenticator
 
         // Same message either way: never reveal which profile ids exist.
         if (!$user instanceof User || !$user->isChild() || null === $user->getPinCode()) {
-            throw new CustomUserMessageAuthenticationException('Ce profil n\'existe pas.');
+            throw new CustomUserMessageAuthenticationException('security.pin_unknown_profile');
         }
 
         return $user;
@@ -124,9 +124,9 @@ final class PinCodeAuthenticator extends AbstractAuthenticator
         $user = $id > 0 ? $this->repository->find($id) : null;
 
         if ($user instanceof User && $this->throttle->isLocked($user)) {
-            return 'Trop d\'essais. Réessaie dans un petit moment.';
+            return 'security.pin_locked';
         }
 
-        return 'Ce code n\'est pas le bon.';
+        return 'security.pin_wrong';
     }
 }

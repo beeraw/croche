@@ -1,6 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 
-import { isBlackKey, keyToMidi, midiToKey, solfegeLabel } from '../js/score/pitch.js';
+import { isBlackKey, keyToMidi, midiToKey, noteLabel } from '../js/score/pitch.js';
 import { sharedAudioEngine } from '../js/audio/AudioEngine.js';
 
 /**
@@ -17,6 +17,10 @@ export default class extends Controller {
         from: { type: String, default: 'c/3' },
         to: { type: String, default: 'c/6' },
         scrollTo: { type: String, default: 'c/4' },
+        /** Letter => displayed name, so the keys read in the right language. */
+        names: Object,
+        /** Word appended to a black key's accessible name. */
+        sharp: { type: String, default: 'sharp' },
     };
 
     connect() {
@@ -40,7 +44,8 @@ export default class extends Controller {
     buildKey(midi) {
         const black = isBlackKey(midi);
         const { key, accidental } = midiToKey(midi);
-        const label = accidental ? `${solfegeLabel(key)} dièse` : solfegeLabel(key);
+        const name = noteLabel(key, this.namesValue);
+        const label = accidental ? `${name} ${this.sharpValue}` : name;
 
         const button = document.createElement('button');
         button.type = 'button';
@@ -51,7 +56,7 @@ export default class extends Controller {
         button.setAttribute('aria-label', label);
 
         if (!black) {
-            button.textContent = solfegeLabel(key);
+            button.textContent = name;
         }
 
         // Middle C is the landmark she navigates from.

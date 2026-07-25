@@ -28,6 +28,7 @@ security:
     # Only the first matching rule applies.
     access_control:
         - { path: '^/$', roles: PUBLIC_ACCESS }
+        - { path: ^/langue, roles: PUBLIC_ACCESS }
         - { path: ^/connexion, roles: PUBLIC_ACCESS }
         - { path: ^/deconnexion, roles: PUBLIC_ACCESS }
         - { path: ^/profils, roles: PUBLIC_ACCESS }

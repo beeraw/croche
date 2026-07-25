@@ -32,7 +32,7 @@ class Score implements TimeInterface, Stringable
     private ?User $owner = null;
 
     #[ORM\Column(length: 120)]
-    #[Assert\NotBlank(message: 'Le titre est obligatoire.')]
+    #[Assert\NotBlank(message: 'form.title_required')]
     #[Assert\Length(max: 120)]
     private ?string $title = null;
 

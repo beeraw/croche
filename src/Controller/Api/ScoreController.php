@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 use function array_key_exists;
 use function is_array;
@@ -64,17 +65,18 @@ final class ScoreController extends Controller
         ScoreFactory $factory,
         ScoreContentValidator $validator,
         ScorePresenter $presenter,
+        TranslatorInterface $translator,
     ): JsonResponse {
         $user = $this->getUserOrThrow();
 
-        if (null !== $error = $this->rejectBadCsrf($request)) {
+        if (null !== $error = $this->rejectBadCsrf($request, $translator)) {
             return $error;
         }
 
         try {
             $payload = $this->decode($request);
         } catch (JsonException) {
-            return $this->badRequest('JSON invalide.');
+            return $this->badRequest($translator->trans('api.invalid_json'));
         }
 
         $score = $factory->createBlank($user, $this->readTitle($payload));
@@ -83,7 +85,7 @@ final class ScoreController extends Controller
             try {
                 $score->setContent($validator->validate($payload['content']));
             } catch (ScoreContentException $exception) {
-                return $this->unprocessable($exception);
+                return $this->unprocessable($exception, $translator);
             }
         }
 
@@ -100,17 +102,18 @@ final class ScoreController extends Controller
         ScoreContentValidator $validator,
         ScoreRevisionRecorder $recorder,
         ScorePresenter $presenter,
+        TranslatorInterface $translator,
     ): JsonResponse {
         $this->denyAccessUnlessGranted(ScoreVoter::EDIT, $score);
 
-        if (null !== $error = $this->rejectBadCsrf($request)) {
+        if (null !== $error = $this->rejectBadCsrf($request, $translator)) {
             return $error;
         }
 
         try {
             $payload = $this->decode($request);
         } catch (JsonException) {
-            return $this->badRequest('JSON invalide.');
+            return $this->badRequest($translator->trans('api.invalid_json'));
         }
 
         if (null !== $title = $this->readTitle($payload)) {
@@ -123,7 +126,7 @@ final class ScoreController extends Controller
             try {
                 $content = $validator->validate($payload['content']);
             } catch (ScoreContentException $exception) {
-                return $this->unprocessable($exception);
+                return $this->unprocessable($exception, $translator);
             }
 
             // The snapshot must be taken before the new content overwrites it.
@@ -141,11 +144,15 @@ final class ScoreController extends Controller
     }
 
     #[Route('/{id}', name: 'delete', requirements: ['id' => Requirement::DIGITS], methods: ['DELETE'])]
-    public function delete(#[MapEntity(id: 'id')] Score $score, Request $request): JsonResponse
-    {
+    public function delete(
+        #[MapEntity(id: 'id')]
+        Score $score,
+        Request $request,
+        TranslatorInterface $translator,
+    ): JsonResponse {
         $this->denyAccessUnlessGranted(ScoreVoter::DELETE, $score);
 
-        if (null !== $error = $this->rejectBadCsrf($request)) {
+        if (null !== $error = $this->rejectBadCsrf($request, $translator)) {
             return $error;
         }
 
@@ -192,7 +199,7 @@ final class ScoreController extends Controller
         return '' === $title ? null : mb_substr($title, 0, 120);
     }
 
-    private function rejectBadCsrf(Request $request): ?JsonResponse
+    private function rejectBadCsrf(Request $request, TranslatorInterface $translator): ?JsonResponse
     {
         $token = $request->headers->get('X-CSRF-Token', '');
 
@@ -201,7 +208,7 @@ final class ScoreController extends Controller
         }
 
         return $this->json(
-            ['error' => 'Jeton de sécurité invalide. Recharge la page.'],
+            ['error' => $translator->trans('api.invalid_csrf')],
             Response::HTTP_FORBIDDEN,
         );
     }
@@ -211,10 +218,12 @@ final class ScoreController extends Controller
         return $this->json(['error' => $message], Response::HTTP_BAD_REQUEST);
     }
 
-    private function unprocessable(ScoreContentException $exception): JsonResponse
-    {
+    private function unprocessable(
+        ScoreContentException $exception,
+        TranslatorInterface $translator,
+    ): JsonResponse {
         return $this->json([
-            'error' => $exception->getMessage(),
+            'error' => $translator->trans($exception->getKey(), $exception->getParameters()),
             'path' => $exception->getPath(),
         ], Response::HTTP_UNPROCESSABLE_ENTITY);
     }

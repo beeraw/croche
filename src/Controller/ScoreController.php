@@ -15,8 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
-
-use function sprintf;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * The child's own space: their pieces, and the editor.
@@ -71,8 +70,12 @@ final class ScoreController extends Controller
     }
 
     #[Route('/{id}/renommer', name: 'rename', requirements: ['id' => Requirement::DIGITS], methods: ['POST'])]
-    public function rename(#[MapEntity(id: 'id')] Score $score, Request $request): Response
-    {
+    public function rename(
+        #[MapEntity(id: 'id')]
+        Score $score,
+        Request $request,
+        TranslatorInterface $translator,
+    ): Response {
         $this->denyAccessUnlessGranted(ScoreVoter::EDIT, $score);
 
         if (!$this->isCsrfTokenValid('score-rename'.$score->getId(), (string) $request->request->get('_token'))) {
@@ -84,7 +87,7 @@ final class ScoreController extends Controller
         if ('' !== $title) {
             $score->setTitle(mb_substr($title, 0, 120));
             $this->entityManager->flush();
-            $this->addFlash('success', sprintf('Renommé en « %s ».', $score->getTitle()));
+            $this->addFlash('success', $translator->trans('score.flash.renamed', ['%title%' => (string) $score->getTitle()]));
         }
 
         return $this->redirectToRoute('score.index');
@@ -96,6 +99,7 @@ final class ScoreController extends Controller
         Score $score,
         Request $request,
         ScoreFactory $factory,
+        TranslatorInterface $translator,
     ): Response {
         $this->denyAccessUnlessGranted(ScoreVoter::VIEW, $score);
 
@@ -105,14 +109,18 @@ final class ScoreController extends Controller
 
         $copy = $factory->duplicate($score);
         $this->persistAndFlush($copy);
-        $this->addFlash('success', sprintf('Copie créée : « %s ».', $copy->getTitle()));
+        $this->addFlash('success', $translator->trans('score.flash.duplicated', ['%title%' => (string) $copy->getTitle()]));
 
         return $this->redirectToRoute('score.index');
     }
 
     #[Route('/{id}/supprimer', name: 'delete', requirements: ['id' => Requirement::DIGITS], methods: ['POST'])]
-    public function delete(#[MapEntity(id: 'id')] Score $score, Request $request): Response
-    {
+    public function delete(
+        #[MapEntity(id: 'id')]
+        Score $score,
+        Request $request,
+        TranslatorInterface $translator,
+    ): Response {
         $this->denyAccessUnlessGranted(ScoreVoter::DELETE, $score);
 
         if (!$this->isCsrfTokenValid('score-delete'.$score->getId(), (string) $request->request->get('_token'))) {
@@ -121,7 +129,7 @@ final class ScoreController extends Controller
 
         $title = (string) $score->getTitle();
         $this->removeAndFlush($score);
-        $this->addFlash('success', sprintf('« %s » a été supprimé.', $title));
+        $this->addFlash('success', $translator->trans('score.flash.deleted', ['%title%' => $title]));
 
         return $this->redirectToRoute('score.index');
     }

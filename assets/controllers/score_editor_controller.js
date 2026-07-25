@@ -3,7 +3,6 @@ import { Controller } from '@hotwired/stimulus';
 import ScoreDocument from '../js/score/ScoreDocument.js';
 import ScoreRenderer from '../js/score/ScoreRenderer.js';
 import UndoStack from '../js/score/UndoStack.js';
-import { DURATION_LABELS } from '../js/score/schema.js';
 import { sharedAudioEngine } from '../js/audio/AudioEngine.js';
 
 /** Finger travel, in pixels, before a tap on a note becomes a drag. */
@@ -33,6 +32,8 @@ export default class extends Controller {
     static values = {
         content: Object,
         schema: Object,
+        /** Interface strings, translated server-side and handed over as data. */
+        messages: Object,
     };
 
     connect() {
@@ -282,7 +283,7 @@ export default class extends Controller {
         const target = measureIndex ?? this.targetMeasure(note.duration);
 
         if (target === null) {
-            this.notify('Toutes les mesures sont pleines. Ajoute une mesure.');
+            this.notify(this.messagesValue.allFull);
 
             return;
         }
@@ -396,7 +397,7 @@ export default class extends Controller {
         const result = this.document.addMeasure();
 
         if (!result.ok) {
-            this.notify(`Maximum ${this.schemaValue.maxMeasures} mesures.`);
+            this.notify(this.messagesValue.maxMeasures);
 
             return;
         }
@@ -410,8 +411,8 @@ export default class extends Controller {
         if (!result.ok) {
             this.notify(
                 result.reason === 'last-measure'
-                    ? 'Il faut au moins une mesure.'
-                    : 'La dernière mesure n\'est pas vide.',
+                    ? this.messagesValue.lastMeasure
+                    : this.messagesValue.notEmpty,
             );
 
             return;
@@ -494,7 +495,9 @@ export default class extends Controller {
      * A refused insertion: red flash on the measure, plus a word about why.
      */
     refuse(measureIndex, duration) {
-        this.notify(`Cette mesure est pleine : la ${DURATION_LABELS[duration]} ne rentre pas.`);
+        const name = this.messagesValue.durations?.[duration] ?? duration;
+
+        this.notify(this.messagesValue.measureFull.replace('%duration%', name));
         this.flashMeasure(this.activeStave, measureIndex);
     }
 
@@ -546,11 +549,8 @@ export default class extends Controller {
             return;
         }
 
-        const when = new Date(buffered.at).toLocaleString('fr-FR');
-        const restore = window.confirm(
-            `Une version non enregistrée du ${when} a été retrouvée sur cet appareil.\n`
-            + 'La récupérer ? (Annuler garde la version enregistrée en ligne.)',
-        );
+        const when = new Date(buffered.at).toLocaleString(document.documentElement.lang || undefined);
+        const restore = window.confirm(this.messagesValue.recovered.replace('%date%', when));
 
         if (restore) {
             this.document = ScoreDocument.fromJSON(buffered.content);

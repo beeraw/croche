@@ -15,11 +15,11 @@ final class PinResetType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('pin', PasswordType::class, [
-            'label' => 'Nouveau code à 4 chiffres',
+            'label' => 'admin.new_pin',
             'always_empty' => true,
             'constraints' => [
-                new Assert\NotBlank(message: 'Le code est obligatoire.'),
-                new Assert\Regex(pattern: '/^\d{4}$/', message: 'Exactement 4 chiffres.'),
+                new Assert\NotBlank(message: 'form.pin_required'),
+                new Assert\Regex(pattern: '/^\d{4}$/', message: 'form.pin_format'),
             ],
             'attr' => ['inputmode' => 'numeric', 'maxlength' => 4, 'autocomplete' => 'off'],
         ]);

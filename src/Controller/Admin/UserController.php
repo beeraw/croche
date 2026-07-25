@@ -17,8 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-
-use function sprintf;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route('/admin/profils', name: 'admin.user.')]
 #[IsGranted(User::ROLE_ADMIN)]
@@ -33,7 +32,7 @@ final class UserController extends Controller
     }
 
     #[Route('/nouveau', name: 'create', methods: ['GET', 'POST'])]
-    public function create(Request $request, PinCodeHasher $hasher): Response
+    public function create(Request $request, PinCodeHasher $hasher, TranslatorInterface $translator): Response
     {
         $profile = (new User())->setRoles([User::ROLE_CHILD]);
         $form = $this->createForm(ChildProfileType::class, $profile, ['require_pin' => true])
@@ -45,7 +44,7 @@ final class UserController extends Controller
             $profile->setPinCode($hasher->hash($profile, $pin));
 
             $this->persistAndFlush($profile);
-            $this->addFlash('success', sprintf('Profil « %s » créé.', $profile->getDisplayName()));
+            $this->addFlash('success', $translator->trans('admin.flash.profile_created', ['%name%' => (string) $profile->getDisplayName()]));
 
             return $this->redirectToRoute('admin.user.index');
         }
@@ -54,13 +53,17 @@ final class UserController extends Controller
     }
 
     #[Route('/{id}/modifier', name: 'edit', requirements: ['id' => Requirement::DIGITS], methods: ['GET', 'POST'])]
-    public function edit(#[MapEntity(id: 'id')] User $profile, Request $request): Response
-    {
+    public function edit(
+        #[MapEntity(id: 'id')]
+        User $profile,
+        Request $request,
+        TranslatorInterface $translator,
+    ): Response {
         $form = $this->createForm(ChildProfileType::class, $profile)->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->flush();
-            $this->addFlash('success', sprintf('Profil « %s » mis à jour.', $profile->getDisplayName()));
+            $this->addFlash('success', $translator->trans('admin.flash.profile_updated', ['%name%' => (string) $profile->getDisplayName()]));
 
             return $this->redirectToRoute('admin.user.index');
         }
@@ -78,9 +81,10 @@ final class UserController extends Controller
         Request $request,
         PinCodeHasher $hasher,
         PinCodeThrottle $throttle,
+        TranslatorInterface $translator,
     ): Response {
         if (!$profile->isChild()) {
-            $this->addFlash('error', 'Seuls les profils enfants ont un code.');
+            $this->addFlash('error', $translator->trans('admin.flash.only_children_have_pin'));
 
             return $this->redirectToRoute('admin.user.index');
         }
@@ -95,7 +99,7 @@ final class UserController extends Controller
             // A reset also clears the lockout: the whole point is to unblock.
             $throttle->reset($profile);
             $this->entityManager->flush();
-            $this->addFlash('success', sprintf('Nouveau code enregistré pour « %s ».', $profile->getDisplayName()));
+            $this->addFlash('success', $translator->trans('admin.flash.pin_saved', ['%name%' => (string) $profile->getDisplayName()]));
 
             return $this->redirectToRoute('admin.user.index');
         }
@@ -112,20 +116,25 @@ final class UserController extends Controller
         User $profile,
         Request $request,
         PinCodeThrottle $throttle,
+        TranslatorInterface $translator,
     ): Response {
         if ($this->isCsrfTokenValid('user-unlock'.$profile->getId(), (string) $request->request->get('_token'))) {
             $throttle->reset($profile);
-            $this->addFlash('success', sprintf('« %s » peut réessayer.', $profile->getDisplayName()));
+            $this->addFlash('success', $translator->trans('admin.flash.unlocked', ['%name%' => (string) $profile->getDisplayName()]));
         }
 
         return $this->redirectToRoute('admin.user.index');
     }
 
     #[Route('/{id}/supprimer', name: 'delete', requirements: ['id' => Requirement::DIGITS], methods: ['POST'])]
-    public function delete(#[MapEntity(id: 'id')] User $profile, Request $request): Response
-    {
+    public function delete(
+        #[MapEntity(id: 'id')]
+        User $profile,
+        Request $request,
+        TranslatorInterface $translator,
+    ): Response {
         if ($profile->getId() === $this->getUserOrThrow()->getId()) {
-            $this->addFlash('error', 'Vous ne pouvez pas supprimer votre propre compte.');
+            $this->addFlash('error', $translator->trans('admin.flash.cannot_delete_self'));
 
             return $this->redirectToRoute('admin.user.index');
         }
@@ -133,7 +142,7 @@ final class UserController extends Controller
         if ($this->isCsrfTokenValid('user-delete'.$profile->getId(), (string) $request->request->get('_token'))) {
             $name = (string) $profile->getDisplayName();
             $this->removeAndFlush($profile);
-            $this->addFlash('success', sprintf('Profil « %s » supprimé, avec ses partitions.', $name));
+            $this->addFlash('success', $translator->trans('admin.flash.profile_deleted', ['%name%' => $name]));
         }
 
         return $this->redirectToRoute('admin.user.index');

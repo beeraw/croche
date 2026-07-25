@@ -27,7 +27,7 @@
 
         <div class="avatar-picker">
             {% for choice in form.avatarIcon %}
-                <label class="avatar-picker__option" title="{{ choice.vars.label }}">
+                <label class="avatar-picker__option" title="{{ choice.vars.label|trans }}">
                     {{ form_widget(choice) }}
                     <span>{{ ux_icon('tabler:' ~ choice.vars.value) }}</span>
                 </label>
@@ -39,6 +39,6 @@
 
     <div class="cluster">
         <button class="btn btn--lg" type="submit">{{ button }}</button>
-        <a class="btn btn--ghost" href="{{ path('admin.user.index') }}">Annuler</a>
+        <a class="btn btn--ghost" href="{{ path('admin.user.index') }}">{{ 'admin.cancel'|trans }}</a>
     </div>
 {{ form_end(form) }}

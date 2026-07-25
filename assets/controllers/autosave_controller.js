@@ -23,6 +23,8 @@ export default class extends Controller {
         token: String,
         storageKey: String,
         debounce: { type: Number, default: DEBOUNCE_MS },
+        /** Indicator wording, translated server-side. */
+        messages: Object,
     };
 
     connect() {
@@ -30,7 +32,7 @@ export default class extends Controller {
         this.inFlight = false;
         this.pending = null;
         this.lastSaved = null;
-        this.setState('idle', 'Enregistré');
+        this.setState('idle', this.messagesValue.saved);
     }
 
     disconnect() {
@@ -42,7 +44,7 @@ export default class extends Controller {
      */
     schedule(content) {
         this.pending = { content, title: this.currentTitle() };
-        this.setState('pending', 'Modifié…');
+        this.setState('pending', this.messagesValue.modified);
 
         window.clearTimeout(this.timer);
         this.timer = window.setTimeout(() => this.flush(), this.debounceValue);
@@ -53,7 +55,7 @@ export default class extends Controller {
             content: this.pending?.content ?? null,
             title: this.currentTitle(),
         };
-        this.setState('pending', 'Modifié…');
+        this.setState('pending', this.messagesValue.modified);
 
         window.clearTimeout(this.timer);
         this.timer = window.setTimeout(() => this.flush(), this.debounceValue);
@@ -72,7 +74,7 @@ export default class extends Controller {
         this.pending = null;
         this.inFlight = true;
         let retryIn = null;
-        this.setState('saving', 'Enregistrement…');
+        this.setState('saving', this.messagesValue.saving);
 
         const body = {};
 
@@ -102,11 +104,11 @@ export default class extends Controller {
 
             this.lastSaved = payload;
             this.clearBuffer();
-            this.setState('saved', 'Enregistré');
+            this.setState('saved', this.messagesValue.saved);
             this.dispatch('saved', { prefix: 'autosave' });
         } catch {
             this.buffer(payload);
-            this.setState('error', 'Hors ligne — réessai…');
+            this.setState('error', this.messagesValue.offline);
 
             // Put the work back at the front of the queue. A newer change may
             // have arrived while the request was in flight; it wins, since it

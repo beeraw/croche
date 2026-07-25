@@ -7,6 +7,9 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    # Where the source lives. Shown on the landing page and in the footer.
+    app.repository_url: 'https://github.com/beeraw/croche'
+    app.repository_label: 'github.com/beeraw/croche'
 
 services:
     # default configuration for services in *this* file

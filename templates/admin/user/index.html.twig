@@ -1,15 +1,15 @@
 {% extends 'layout.html.twig' %}
 
-{% block title %}Profils — Croche{% endblock %}
+{% block title %}{{ 'admin.profiles'|trans }} — {{ 'app.name'|trans }}{% endblock %}
 {% block container_class %}container--wide{% endblock %}
 
 {% block content %}
     <div class="page-header">
-        <h1 class="page-header__title">Profils</h1>
+        <h1 class="page-header__title">{{ 'admin.profiles'|trans }}</h1>
 
         <a class="btn" href="{{ path('admin.user.create') }}">
             {{ ux_icon('tabler:plus') }}
-            Nouveau profil enfant
+            {{ 'admin.new_child'|trans }}
         </a>
     </div>
 
@@ -17,11 +17,11 @@
         <table class="table">
             <thead>
             <tr>
-                <th>Prénom</th>
-                <th>Identifiant</th>
-                <th>Rôle</th>
-                <th>Morceaux</th>
-                <th>État</th>
+                <th>{{ 'admin.first_name'|trans }}</th>
+                <th>{{ 'admin.username'|trans }}</th>
+                <th>{{ 'admin.role'|trans }}</th>
+                <th>{{ 'admin.scores_count'|trans }}</th>
+                <th>{{ 'admin.state'|trans }}</th>
                 <th></th>
             </tr>
             </thead>
@@ -37,9 +37,9 @@
                     <td>{{ profile.username }}</td>
                     <td>
                         {% if profile.admin %}
-                            <span class="badge badge--admin">Administrateur</span>
+                            <span class="badge badge--admin">{{ 'admin.role_admin'|trans }}</span>
                         {% else %}
-                            <span class="badge badge--child">Enfant</span>
+                            <span class="badge badge--child">{{ 'admin.role_child'|trans }}</span>
                         {% endif %}
                     </td>
                     <td>{{ profile.scores|length }}</td>
@@ -49,11 +49,13 @@
                                 <input type="hidden" name="_token" value="{{ csrf_token('user-unlock' ~ profile.id) }}">
                                 <button class="btn btn--ghost" type="submit">
                                     {{ ux_icon('tabler:lock-open') }}
-                                    Débloquer
+                                    {{ 'admin.unlock'|trans }}
                                 </button>
                             </form>
                         {% elseif profile.pinFailedAttempts > 0 %}
-                            <span class="text-muted">{{ profile.pinFailedAttempts }} essai(s) raté(s)</span>
+                            <span class="text-muted">
+                                {{ 'admin.failed_attempts'|trans({ '%count%': profile.pinFailedAttempts }) }}
+                            </span>
                         {% else %}
                             <span class="text-muted">—</span>
                         {% endif %}
@@ -62,11 +64,11 @@
                         <div class="table__actions">
                             {% if not profile.admin %}
                                 <a class="btn-icon" href="{{ path('admin.user.edit', { id: profile.id }) }}"
-                                   title="Modifier" aria-label="Modifier">
+                                   title="{{ 'admin.edit'|trans }}" aria-label="{{ 'admin.edit'|trans }}">
                                     {{ ux_icon('tabler:pencil') }}
                                 </a>
                                 <a class="btn-icon" href="{{ path('admin.user.reset_pin', { id: profile.id }) }}"
-                                   title="Réinitialiser le code" aria-label="Réinitialiser le code">
+                                   title="{{ 'admin.reset_pin'|trans }}" aria-label="{{ 'admin.reset_pin'|trans }}">
                                     {{ ux_icon('tabler:key') }}
                                 </a>
                             {% endif %}
@@ -74,10 +76,10 @@
                             {% if profile.id != app.user.id %}
                                 <form method="post" action="{{ path('admin.user.delete', { id: profile.id }) }}"
                                       data-controller="confirm"
-                                      data-confirm-message-value="Supprimer « {{ profile.displayName }} » et toutes ses partitions ?">
+                                      data-confirm-message-value="{{ 'admin.delete_profile_confirm'|trans({ '%name%': profile.displayName }) }}">
                                     <input type="hidden" name="_token" value="{{ csrf_token('user-delete' ~ profile.id) }}">
                                     <button class="btn-icon btn-icon--danger" type="submit"
-                                            title="Supprimer" aria-label="Supprimer">
+                                            title="{{ 'admin.delete'|trans }}" aria-label="{{ 'admin.delete'|trans }}">
                                         {{ ux_icon('tabler:trash') }}
                                     </button>
                                 </form>

@@ -1,7 +1,40 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ score.title }} — Croche{% endblock %}
+{% block title %}{{ score.title }} — {{ 'app.name'|trans }}{% endblock %}
 {% block body_class %}is-editor{% endblock %}
+
+{#
+  Every string the JavaScript shows is translated here and handed over as data.
+  The catalogue stays the single source of truth, and the bundle needs no
+  translation library of its own.
+#}
+{% set editorMessages = {
+    measureFull: 'editor.notice.measure_full'|trans,
+    allFull: 'editor.notice.all_full'|trans,
+    maxMeasures: 'editor.notice.max_measures'|trans({ '%count%': schema.maxMeasures }),
+    lastMeasure: 'editor.notice.last_measure'|trans,
+    notEmpty: 'editor.notice.not_empty'|trans,
+    recovered: 'editor.recovered'|trans,
+    durations: {
+        w: 'editor.duration_name.w'|trans,
+        h: 'editor.duration_name.h'|trans,
+        q: 'editor.duration_name.q'|trans,
+        '8': 'editor.duration_name.8'|trans,
+    },
+} %}
+
+{% set autosaveMessages = {
+    saved: 'editor.saved'|trans,
+    saving: 'editor.saving'|trans,
+    modified: 'editor.modified'|trans,
+    offline: 'editor.offline'|trans,
+} %}
+
+{% set playbackMessages = {
+    play: 'editor.play'|trans,
+    stop: 'editor.stop'|trans,
+    nothingToPlay: 'editor.notice.nothing_to_play'|trans,
+} %}
 
 {% block body %}
     <div class="editor"
@@ -11,10 +44,13 @@
                       piano-keyboard:release->score-editor#pianoReleased"
          data-score-editor-content-value="{{ score.content|json_encode|e('html_attr') }}"
          data-score-editor-schema-value="{{ schema|json_encode|e('html_attr') }}"
+         data-score-editor-messages-value="{{ editorMessages|json_encode|e('html_attr') }}"
          data-autosave-url-value="{{ path('api.score.update', { id: score.id }) }}"
          data-autosave-token-value="{{ csrf_token('score-api') }}"
          data-autosave-storage-key-value="croche.score.{{ score.id }}"
-         data-playback-tempo-value="{{ score.content.tempo|default(90) }}">
+         data-autosave-messages-value="{{ autosaveMessages|json_encode|e('html_attr') }}"
+         data-playback-tempo-value="{{ score.content.tempo|default(90) }}"
+         data-playback-messages-value="{{ playbackMessages|json_encode|e('html_attr') }}">
 
         {% include 'score/_editor_bar.html.twig' %}
 

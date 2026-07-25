@@ -1,17 +1,18 @@
 import { Controller } from '@hotwired/stimulus';
 
 /**
- * Rename and delete affordances on a score card.
+ * Renaming a score from its card.
  *
- * Deliberately plain prompt/confirm dialogs: they are native, keyboard- and
- * VoiceOver-friendly on iPad, and nothing here warrants a custom modal.
+ * A plain prompt on purpose: it is native, works with VoiceOver on the iPad,
+ * and nothing here warrants a custom modal. Deleting is handled by the
+ * `confirm` controller on the form itself.
  */
 export default class extends Controller {
     static targets = ['renameForm', 'renameInput'];
 
     rename(event) {
         const current = event.params.current ?? '';
-        const title = window.prompt('Nouveau nom du morceau :', current);
+        const title = window.prompt(event.params.prompt ?? '', current);
 
         if (title === null) {
             return;
@@ -25,13 +26,5 @@ export default class extends Controller {
 
         this.renameInputTarget.value = trimmed;
         this.renameFormTarget.submit();
-    }
-
-    confirmDelete(event) {
-        const title = event.params.title ?? 'ce morceau';
-
-        if (!window.confirm(`Supprimer « ${title} » ? C'est définitif.`)) {
-            event.preventDefault();
-        }
     }
 }

@@ -73,10 +73,16 @@ button {
     @include tap-clean;
 }
 
-img,
-svg {
+img {
     display: block;
     max-width: 100%;
+}
+
+// Icons sit inside sentences and buttons far more often than they stand alone,
+// so they default to inline. The score canvas overrides this back to block.
+svg {
+    max-width: 100%;
+    vertical-align: -0.125em;
 }
 
 :focus-visible {

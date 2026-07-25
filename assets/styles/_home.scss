@@ -1,0 +1,148 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+.home {
+    position: relative;
+    padding-bottom: $space-8;
+}
+
+.home__lang {
+    display: flex;
+    justify-content: flex-end;
+    padding: $space-3 $space-4 0;
+}
+
+.home__hero {
+    padding: $space-6 $space-4 $space-8;
+    text-align: center;
+}
+
+.home__brand {
+    display: inline-flex;
+    gap: $space-2;
+    align-items: center;
+    margin-bottom: $space-4;
+    color: $primary;
+    font-size: 2.25rem;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+
+    svg {
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+
+    @include up(md) {
+        font-size: 3rem;
+
+        svg {
+            width: 3.25rem;
+            height: 3.25rem;
+        }
+    }
+}
+
+.home__tagline {
+    max-width: 34ch;
+    margin: 0 auto $space-5;
+    color: $gray-500;
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.home__lead {
+    max-width: 58ch;
+    margin: 0 auto $space-6;
+    font-size: 1.125rem;
+    line-height: 1.65;
+}
+
+.home__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $space-3;
+    justify-content: center;
+}
+
+.home__section {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 $space-4 $space-6;
+}
+
+.home__section-title {
+    margin-bottom: $space-4;
+    color: $primary;
+    font-size: 1.375rem;
+}
+
+.home__list {
+    display: grid;
+    gap: $space-3;
+    grid-template-columns: 1fr;
+
+    @include up(md) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.home__item {
+    display: flex;
+    gap: $space-3;
+    align-items: flex-start;
+    padding: $space-4;
+    border: 2px solid $gray-200;
+    border-radius: $radius-lg;
+    background-color: $white;
+
+    svg {
+        flex: 0 0 auto;
+        width: 1.5rem;
+        height: 1.5rem;
+        margin-top: 2px;
+        color: $accent;
+    }
+}
+
+.home__note {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: $space-5;
+    border-radius: $radius-lg;
+    background-color: $plum-light;
+}
+
+.home__note h2 {
+    display: flex;
+    gap: $space-2;
+    align-items: center;
+    color: $plum-dark;
+    font-size: 1.125rem;
+
+    svg {
+        flex: 0 0 auto;
+        width: 1.375rem;
+        height: 1.375rem;
+    }
+}
+
+.home__note p:last-child {
+    margin-bottom: 0;
+}
+
+.home__source {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $space-3;
+    align-items: center;
+    justify-content: center;
+    padding: $space-6 $space-4 0;
+    text-align: center;
+}
+
+.home__footer {
+    padding: $space-6 $space-4 0;
+    color: $gray-400;
+    font-size: 0.875rem;
+    text-align: center;
+}

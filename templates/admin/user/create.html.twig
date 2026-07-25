@@ -1,14 +1,14 @@
 {% extends 'layout.html.twig' %}
 
-{% block title %}Nouveau profil — Croche{% endblock %}
+{% block title %}{{ 'admin.new_child'|trans }} — {{ 'app.name'|trans }}{% endblock %}
 {% block container_class %}container--narrow{% endblock %}
 
 {% block content %}
     <div class="page-header">
-        <h1 class="page-header__title">Nouveau profil enfant</h1>
+        <h1 class="page-header__title">{{ 'admin.new_child'|trans }}</h1>
     </div>
 
     <div class="card">
-        {{ include('admin/user/_form.html.twig', { button: 'Créer le profil' }) }}
+        {{ include('admin/user/_form.html.twig', { button: 'admin.create_profile'|trans }) }}
     </div>
 {% endblock %}

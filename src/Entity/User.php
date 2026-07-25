@@ -22,7 +22,7 @@ use function in_array;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-#[UniqueEntity(fields: ['username'], message: 'Cet identifiant est déjà pris.')]
+#[UniqueEntity(fields: ['username'], message: 'form.username_taken')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface, TimeInterface, Stringable
 {
     use TimeTrait;
@@ -34,16 +34,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, TimeInt
     public const int PIN_MAX_ATTEMPTS = 5;
 
     #[ORM\Column(length: 60, unique: true)]
-    #[Assert\NotBlank(message: 'L\'identifiant est obligatoire.')]
+    #[Assert\NotBlank(message: 'form.username_required')]
     #[Assert\Length(min: 2, max: 60)]
     #[Assert\Regex(
         pattern: '/^[a-z0-9._-]+$/',
-        message: 'Uniquement des minuscules, chiffres, point, tiret ou tiret bas.',
+        message: 'form.username_format',
     )]
     private ?string $username = null;
 
     #[ORM\Column(length: 60)]
-    #[Assert\NotBlank(message: 'Le prénom est obligatoire.')]
+    #[Assert\NotBlank(message: 'form.first_name_required')]
     #[Assert\Length(min: 1, max: 60)]
     private ?string $displayName = null;
 

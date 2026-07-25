@@ -42,52 +42,9 @@ enum AvatarIcon: string
     case Headphones = 'headphones';
     case GuitarPick = 'guitar-pick';
 
+    /** Translation key for the human-readable name. */
     public function label(): string
     {
-        return match ($this) {
-            self::Cat => 'Chat',
-            self::Dog => 'Chien',
-            self::Fish => 'Poisson',
-            self::Bug => 'Coccinelle',
-            self::Ghost => 'Fantôme',
-            self::Robot => 'Robot',
-            self::Alien => 'Extraterrestre',
-            self::Star => 'Étoile',
-            self::Heart => 'Cœur',
-            self::Crown => 'Couronne',
-            self::Diamond => 'Diamant',
-            self::Rocket => 'Fusée',
-            self::Planet => 'Planète',
-            self::Sun => 'Soleil',
-            self::Moon => 'Lune',
-            self::Cloud => 'Nuage',
-            self::Snowflake => 'Flocon',
-            self::Umbrella => 'Parapluie',
-            self::Leaf => 'Feuille',
-            self::Apple => 'Pomme',
-            self::Cherry => 'Cerise',
-            self::IceCream => 'Glace',
-            self::Balloon => 'Ballon',
-            self::Feather => 'Plume',
-            self::Palette => 'Palette',
-            self::Brush => 'Pinceau',
-            self::Music => 'Note',
-            self::Headphones => 'Casque',
-            self::GuitarPick => 'Médiator',
-        };
-    }
-
-    /**
-     * @return array<string, string> label => value, for a form choice list
-     */
-    public static function choices(): array
-    {
-        $choices = [];
-
-        foreach (self::cases() as $case) {
-            $choices[$case->label()] = $case->value;
-        }
-
-        return $choices;
+        return 'avatar.'.$this->value;
     }
 }

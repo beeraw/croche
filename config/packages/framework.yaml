@@ -11,8 +11,6 @@ framework:
         cookie_secure: auto
         cookie_httponly: true
 
-    enabled_locales: ['fr']
-
 when@test:
     framework:
         test: true

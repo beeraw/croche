@@ -17,8 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-
-use function sprintf;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route('/admin/partitions', name: 'admin.score.')]
 #[IsGranted(User::ROLE_ADMIN)]
@@ -65,6 +64,7 @@ final class ScoreController extends Controller
         ScoreRevision $revision,
         Request $request,
         ScoreRevisionRecorder $recorder,
+        TranslatorInterface $translator,
     ): Response {
         if ($revision->getScore()?->getId() !== $score->getId()) {
             throw $this->createNotFoundException();
@@ -82,22 +82,25 @@ final class ScoreController extends Controller
                 $recorder->purge($score);
             }
 
-            $this->addFlash('success', sprintf(
-                'Version du %s restaurée.',
-                $revision->getCreatedAt()?->format('d/m/Y à H\hi') ?? '',
-            ));
+            $this->addFlash('success', $translator->trans('admin.flash.version_restored', [
+                '%date%' => $revision->getCreatedAt()?->format('d/m/Y H:i') ?? '',
+            ]));
         }
 
         return $this->redirectToRoute('admin.score.history', ['id' => $score->getId()]);
     }
 
     #[Route('/{id}/supprimer', name: 'delete', requirements: ['id' => Requirement::DIGITS], methods: ['POST'])]
-    public function delete(#[MapEntity(id: 'id')] Score $score, Request $request): Response
-    {
+    public function delete(
+        #[MapEntity(id: 'id')]
+        Score $score,
+        Request $request,
+        TranslatorInterface $translator,
+    ): Response {
         if ($this->isCsrfTokenValid('score-delete'.$score->getId(), (string) $request->request->get('_token'))) {
             $title = (string) $score->getTitle();
             $this->removeAndFlush($score);
-            $this->addFlash('success', sprintf('« %s » supprimé.', $title));
+            $this->addFlash('success', $translator->trans('admin.flash.score_deleted', ['%title%' => $title]));
         }
 
         return $this->redirectToRoute('admin.score.index');

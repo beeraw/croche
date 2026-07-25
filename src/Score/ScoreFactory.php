@@ -7,13 +7,16 @@ namespace App\Score;
 use App\Entity\Score;
 use App\Entity\User;
 use App\Repository\ScoreRepository;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 use function sprintf;
 
 final readonly class ScoreFactory
 {
-    public function __construct(private ScoreRepository $repository)
-    {
+    public function __construct(
+        private ScoreRepository $repository,
+        private TranslatorInterface $translator,
+    ) {
     }
 
     public function createBlank(User $owner, ?string $title = null): Score
@@ -37,7 +40,7 @@ final readonly class ScoreFactory
 
     private function nextUntitledName(User $owner): string
     {
-        $base = 'Nouveau morceau';
+        $base = $this->translator->trans('score.untitled');
         $count = $this->repository->countByOwnerAndTitlePrefix($owner, $base);
 
         return 0 === $count ? $base : sprintf('%s %d', $base, $count + 1);
@@ -46,7 +49,7 @@ final readonly class ScoreFactory
     private function nextCopyName(Score $source): string
     {
         $owner = $source->getOwner();
-        $base = sprintf('%s (copie', (string) $source->getTitle());
+        $base = sprintf('%s (%s', (string) $source->getTitle(), $this->translator->trans('score.copy_suffix'));
 
         if (!$owner instanceof User) {
             return $base.')';

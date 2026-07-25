@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'home.title'|trans }}{% endblock %}
+
+{% block body %}
+    <div class="home">
+        <div class="home__lang">
+            {% include 'partial/_language.html.twig' with { locales: app_locales() } %}
+        </div>
+
+        <header class="home__hero">
+            <p class="home__brand">
+                {{ ux_icon('tabler:music') }}
+                {{ 'app.name'|trans }}
+            </p>
+
+            <p class="home__tagline">{{ 'app.tagline'|trans }}</p>
+            <p class="home__lead">{{ 'home.lead'|trans }}</p>
+
+            <div class="home__cta">
+                <a class="btn btn--lg" href="{{ path('security.profiles') }}">{{ 'home.enter'|trans }}</a>
+                <a class="btn btn--ghost btn--lg" href="{{ path('security.login') }}">
+                    {{ 'nav.admin_area'|trans }}
+                </a>
+            </div>
+        </header>
+
+        <section class="home__section">
+            <h2 class="home__section-title">{{ 'home.what_title'|trans }}</h2>
+
+            <ul class="home__list">
+                {% for item in ['what_score', 'what_input', 'what_listen', 'what_save', 'what_print'] %}
+                    <li class="home__item">
+                        {{ ux_icon('tabler:check') }}
+                        <span>{{ ('home.' ~ item)|trans }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+
+        <section class="home__section">
+            <div class="home__note">
+                <h2>{{ ux_icon('tabler:heart-handshake') }} {{ 'home.not_title'|trans }}</h2>
+                <p>{{ 'home.not_body'|trans }}</p>
+            </div>
+        </section>
+
+        <section class="home__section">
+            <div class="home__note">
+                <h2>{{ ux_icon('tabler:wifi-off') }} {{ 'home.offline_title'|trans }}</h2>
+                <p>{{ 'home.offline_body'|trans }}</p>
+            </div>
+        </section>
+
+        <section class="home__source">
+            <div>
+                <h2 class="home__section-title">{{ 'home.source_title'|trans }}</h2>
+                <p>{{ 'home.source_body'|trans }}</p>
+                <a class="btn btn--ghost" href="{{ repository_url }}" rel="noopener noreferrer" target="_blank">
+                    {{ ux_icon('tabler:brand-github') }}
+                    {{ 'home.source_link'|trans }}
+                </a>
+            </div>
+        </section>
+
+        <footer class="home__footer">
+            <p>{{ 'app.name'|trans }} · MIT · <a href="{{ repository_url }}" rel="noopener noreferrer">{{ repository_label }}</a></p>
+        </footer>
+    </div>
+{% endblock %}

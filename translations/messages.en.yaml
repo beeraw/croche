@@ -1,0 +1,260 @@
+app:
+    name: Croche
+    tagline: Write your pieces, hear them, print them.
+
+nav:
+    my_scores: My pieces
+    profiles: Profiles
+    scores: Scores
+    sign_out: Sign out
+    admin_area: Admin area
+    language: Language
+
+home:
+    title: 'Croche — writing music when you are eight'
+    lead: >-
+        Croche is a small app for writing music. It was built for a child who
+        plays the piano, already reads simple sheet music, and wanted to
+        compose her own pieces without losing them.
+    enter: Enter
+    what_title: What it does
+    what_score: A full piano staff, treble and bass, like a real music notebook.
+    what_input: Notes placed with a finger, on an on-screen piano or straight onto the staff.
+    what_listen: Playback of both hands at once, with a cursor that follows the music.
+    what_save: Saving that happens on its own, with no button to remember.
+    what_print: Clean printing, to turn a piece into real sheet music on paper.
+    not_title: What it is not
+    not_body: >-
+        This is not a professional score editor, and it does not try to be. No
+        dynamics, no slurs, no lyrics. Just enough to write a melody and an
+        accompaniment, hear them, and keep them.
+    offline_title: Nothing leaves this page
+    offline_body: >-
+        No outbound requests at all: no CDN, no remote font, no downloaded
+        sound. The fonts, the icons and the piano tone are all embedded or
+        computed on the spot. Once the page is open, the app talks to nobody.
+    source_title: Source code
+    source_body: 'Croche is free software, released under the MIT licence.'
+    source_link: View the project on GitHub
+
+security:
+    who_plays: Who is playing?
+    pick_profile: Pick your profile to start writing.
+    no_profile: |-
+        No profiles yet.
+        An administrator needs to create one.
+    change_profile: Change profile
+    back_to_profiles: Back to profiles
+    enter_pin: Tap your 4-digit code.
+    digits_entered: Digits entered
+    clear_all: Clear everything
+    erase_one: Erase one digit
+    admin_title: Administration
+    username: Username
+    password: Password
+    sign_in: Sign in
+    bad_credentials: Wrong username or password.
+    pin_wrong: That code is not right.
+    pin_length: The code is 4 digits long.
+    pin_unknown_profile: That profile does not exist.
+    pin_locked: Too many tries. Have another go in a little while.
+    pin_locked_minutes: 'Too many tries. Have another go in {minutes} minute(s).'
+
+score:
+    my_scores: My pieces
+    new: New piece
+    empty: |-
+        You have no pieces yet.
+        Press "New piece" to begin.
+    measures: '{1}1 bar|]1,Inf[ %count% bars'
+    modified_on: 'edited on %date%'
+    rename: Rename
+    duplicate: Duplicate
+    delete: Delete
+    rename_prompt: 'New name for the piece:'
+    delete_confirm: 'Delete "%title%"? This cannot be undone.'
+    flash:
+        renamed: 'Renamed to "%title%".'
+        duplicated: 'Copy created: "%title%".'
+        deleted: '"%title%" has been deleted.'
+    untitled: New piece
+    copy_suffix: copy
+
+editor:
+    back: My pieces
+    title_label: Title of the piece
+    saved: Saved
+    saving: Saving…
+    modified: Edited…
+    offline: Offline — retrying…
+    undo: Undo
+    redo: Redo
+    play: Play
+    stop: Stop
+    print: Print
+    stave: Staff
+    stave_treble: Treble
+    stave_bass: Bass
+    active_stave: Active staff
+    duration: Length
+    whole: Whole note
+    half: Half note
+    quarter: Quarter note
+    eighth: Eighth note
+    accidental: Accidental
+    sharp: Sharp
+    flat: Flat
+    natural: Natural
+    rest: Rest
+    place_rest: Place a rest
+    note: Note
+    delete_note: Delete the selected note
+    measures: Bars
+    add_measure: Add a bar
+    remove_measure: Remove a bar
+    tempo: Tempo
+    notice:
+        measure_full: 'This bar is full: the %duration% will not fit.'
+        all_full: Every bar is full. Add one more.
+        max_measures: '%count% bars maximum.'
+        last_measure: There has to be at least one bar.
+        not_empty: The last bar is not empty.
+        nothing_to_play: There is nothing to listen to yet.
+    duration_name:
+        w: whole note
+        h: half note
+        q: quarter note
+        '8': eighth note
+    recovered: |-
+        An unsaved version from %date% was found on this device.
+        Recover it? (Cancel keeps the version saved online.)
+
+admin:
+    profiles: Profiles
+    new_child: New child profile
+    first_name: First name
+    username: Username
+    username_help: Lowercase, no spaces. Used internally only.
+    role: Role
+    role_admin: Administrator
+    role_child: Child
+    scores_count: Pieces
+    state: State
+    unlock: Unlock
+    failed_attempts: '%count% failed attempt(s)'
+    edit: Edit
+    reset_pin: Reset the code
+    delete: Delete
+    delete_profile_confirm: 'Delete "%name%" and all their scores?'
+    avatar: Avatar
+    pin: 4-digit code
+    create_profile: Create the profile
+    save: Save
+    cancel: Cancel
+    edit_profile: 'Edit "%name%"'
+    pin_of: 'Code for "%name%"'
+    pin_help: >-
+        The current code cannot be read back, it is hashed in the database.
+        Entering a new one replaces it and unlocks the profile if it was locked.
+    new_pin: New 4-digit code
+    save_pin: Save the code
+    change_pin_hint: 'To change the 4-digit code, %link%.'
+    change_pin_link: reset it
+    all_scores: All scores
+    no_scores: No scores yet.
+    profile: Profile
+    modified: Edited
+    revisions: Revisions
+    open_in_editor: Open in the editor
+    history: History
+    history_title: History
+    history_intro: >-
+        The last %keep% versions are kept. Restoring replaces the current
+        content, which becomes a revision of its own: nothing is lost.
+    no_history: This score has no history yet.
+    version: Version
+    saved_at: Saved
+    restore: Restore
+    restore_confirm: Restore this version?
+    back: Back
+    delete_score_confirm: 'Delete "%title%"?'
+    flash:
+        profile_created: 'Profile "%name%" created.'
+        profile_updated: 'Profile "%name%" updated.'
+        pin_saved: 'New code saved for "%name%".'
+        unlocked: '"%name%" can try again.'
+        profile_deleted: 'Profile "%name%" deleted, along with their scores.'
+        cannot_delete_self: You cannot delete your own account.
+        only_children_have_pin: Only child profiles have a code.
+        score_deleted: '"%title%" deleted.'
+        version_restored: 'Version from %date% restored.'
+
+form:
+    first_name_required: A first name is required.
+    username_required: A username is required.
+    username_format: 'Lowercase letters, digits, dot, dash or underscore only.'
+    username_taken: That username is already taken.
+    pin_required: A code is required.
+    pin_format: Exactly 4 digits.
+    title_required: A title is required.
+
+api:
+    invalid_json: Invalid JSON.
+    invalid_csrf: Invalid security token. Reload the page.
+    content_not_object: The content must be an object.
+    schema_version: 'Unsupported schema version (expected %version%).'
+    invalid_value: 'Invalid value for "%path%".'
+    tempo_integer: The tempo must be a whole number.
+    tempo_range: 'The tempo must be between %min% and %max%.'
+    stave_count: 'A score has exactly %count% staves.'
+    invalid_stave: Invalid staff.
+    wrong_clef: 'Staff %index% must use the "%clef%" clef.'
+    measure_required: A staff holds at least one bar.
+    too_many_measures: 'A score cannot exceed %max% bars.'
+    measures_must_match: Both staves must have the same number of bars.
+    invalid_measure: Invalid bar.
+    too_many_notes: Too many notes in one bar.
+    measure_overfull: 'Bar %index% is overfull.'
+    invalid_note: Invalid note.
+    invalid_pitch: Invalid pitch.
+
+note_name:
+    c: C
+    d: D
+    e: E
+    f: F
+    g: G
+    a: A
+    b: B
+    sharp_suffix: sharp
+
+avatar:
+    cat: Cat
+    dog: Dog
+    fish: Fish
+    bug: Ladybird
+    ghost: Ghost
+    robot: Robot
+    alien: Alien
+    star: Star
+    heart: Heart
+    crown: Crown
+    diamond: Diamond
+    rocket: Rocket
+    planet: Planet
+    sun: Sun
+    moon: Moon
+    cloud: Cloud
+    snowflake: Snowflake
+    umbrella: Umbrella
+    leaf: Leaf
+    apple: Apple
+    cherry: Cherry
+    'ice-cream': Ice cream
+    balloon: Balloon
+    feather: Feather
+    palette: Palette
+    brush: Paintbrush
+    music: Note
+    headphones: Headphones
+    'guitar-pick': Guitar pick

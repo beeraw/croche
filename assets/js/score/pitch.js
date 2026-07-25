@@ -79,22 +79,19 @@ export function isBlackKey(midi) {
 }
 
 /**
- * French note names, which is what she reads. Used for the keyboard labels.
+ * Label for a key on the virtual piano.
+ *
+ * The names come from the caller rather than living here: a French-speaking
+ * child reads Do-Ré-Mi, an English-speaking one reads C-D-E, and the
+ * translation catalogue is the single place that decides.
+ *
+ * @param {string} key            pitch as "c/4"
+ * @param {Object<string,string>} names letter => displayed name
  */
-export const SOLFEGE = {
-    c: 'Do',
-    d: 'Ré',
-    e: 'Mi',
-    f: 'Fa',
-    g: 'Sol',
-    a: 'La',
-    b: 'Si',
-};
-
-export function solfegeLabel(key) {
+export function noteLabel(key, names) {
     const { letter, octave } = parseKey(key);
 
-    return `${SOLFEGE[letter]}${octave}`;
+    return `${names[letter] ?? letter.toUpperCase()}${octave}`;
 }
 
 /**

@@ -1,0 +1,47 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+.language {
+    display: inline-flex;
+    gap: $space-1;
+    align-items: center;
+}
+
+.language__link,
+.language__current {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: $touch-target;
+    height: $touch-target;
+    padding: 0 $space-2;
+    border-radius: $radius-pill;
+    font-size: 0.8125rem;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    text-decoration: none;
+    text-transform: uppercase;
+
+    @include tap-clean;
+}
+
+.language__current {
+    background-color: $plum-light;
+    color: $primary;
+}
+
+.language__link {
+    color: $gray-500;
+
+    &:hover {
+        background-color: $gray-100;
+        color: $primary;
+    }
+}
+
+/// On the signed-out screens the switcher floats in the top corner.
+.login__lang {
+    position: absolute;
+    top: $space-3;
+    right: $space-3;
+}

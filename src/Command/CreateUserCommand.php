@@ -60,13 +60,13 @@ final class CreateUserCommand extends Command
         $isChild = (bool) $input->getOption('child');
 
         if (null !== $this->repository->findOneByUsername($username)) {
-            $io->error(sprintf('L\'identifiant "%s" est déjà pris.', $username));
+            $io->error(sprintf('The username "%s" is already taken.', $username));
 
             return Command::FAILURE;
         }
 
         if ($isChild && 1 !== preg_match('/^\d{4}$/', $secret)) {
-            $io->error('Le code d\'un profil enfant doit faire exactement 4 chiffres.');
+            $io->error('A child profile code must be exactly 4 digits.');
 
             return Command::FAILURE;
         }
@@ -77,7 +77,7 @@ final class CreateUserCommand extends Command
 
         if (!$avatar instanceof AvatarIcon) {
             $io->error(sprintf(
-                'Avatar inconnu "%s". Valeurs possibles : %s.',
+                'Unknown avatar "%s". Available values: %s.',
                 $avatarValue,
                 implode(', ', array_column(AvatarIcon::cases(), 'value')),
             ));
@@ -104,8 +104,8 @@ final class CreateUserCommand extends Command
         $this->entityManager->flush();
 
         $io->success(sprintf(
-            'Profil %s "%s" créé.',
-            $isChild ? 'enfant' : 'administrateur',
+            '%s profile "%s" created.',
+            $isChild ? 'Child' : 'Admin',
             $user->getDisplayName(),
         ));
 

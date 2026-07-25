@@ -1,6 +1,7 @@
 <div class="editor__bar no-print">
     <div class="editor__identity">
-        <a class="editor__back" href="{{ path('score.index') }}" title="Mes morceaux" aria-label="Mes morceaux">
+        <a class="editor__back" href="{{ path('score.index') }}"
+           title="{{ 'editor.back'|trans }}" aria-label="{{ 'editor.back'|trans }}">
             {{ ux_icon('tabler:arrow-left') }}
         </a>
 
@@ -8,14 +9,15 @@
                type="text"
                value="{{ score.title }}"
                maxlength="120"
-               aria-label="Titre du morceau"
+               aria-label="{{ 'editor.title_label'|trans }}"
                data-autosave-target="title"
                data-score-editor-target="title"
                data-action="input->autosave#titleChanged">
 
-        <span class="save-state" data-autosave-target="indicator" data-state="idle" role="status" aria-live="polite">
+        <span class="save-state" data-autosave-target="indicator" data-state="idle"
+              role="status" aria-live="polite">
             {{ ux_icon('tabler:cloud-check') }}
-            <span data-autosave-target="indicatorText">Enregistré</span>
+            <span data-autosave-target="indicatorText">{{ 'editor.saved'|trans }}</span>
         </span>
     </div>
 
@@ -23,27 +25,27 @@
         <button type="button" class="btn-icon"
                 data-score-editor-target="undoButton"
                 data-action="score-editor#undo"
-                title="Annuler" aria-label="Annuler">
+                title="{{ 'editor.undo'|trans }}" aria-label="{{ 'editor.undo'|trans }}">
             {{ ux_icon('tabler:arrow-back-up') }}
         </button>
 
         <button type="button" class="btn-icon"
                 data-score-editor-target="redoButton"
                 data-action="score-editor#redo"
-                title="Rétablir" aria-label="Rétablir">
+                title="{{ 'editor.redo'|trans }}" aria-label="{{ 'editor.redo'|trans }}">
             {{ ux_icon('tabler:arrow-forward-up') }}
         </button>
 
         <button type="button" class="btn-icon"
                 data-playback-target="playButton"
                 data-action="playback#toggle"
-                title="Écouter" aria-label="Écouter">
+                title="{{ 'editor.play'|trans }}" aria-label="{{ 'editor.play'|trans }}">
             {{ ux_icon('tabler:player-play-filled') }}
         </button>
 
         <button type="button" class="btn-icon"
                 data-action="score-editor#print"
-                title="Imprimer" aria-label="Imprimer">
+                title="{{ 'editor.print'|trans }}" aria-label="{{ 'editor.print'|trans }}">
             {{ ux_icon('tabler:printer') }}
         </button>
     </div>

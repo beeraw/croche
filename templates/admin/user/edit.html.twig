@@ -1,19 +1,21 @@
 {% extends 'layout.html.twig' %}
 
-{% block title %}{{ profile.displayName }} — Croche{% endblock %}
+{% block title %}{{ profile.displayName }} — {{ 'app.name'|trans }}{% endblock %}
 {% block container_class %}container--narrow{% endblock %}
 
 {% block content %}
     <div class="page-header">
-        <h1 class="page-header__title">Modifier « {{ profile.displayName }} »</h1>
+        <h1 class="page-header__title">{{ 'admin.edit_profile'|trans({ '%name%': profile.displayName }) }}</h1>
     </div>
 
     <div class="card">
-        {{ include('admin/user/_form.html.twig', { button: 'Enregistrer' }) }}
+        {{ include('admin/user/_form.html.twig', { button: 'admin.save'|trans }) }}
     </div>
 
     <p class="text-muted form-footnote">
-        Pour changer le code à 4 chiffres,
-        <a href="{{ path('admin.user.reset_pin', { id: profile.id }) }}">réinitialisez-le</a>.
+        {{ 'admin.change_pin_hint'|trans({
+            '%link%': '<a href="' ~ path('admin.user.reset_pin', { id: profile.id }) ~ '">'
+                ~ 'admin.change_pin_link'|trans ~ '</a>'
+        })|raw }}
     </p>
 {% endblock %}

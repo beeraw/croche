@@ -1,5 +1,8 @@
 twig:
     file_name_pattern: '*.twig'
+    globals:
+        repository_url: '%app.repository_url%'
+        repository_label: '%app.repository_label%'
 
 when@test:
     twig:

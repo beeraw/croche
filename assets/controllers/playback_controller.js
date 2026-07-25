@@ -15,6 +15,8 @@ export default class extends Controller {
 
     static values = {
         tempo: { type: Number, default: 90 },
+        /** Button labels and notices, translated server-side. */
+        messages: Object,
     };
 
     connect() {
@@ -54,7 +56,7 @@ export default class extends Controller {
         const timeline = this.buildTimeline(document);
 
         if (timeline.events.length === 0) {
-            editor.notify('Il n\'y a encore rien à écouter.');
+            editor.notify(this.messagesValue.nothingToPlay);
 
             return;
         }
@@ -214,9 +216,9 @@ export default class extends Controller {
         }
 
         this.playButtonTarget.classList.toggle('is-active', this.playing);
-        this.playButtonTarget.setAttribute(
-            'aria-label',
-            this.playing ? 'Arrêter' : 'Écouter',
-        );
+        const label = this.playing ? this.messagesValue.stop : this.messagesValue.play;
+
+        this.playButtonTarget.setAttribute('aria-label', label);
+        this.playButtonTarget.setAttribute('title', label);
     }
 }

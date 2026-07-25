@@ -1,11 +1,24 @@
 {#
   The virtual keyboard is the main way of entering notes: she finds the pitch
   by ear, then it lands on the active stave. The keys themselves are built by
-  the piano-keyboard controller so the range stays defined in one place.
+  the piano-keyboard controller so the range stays defined in one place, and
+  the note names come from the catalogue so they read Do-Ré-Mi or C-D-E.
 #}
+{% set noteNames = {
+    c: 'note_name.c'|trans,
+    d: 'note_name.d'|trans,
+    e: 'note_name.e'|trans,
+    f: 'note_name.f'|trans,
+    g: 'note_name.g'|trans,
+    a: 'note_name.a'|trans,
+    b: 'note_name.b'|trans,
+} %}
+
 <div class="piano no-print" data-controller="piano-keyboard"
      data-piano-keyboard-from-value="c/2"
      data-piano-keyboard-to-value="c/6"
-     data-piano-keyboard-scroll-to-value="c/4">
+     data-piano-keyboard-scroll-to-value="c/4"
+     data-piano-keyboard-names-value="{{ noteNames|json_encode|e('html_attr') }}"
+     data-piano-keyboard-sharp-value="{{ 'note_name.sharp_suffix'|trans }}">
     <div class="piano__keys" data-piano-keyboard-target="keys"></div>
 </div>
