@@ -46,8 +46,12 @@ export default class extends Controller {
         this.tool = { duration: 'q', accidental: null, rest: false };
         this.drag = null;
 
-        this.offerBufferedCopy();
         this.render();
+
+        // The autosave controller lives on this same element, and Stimulus does
+        // not promise an order between the two connect() calls. Waiting a tick
+        // guarantees it is there before we ask it for a buffered copy.
+        window.setTimeout(() => this.offerBufferedCopy(), 0);
 
         this.onResize = this.debounce(() => this.render(), 150);
         window.addEventListener('resize', this.onResize);
@@ -461,7 +465,12 @@ export default class extends Controller {
 
         if (meta && event.key.toLowerCase() === 'z') {
             event.preventDefault();
-            event.shiftKey ? this.redo() : this.undo();
+
+            if (event.shiftKey) {
+                this.redo();
+            } else {
+                this.undo();
+            }
         } else if (event.key === 'Backspace' || event.key === 'Delete') {
             event.preventDefault();
             this.deleteSelection();

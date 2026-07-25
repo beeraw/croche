@@ -2,6 +2,9 @@ import { Controller } from '@hotwired/stimulus';
 
 const DEBOUNCE_MS = 2000;
 
+/** Back-off before retrying a save that failed, usually for want of network. */
+const RETRY_MS = 5000;
+
 /**
  * Saves on its own, two seconds after the last change.
  *
@@ -68,6 +71,7 @@ export default class extends Controller {
         const payload = this.pending;
         this.pending = null;
         this.inFlight = true;
+        let retryIn = null;
         this.setState('saving', 'Enregistrement…');
 
         const body = {};
@@ -100,19 +104,21 @@ export default class extends Controller {
             this.clearBuffer();
             this.setState('saved', 'Enregistré');
             this.dispatch('saved', { prefix: 'autosave' });
-        } catch (error) {
+        } catch {
             this.buffer(payload);
             this.setState('error', 'Hors ligne — réessai…');
-            // Keep trying: the network usually comes back before she notices.
-            window.clearTimeout(this.timer);
+
+            // Put the work back at the front of the queue. A newer change may
+            // have arrived while the request was in flight; it wins, since it
+            // already contains everything this payload held.
             this.pending = this.pending ?? payload;
-            this.timer = window.setTimeout(() => this.flush(), 5000);
+            retryIn = RETRY_MS;
         } finally {
             this.inFlight = false;
 
             if (this.pending) {
                 window.clearTimeout(this.timer);
-                this.timer = window.setTimeout(() => this.flush(), this.debounceValue);
+                this.timer = window.setTimeout(() => this.flush(), retryIn ?? this.debounceValue);
             }
         }
     }

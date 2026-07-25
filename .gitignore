@@ -29,3 +29,6 @@ yarn-error.log
 .vscode/
 /public/build/
 ###< project ###
+
+# Regenerated on every cache warmup; pure IDE helper.
+/config/reference.php
