@@ -1,0 +1,288 @@
+app:
+    name: Croche
+    tagline: Escribe tus piezas, escúchalas, imprímelas.
+
+nav:
+    home: Volver al inicio
+    my_scores: Mis piezas
+    profiles: Perfiles
+    scores: Partituras
+    sign_out: Cerrar sesión
+    admin_area: Zona de administración
+    language: Idioma
+
+home:
+    title: 'Croche — escribir música cuando tienes ocho años'
+    lead: >-
+        Croche es una pequeña aplicación para escribir música. Nació para una
+        niña que toca el piano, ya lee partituras sencillas y quería componer
+        sus propias piezas sin perderlas.
+    enter: Entrar
+    what_title: Lo que sabe hacer
+    what_score: Un pentagrama de piano completo, clave de sol y clave de fa, como un cuaderno de música de verdad.
+    what_input: Notas puestas con el dedo, en un piano en pantalla o directamente sobre el pentagrama.
+    what_listen: La escucha de las dos manos a la vez, con un cursor que sigue la música.
+    what_save: Un guardado que ocurre solo, sin ningún botón que recordar.
+    what_print: Una impresión limpia, para convertir la pieza en una partitura de papel de verdad.
+    not_title: Lo que no es
+    not_body: >-
+        No es un editor de partituras profesional, y no pretende serlo. Sin
+        matices, sin ligaduras, sin letra. Justo lo necesario para escribir una
+        melodía y un acompañamiento, oírlos y guardarlos.
+    offline_title: Nada sale de esta página
+    offline_body: >-
+        Ninguna petición hacia fuera: sin CDN, sin tipografía remota, sin sonido
+        descargado. Las tipografías, los iconos y el timbre del piano van
+        incrustados o se calculan sobre la marcha. Una vez abierta la página, la
+        aplicación no habla con nadie.
+    self_host_title: Instálala en tu casa
+    self_host_body: >-
+        Croche no es un servicio en línea. No hay registro, y esta dirección es
+        solo la instancia de una familia. El código está en GitHub: descárgalo,
+        instálalo en tu propio servidor y la aplicación pasa a ser tuya — tus
+        perfiles, tus piezas, tu base de datos, en casa.
+    source_title: Código fuente
+    source_body: >-
+        Croche es software libre, publicado bajo licencia MIT. El README explica
+        cómo instalarlo.
+    source_link: Ver el proyecto en GitHub
+
+security:
+    who_plays: ¿Quién toca?
+    pick_profile: Elige tu perfil para empezar a escribir.
+    no_profile: |-
+        Todavía no hay perfiles.
+        Un administrador tiene que crear uno.
+    change_profile: Cambiar de perfil
+    back_to_profiles: Volver a los perfiles
+    enter_pin: Escribe tu código de 4 cifras.
+    digits_entered: Cifras introducidas
+    clear_all: Borrarlo todo
+    erase_one: Borrar una cifra
+    admin_title: Administración
+    username: Usuario
+    password: Contraseña
+    sign_in: Entrar
+    bad_credentials: Usuario o contraseña incorrectos.
+    pin_wrong: Ese código no es el correcto.
+    pin_length: El código tiene 4 cifras.
+    pin_unknown_profile: Ese perfil no existe.
+    pin_locked: Demasiados intentos. Vuelve a probar dentro de un rato.
+    pin_locked_minutes: 'Demasiados intentos. Vuelve a probar dentro de {minutes} minuto(s).'
+
+score:
+    my_scores: Mis piezas
+    new: Pieza nueva
+    empty: |-
+        Todavía no tienes ninguna pieza.
+        Pulsa «Pieza nueva» para empezar.
+    measures: '{1}1 compás|]1,Inf[ %count% compases'
+    modified_on: 'editada el %date%'
+    rename: Cambiar el nombre
+    duplicate: Duplicar
+    delete: Eliminar
+    rename_prompt: 'Nuevo nombre de la pieza:'
+    delete_confirm: '¿Eliminar «%title%»? No se puede deshacer.'
+    flash:
+        renamed: 'Ahora se llama «%title%».'
+        duplicated: 'Copia creada: «%title%».'
+        deleted: '«%title%» se ha eliminado.'
+    untitled: Pieza nueva
+    copy_suffix: copia
+
+editor:
+    back: Mis piezas
+    title_label: Título de la pieza
+    saved: Guardada
+    saving: Guardando…
+    modified: Editada…
+    offline: Sin conexión — reintentando…
+    undo: Deshacer
+    redo: Rehacer
+    play: Escuchar
+    stop: Parar
+    print: Imprimir
+    stave: Pentagrama
+    stave_treble: Sol
+    stave_bass: Fa
+    active_stave: Pentagrama activo
+    duration: Duración
+    whole: Redonda
+    half: Blanca
+    quarter: Negra
+    eighth: Corchea
+    accidental: Alteración
+    sharp: Sostenido
+    flat: Bemol
+    natural: Becuadro
+    rest: Silencio
+    place_rest: Poner un silencio
+    note: Nota
+    delete_note: Eliminar la nota seleccionada
+    measures: Compases
+    add_measure: Añadir un compás
+    remove_measure: Quitar un compás
+    tempo: Tempo
+    notice:
+        measure_full: 'Este compás está lleno: la %duration% no cabe.'
+        all_full: Todos los compases están llenos. Añade uno más.
+        max_measures: 'Máximo %count% compases.'
+        last_measure: Tiene que haber al menos un compás.
+        not_empty: El último compás no está vacío.
+        nothing_to_play: Todavía no hay nada que escuchar.
+    duration_name:
+        w: redonda
+        h: blanca
+        q: negra
+        '8': corchea
+    recovered: |-
+        En este dispositivo se ha encontrado una versión sin guardar del %date%.
+        ¿Recuperarla? (Cancelar mantiene la versión guardada en línea.)
+
+admin:
+    profiles: Perfiles
+    new_child: Nuevo perfil de niño
+    first_name: Nombre
+    username: Usuario
+    username_help: En minúsculas, sin espacios. Solo se usa internamente.
+    role: Rol
+    role_admin: Administrador
+    role_child: Niño
+    scores_count: Piezas
+    state: Estado
+    unlock: Desbloquear
+    failed_attempts: '%count% intento(s) fallido(s)'
+    edit: Editar
+    reset_pin: Restablecer el código
+    delete: Eliminar
+    delete_profile_confirm: '¿Eliminar «%name%» y todas sus partituras?'
+    avatar: Avatar
+    pin: Código de 4 cifras
+    create_profile: Crear el perfil
+    save: Guardar
+    cancel: Cancelar
+    edit_profile: 'Editar «%name%»'
+    pin_of: 'Código de «%name%»'
+    pin_help: >-
+        El código actual no se puede volver a leer: se guarda con un hash en la
+        base de datos. Introducir uno nuevo lo sustituye y desbloquea el perfil
+        si estaba bloqueado.
+    new_pin: Nuevo código de 4 cifras
+    save_pin: Guardar el código
+    change_pin_hint: 'Para cambiar el código de 4 cifras, %link%.'
+    change_pin_link: restablézcalo
+    all_scores: Todas las partituras
+    no_scores: Todavía no hay partituras.
+    profile: Perfil
+    modified: Editada
+    revisions: Revisiones
+    open_in_editor: Abrir en el editor
+    history: Historial
+    history_title: Historial
+    history_intro: >-
+        Se conservan las %keep% últimas versiones. Restaurar sustituye el
+        contenido actual, que pasa a ser una revisión más: no se pierde nada.
+    no_history: Esta partitura todavía no tiene historial.
+    version: Versión
+    saved_at: Guardada
+    restore: Restaurar
+    restore_confirm: ¿Restaurar esta versión?
+    back: Volver
+    delete_score_confirm: '¿Eliminar «%title%»?'
+    flash:
+        profile_created: 'Perfil «%name%» creado.'
+        profile_updated: 'Perfil «%name%» actualizado.'
+        pin_saved: 'Nuevo código guardado para «%name%».'
+        unlocked: '«%name%» puede volver a intentarlo.'
+        profile_deleted: 'Perfil «%name%» eliminado, junto con sus partituras.'
+        cannot_delete_self: No puede eliminar su propia cuenta.
+        only_children_have_pin: Solo los perfiles de niño tienen código.
+        score_deleted: '«%title%» eliminada.'
+        version_restored: 'Versión del %date% restaurada.'
+
+error:
+    not_found_title: Esta página ya no existe
+    not_found_body: >-
+        Puede que la pieza que buscas se haya eliminado o cambiado de nombre.
+        Vuelve a tus piezas, debería estar allí.
+    forbidden_title: Esta no es tuya
+    forbidden_body: >-
+        Esta pieza es de otra persona. Cada uno ve solamente sus propias
+        partituras.
+    generic_title: Algo ha salido mal
+    generic_body: >-
+        No es culpa tuya. Vuelve a probar en un momento: tu trabajo está
+        guardado.
+    go_home: Volver al inicio
+
+form:
+    first_name_required: El nombre es obligatorio.
+    username_required: El usuario es obligatorio.
+    username_format: 'Solo minúsculas, cifras, punto, guion o guion bajo.'
+    username_taken: Ese usuario ya está en uso.
+    pin_required: El código es obligatorio.
+    pin_format: Exactamente 4 cifras.
+    title_required: El título es obligatorio.
+
+api:
+    invalid_json: JSON no válido.
+    invalid_csrf: Token de seguridad no válido. Recarga la página.
+    content_not_object: El contenido debe ser un objeto.
+    schema_version: 'Versión de esquema no admitida (se esperaba %version%).'
+    invalid_value: 'Valor no válido para «%path%».'
+    tempo_integer: El tempo debe ser un número entero.
+    tempo_range: 'El tempo debe estar entre %min% y %max%.'
+    stave_count: 'Una partitura tiene exactamente %count% pentagramas.'
+    invalid_stave: Pentagrama no válido.
+    wrong_clef: 'El pentagrama %index% debe estar en clave «%clef%».'
+    measure_required: Un pentagrama tiene al menos un compás.
+    too_many_measures: 'Una partitura no puede pasar de %max% compases.'
+    measures_must_match: Los dos pentagramas deben tener el mismo número de compases.
+    invalid_measure: Compás no válido.
+    too_many_notes: Demasiadas notas en un compás.
+    measure_overfull: 'El compás %index% está demasiado lleno.'
+    invalid_note: Nota no válida.
+    invalid_pitch: Altura de nota no válida.
+
+note_name:
+    c: Do
+    d: Re
+    e: Mi
+    f: Fa
+    g: Sol
+    a: La
+    b: Si
+    # %note% stands for the note itself. A pattern rather than a word to
+    # append, because German writes the sharp as one word: '%note%is'.
+    sharp_pattern: '%note% sostenido'
+
+avatar:
+    cat: Gato
+    dog: Perro
+    fish: Pez
+    bug: Mariquita
+    ghost: Fantasma
+    robot: Robot
+    alien: Extraterrestre
+    star: Estrella
+    heart: Corazón
+    crown: Corona
+    diamond: Diamante
+    rocket: Cohete
+    planet: Planeta
+    sun: Sol
+    moon: Luna
+    cloud: Nube
+    snowflake: Copo de nieve
+    umbrella: Paraguas
+    leaf: Hoja
+    apple: Manzana
+    cherry: Cereza
+    'ice-cream': Helado
+    balloon: Globo
+    feather: Pluma
+    palette: Paleta
+    brush: Pincel
+    music: Nota
+    headphones: Auriculares
+    'guitar-pick': Púa

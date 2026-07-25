@@ -249,7 +249,9 @@ note_name:
     g: G
     a: A
     b: B
-    sharp_suffix: sharp
+    # %note% stands for the note itself. A pattern rather than a word to
+    # append, because German writes the sharp as one word: '%note%is'.
+    sharp_pattern: '%note% sharp'
 
 avatar:
     cat: Cat

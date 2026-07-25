@@ -37,7 +37,8 @@ test.describe('signing in', () => {
             await page.locator(`.pin-pad__key[data-digit="${digit}"]`).click();
         }
 
-        await expect(page.locator('.alert--error')).toBeVisible();
+        // A sentence, not the translation key it travels as.
+        await expect(page.locator('.alert--error')).toHaveText("Ce code n'est pas le bon.");
         await expect(page).toHaveURL(/\/profils\/\d+$/);
     });
 
@@ -116,11 +117,27 @@ test.describe('language', () => {
         await page.getByRole('heading', { name: DEMO.piece }).click();
 
         await expect(page.locator('.piano__key--anchor')).toHaveText('Do4');
+        // The black keys are named by a pattern, so a language that spells the
+        // sharp in one word — Cis — can be added without touching the code.
+        await expect(page.locator('.piano__key--black').first()).toHaveAttribute('aria-label', 'Do dièse2');
 
         await useLanguage(page, 'en');
         await page.goto('/morceaux');
         await page.getByRole('heading', { name: DEMO.piece }).click();
 
         await expect(page.locator('.piano__key--anchor')).toHaveText('C4');
+        await expect(page.locator('.piano__key--black').first()).toHaveAttribute('aria-label', 'C sharp2');
+    });
+
+    test('German spells the notes its own way', async ({ page }) => {
+        await useLanguage(page, 'de');
+        await signIn(page);
+        await page.goto('/morceaux');
+        await page.getByRole('heading', { name: DEMO.piece }).click();
+
+        // B natural is H in German, and the sharp is welded to the name.
+        await expect(page.locator('.piano__key--anchor')).toHaveText('C4');
+        await expect(page.getByRole('button', { name: 'H3', exact: true })).toBeVisible();
+        await expect(page.locator('.piano__key--black').first()).toHaveAttribute('aria-label', 'Cis2');
     });
 });

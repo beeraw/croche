@@ -35,7 +35,7 @@ final class LocaleTest extends DatabaseTestCase
 
     public function testFrenchIsTheFallbackForAnUnsupportedLanguage(): void
     {
-        $crawler = $this->client->request('GET', '/', server: ['HTTP_ACCEPT_LANGUAGE' => 'de-DE,de;q=0.9']);
+        $crawler = $this->client->request('GET', '/', server: ['HTTP_ACCEPT_LANGUAGE' => 'ja-JP,ja;q=0.9']);
 
         self::assertSame('fr', $crawler->filter('html')->attr('lang'));
     }
@@ -65,7 +65,7 @@ final class LocaleTest extends DatabaseTestCase
     public function testAnUnknownLanguageLeavesTheChoiceAlone(): void
     {
         $this->client->request('GET', '/langue/fr');
-        $this->client->request('GET', '/langue/de');
+        $this->client->request('GET', '/langue/ja');
 
         $crawler = $this->client->request('GET', '/');
 

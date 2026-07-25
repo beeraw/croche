@@ -18,6 +18,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\CustomCredentials;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Child sign-in: pick a profile tile, then tap a four-digit code.
@@ -34,6 +35,7 @@ final class PinCodeAuthenticator extends AbstractAuthenticator
         private readonly PinCodeHasher $hasher,
         private readonly PinCodeThrottle $throttle,
         private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -88,7 +90,12 @@ final class PinCodeAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        $request->getSession()->getFlashBag()->add('error', $this->humanise($request, $exception));
+        // Flashes travel as finished sentences, the way the controllers write
+        // them: the partial that prints them does not translate.
+        $request->getSession()->getFlashBag()->add(
+            'error',
+            $this->translator->trans($this->humanise($request, $exception)),
+        );
 
         $profileId = $request->attributes->get('id');
 

@@ -32,6 +32,29 @@ final class PinCodeTest extends DatabaseTestCase
         self::assertSame(1, $this->reload(User::class, $child->getId())->getPinFailedAttempts());
     }
 
+    /**
+     * The failure travels as a flash, and the partial that prints flashes does
+     * not translate — so the sentence has to leave the authenticator finished,
+     * in the language the child is reading.
+     */
+    public function testTheRefusalIsWordedInTheChildsLanguage(): void
+    {
+        $child = $this->createChild('aicha', '2018');
+
+        // The test client asks for English, so the language is set explicitly.
+        $this->client->request('GET', '/langue/fr');
+        $this->submitPin($child, '9999');
+        $crawler = $this->client->followRedirect();
+
+        self::assertSame("Ce code n'est pas le bon.", trim($crawler->filter('.alert--error')->text()));
+
+        $this->client->request('GET', '/langue/en');
+        $this->submitPin($child, '9999');
+        $crawler = $this->client->followRedirect();
+
+        self::assertSame('That code is not right.', trim($crawler->filter('.alert--error')->text()));
+    }
+
     public function testTheProfileLocksItselfAfterRepeatedFailures(): void
     {
         $child = $this->createChild('aicha', '2018');

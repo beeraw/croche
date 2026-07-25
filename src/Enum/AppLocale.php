@@ -11,6 +11,9 @@ enum AppLocale: string
 {
     case French = 'fr';
     case English = 'en';
+    case Spanish = 'es';
+    case Portuguese = 'pt';
+    case German = 'de';
 
     public const string DEFAULT = self::French->value;
 
@@ -20,6 +23,9 @@ enum AppLocale: string
         return match ($this) {
             self::French => 'Français',
             self::English => 'English',
+            self::Spanish => 'Español',
+            self::Portuguese => 'Português',
+            self::German => 'Deutsch',
         };
     }
 

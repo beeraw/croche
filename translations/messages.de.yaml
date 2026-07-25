@@ -1,0 +1,291 @@
+app:
+    name: Croche
+    tagline: Schreib deine Stücke, hör sie dir an, druck sie aus.
+
+nav:
+    home: Zurück zum Anfang
+    my_scores: Meine Stücke
+    profiles: Profile
+    scores: Partituren
+    sign_out: Abmelden
+    admin_area: Verwaltung
+    language: Sprache
+
+home:
+    title: 'Croche — Musik schreiben, wenn man acht ist'
+    lead: >-
+        Croche ist eine kleine App zum Musikschreiben. Sie ist für ein Kind
+        entstanden, das Klavier spielt, einfache Noten schon lesen kann und
+        seine eigenen Stücke schreiben wollte, ohne sie zu verlieren.
+    enter: Los geht's
+    what_title: Was sie kann
+    what_score: Ein ganzes Klaviersystem, Violin- und Bassschlüssel, wie in einem echten Notenheft.
+    what_input: Noten mit dem Finger gesetzt, auf einem Klavier am Bildschirm oder direkt in die Notenzeile.
+    what_listen: Beide Hände gleichzeitig hören, mit einem Strich, der der Musik folgt.
+    what_save: Ein Speichern, das von allein passiert, ohne Knopf, an den man denken muss.
+    what_print: Ein sauberer Ausdruck, damit aus dem Stück echte Noten auf Papier werden.
+    not_title: Was sie nicht ist
+    not_body: >-
+        Sie ist kein professioneller Notensatz und will auch keiner sein. Keine
+        Dynamik, keine Bögen, kein Text. Gerade genug, um eine Melodie und eine
+        Begleitung zu schreiben, sie zu hören und zu behalten.
+    offline_title: Nichts verlässt diese Seite
+    offline_body: >-
+        Überhaupt keine Anfragen nach außen: kein CDN, keine Schrift von
+        anderswo, kein heruntergeladener Klang. Schriften, Symbole und der
+        Klavierklang sind eingebettet oder werden an Ort und Stelle berechnet.
+        Ist die Seite einmal offen, spricht die App mit niemandem.
+    self_host_title: Selbst betreiben
+    self_host_body: >-
+        Croche ist kein Onlinedienst. Es gibt keine Anmeldung, und diese Adresse
+        ist nur die Instanz einer Familie. Der Code liegt auf GitHub: nimm ihn,
+        installiere ihn auf deinem eigenen Server, und die App gehört dir —
+        deine Profile, deine Stücke, deine Datenbank, zu Hause.
+    source_title: Quellcode
+    source_body: >-
+        Croche ist freie Software unter der MIT-Lizenz. Die README erklärt, wie
+        man sie installiert.
+    source_link: Das Projekt auf GitHub ansehen
+
+security:
+    who_plays: Wer spielt?
+    pick_profile: Wähl dein Profil, dann kann es losgehen.
+    no_profile: |-
+        Noch keine Profile.
+        Ein Administrator muss erst eines anlegen.
+    change_profile: Profil wechseln
+    back_to_profiles: Zurück zu den Profilen
+    enter_pin: Tipp deinen vierstelligen Code ein.
+    digits_entered: Eingegebene Ziffern
+    clear_all: Alles löschen
+    erase_one: Eine Ziffer löschen
+    admin_title: Verwaltung
+    username: Benutzername
+    password: Passwort
+    sign_in: Anmelden
+    bad_credentials: Benutzername oder Passwort stimmt nicht.
+    pin_wrong: Dieser Code stimmt nicht.
+    pin_length: Der Code hat vier Ziffern.
+    pin_unknown_profile: Dieses Profil gibt es nicht.
+    pin_locked: Zu viele Versuche. Probier es gleich noch einmal.
+    pin_locked_minutes: 'Zu viele Versuche. Probier es in {minutes} Minute(n) noch einmal.'
+
+score:
+    my_scores: Meine Stücke
+    new: Neues Stück
+    empty: |-
+        Du hast noch keine Stücke.
+        Drück auf „Neues Stück“, um anzufangen.
+    measures: '{1}1 Takt|]1,Inf[ %count% Takte'
+    modified_on: 'bearbeitet am %date%'
+    rename: Umbenennen
+    duplicate: Kopieren
+    delete: Löschen
+    rename_prompt: 'Neuer Name für das Stück:'
+    delete_confirm: '„%title%“ löschen? Das lässt sich nicht rückgängig machen.'
+    flash:
+        renamed: 'Heißt jetzt „%title%“.'
+        duplicated: 'Kopie angelegt: „%title%“.'
+        deleted: '„%title%“ wurde gelöscht.'
+    untitled: Neues Stück
+    copy_suffix: Kopie
+
+editor:
+    back: Meine Stücke
+    title_label: Titel des Stücks
+    saved: Gespeichert
+    saving: Wird gespeichert…
+    modified: Bearbeitet…
+    offline: Offline — neuer Versuch…
+    undo: Rückgängig
+    redo: Wiederherstellen
+    play: Anhören
+    stop: Stopp
+    print: Drucken
+    stave: Notenzeile
+    stave_treble: Violin
+    stave_bass: Bass
+    active_stave: Aktive Notenzeile
+    duration: Notenwert
+    whole: Ganze Note
+    half: Halbe Note
+    quarter: Viertelnote
+    eighth: Achtelnote
+    accidental: Vorzeichen
+    sharp: Kreuz
+    flat: Be
+    natural: Auflösungszeichen
+    rest: Pause
+    place_rest: Eine Pause setzen
+    note: Note
+    delete_note: Ausgewählte Note löschen
+    measures: Takte
+    add_measure: Einen Takt hinzufügen
+    remove_measure: Einen Takt entfernen
+    tempo: Tempo
+    notice:
+        measure_full: 'Dieser Takt ist voll: die %duration% passt nicht mehr hinein.'
+        all_full: Alle Takte sind voll. Füg noch einen hinzu.
+        max_measures: 'Höchstens %count% Takte.'
+        last_measure: Es muss mindestens einen Takt geben.
+        not_empty: Der letzte Takt ist nicht leer.
+        nothing_to_play: Es gibt noch nichts zu hören.
+    duration_name:
+        w: ganze Note
+        h: halbe Note
+        q: Viertelnote
+        '8': Achtelnote
+    recovered: |-
+        Auf diesem Gerät wurde eine nicht gespeicherte Fassung vom %date% gefunden.
+        Wiederherstellen? (Abbrechen behält die online gespeicherte Fassung.)
+
+admin:
+    profiles: Profile
+    new_child: Neues Kinderprofil
+    first_name: Vorname
+    username: Benutzername
+    username_help: Kleinbuchstaben, keine Leerzeichen. Wird nur intern verwendet.
+    role: Rolle
+    role_admin: Administrator
+    role_child: Kind
+    scores_count: Stücke
+    state: Status
+    unlock: Entsperren
+    failed_attempts: '%count% Fehlversuch(e)'
+    edit: Bearbeiten
+    reset_pin: Code zurücksetzen
+    delete: Löschen
+    delete_profile_confirm: '„%name%“ und alle zugehörigen Partituren löschen?'
+    avatar: Avatar
+    pin: Vierstelliger Code
+    create_profile: Profil anlegen
+    save: Speichern
+    cancel: Abbrechen
+    edit_profile: '„%name%“ bearbeiten'
+    pin_of: 'Code von „%name%“'
+    pin_help: >-
+        Der aktuelle Code lässt sich nicht auslesen, er liegt gehasht in der
+        Datenbank. Ein neuer Code ersetzt ihn und entsperrt das Profil, falls es
+        gesperrt war.
+    new_pin: Neuer vierstelliger Code
+    save_pin: Code speichern
+    change_pin_hint: 'Um den vierstelligen Code zu ändern, %link%.'
+    change_pin_link: setzen Sie ihn zurück
+    all_scores: Alle Partituren
+    no_scores: Noch keine Partituren.
+    profile: Profil
+    modified: Bearbeitet
+    revisions: Fassungen
+    open_in_editor: Im Editor öffnen
+    history: Verlauf
+    history_title: Verlauf
+    history_intro: >-
+        Die letzten %keep% Fassungen werden aufbewahrt. Beim Wiederherstellen
+        wird der aktuelle Inhalt ersetzt und selbst zu einer Fassung: nichts
+        geht verloren.
+    no_history: Diese Partitur hat noch keinen Verlauf.
+    version: Fassung
+    saved_at: Gespeichert
+    restore: Wiederherstellen
+    restore_confirm: Diese Fassung wiederherstellen?
+    back: Zurück
+    delete_score_confirm: '„%title%“ löschen?'
+    flash:
+        profile_created: 'Profil „%name%“ angelegt.'
+        profile_updated: 'Profil „%name%“ aktualisiert.'
+        pin_saved: 'Neuer Code für „%name%“ gespeichert.'
+        unlocked: '„%name%“ kann es noch einmal versuchen.'
+        profile_deleted: 'Profil „%name%“ samt Partituren gelöscht.'
+        cannot_delete_self: Sie können Ihr eigenes Konto nicht löschen.
+        only_children_have_pin: Nur Kinderprofile haben einen Code.
+        score_deleted: '„%title%“ gelöscht.'
+        version_restored: 'Fassung vom %date% wiederhergestellt.'
+
+error:
+    not_found_title: Diese Seite gibt es nicht mehr
+    not_found_body: >-
+        Das Stück, das du suchst, wurde vielleicht gelöscht oder umbenannt. Geh
+        zurück zu deinen Stücken, dort sollte es sein.
+    forbidden_title: Das gehört dir nicht
+    forbidden_body: >-
+        Dieses Stück gehört jemand anderem. Jeder sieht immer nur seine eigenen
+        Partituren.
+    generic_title: Da ist etwas schiefgegangen
+    generic_body: >-
+        Es liegt nicht an dir. Probier es gleich noch einmal — deine Arbeit ist
+        gespeichert.
+    go_home: Zurück zum Anfang
+
+form:
+    first_name_required: Ein Vorname ist nötig.
+    username_required: Ein Benutzername ist nötig.
+    username_format: 'Nur Kleinbuchstaben, Ziffern, Punkt, Bindestrich oder Unterstrich.'
+    username_taken: Dieser Benutzername ist schon vergeben.
+    pin_required: Ein Code ist nötig.
+    pin_format: Genau vier Ziffern.
+    title_required: Ein Titel ist nötig.
+
+api:
+    invalid_json: Ungültiges JSON.
+    invalid_csrf: Ungültiges Sicherheitstoken. Lade die Seite neu.
+    content_not_object: Der Inhalt muss ein Objekt sein.
+    schema_version: 'Nicht unterstützte Schemaversion (erwartet %version%).'
+    invalid_value: 'Ungültiger Wert für „%path%“.'
+    tempo_integer: Das Tempo muss eine ganze Zahl sein.
+    tempo_range: 'Das Tempo muss zwischen %min% und %max% liegen.'
+    stave_count: 'Eine Partitur hat genau %count% Notenzeilen.'
+    invalid_stave: Ungültige Notenzeile.
+    wrong_clef: 'Notenzeile %index% muss den Schlüssel „%clef%“ verwenden.'
+    measure_required: Eine Notenzeile enthält mindestens einen Takt.
+    too_many_measures: 'Eine Partitur darf höchstens %max% Takte haben.'
+    measures_must_match: Beide Notenzeilen müssen gleich viele Takte haben.
+    invalid_measure: Ungültiger Takt.
+    too_many_notes: Zu viele Noten in einem Takt.
+    measure_overfull: 'Takt %index% ist zu voll.'
+    invalid_note: Ungültige Note.
+    invalid_pitch: Ungültige Tonhöhe.
+
+note_name:
+    c: C
+    d: D
+    e: E
+    f: F
+    g: G
+    a: A
+    # B natural is called H in German. The app never writes flats, so the other
+    # half of that convention — B meaning B flat — never comes up.
+    b: H
+    # %note% stands for the note itself. A pattern rather than a word to
+    # append, because German writes the sharp as one word: Cis, Fis, Ais.
+    sharp_pattern: '%note%is'
+
+avatar:
+    cat: Katze
+    dog: Hund
+    fish: Fisch
+    bug: Marienkäfer
+    ghost: Gespenst
+    robot: Roboter
+    alien: Außerirdischer
+    star: Stern
+    heart: Herz
+    crown: Krone
+    diamond: Diamant
+    rocket: Rakete
+    planet: Planet
+    sun: Sonne
+    moon: Mond
+    cloud: Wolke
+    snowflake: Schneeflocke
+    umbrella: Regenschirm
+    leaf: Blatt
+    apple: Apfel
+    cherry: Kirsche
+    'ice-cream': Eis
+    balloon: Luftballon
+    feather: Feder
+    palette: Palette
+    brush: Pinsel
+    music: Note
+    headphones: Kopfhörer
+    'guitar-pick': Plektrum

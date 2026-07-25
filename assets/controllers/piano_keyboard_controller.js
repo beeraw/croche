@@ -19,8 +19,8 @@ export default class extends Controller {
         scrollTo: { type: String, default: 'c/4' },
         /** Letter => displayed name, so the keys read in the right language. */
         names: Object,
-        /** Word appended to a black key's accessible name. */
-        sharp: { type: String, default: 'sharp' },
+        /** How a black key is named, with %note% standing for the note. */
+        sharp: { type: String, default: '%note% sharp' },
     };
 
     connect() {
@@ -45,7 +45,7 @@ export default class extends Controller {
         const black = isBlackKey(midi);
         const { key, accidental } = midiToKey(midi);
         const name = noteLabel(key, this.namesValue);
-        const label = accidental ? `${name} ${this.sharpValue}` : name;
+        const label = noteLabel(key, this.namesValue, { accidental, sharp: this.sharpValue });
 
         const button = document.createElement('button');
         button.type = 'button';

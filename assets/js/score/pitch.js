@@ -85,13 +85,21 @@ export function isBlackKey(midi) {
  * child reads Do-Ré-Mi, an English-speaking one reads C-D-E, and the
  * translation catalogue is the single place that decides.
  *
+ * The sharp is a pattern and not a word to tack on, because languages do not
+ * agree on where it goes: French says "do dièse", German writes "Cis" in one
+ * word. The octave stays outside it either way — "do dièse4", "Cis4".
+ *
  * @param {string} key            pitch as "c/4"
  * @param {Object<string,string>} names letter => displayed name
+ * @param {Object} [options]
+ * @param {?string} [options.accidental] '#' when the key is a black one
+ * @param {string} [options.sharp]       pattern such as '%note% dièse'
  */
-export function noteLabel(key, names) {
+export function noteLabel(key, names, { accidental = null, sharp = '%note%' } = {}) {
     const { letter, octave } = parseKey(key);
+    const name = names[letter] ?? letter.toUpperCase();
 
-    return `${names[letter] ?? letter.toUpperCase()}${octave}`;
+    return `${accidental ? sharp.replace('%note%', name) : name}${octave}`;
 }
 
 /**

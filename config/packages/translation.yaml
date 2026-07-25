@@ -1,6 +1,7 @@
 framework:
     default_locale: fr
-    enabled_locales: ['fr', 'en']
+    # Keep in step with App\Enum\AppLocale.
+    enabled_locales: ['fr', 'en', 'es', 'pt', 'de']
     translator:
         default_path: '%kernel.project_dir%/translations'
         fallbacks:

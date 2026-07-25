@@ -284,7 +284,8 @@ Choix tranchés en cours de route, à revoir librement.
   économise environ 300 Ko de bundle pour des polices qu'on n'utilise pas.
 - **Nunito repris de mes autres projets** (fichiers `woff2` Google Fonts,
   sous-ensembles latin et latin-ext), copiés en local et renommés lisiblement.
-  Deux fichiers suffisent pour du français.
+  Deux fichiers couvrent les cinq langues de l'interface ; une langue en
+  cyrillique ou en grec demanderait un sous-ensemble de plus.
 - **Deux portées, pas plus.** Le modèle autorise un tableau `staves`, mais tout
   l'éditeur suppose exactement deux entrées (sol puis fa). Généraliser
   demanderait de revoir le rendu et le clavier.
@@ -345,13 +346,21 @@ Choix tranchés en cours de route, à revoir librement.
   Il est isolé dans un groupe `vf-active-stave` que l'impression masque.
 - **`window.crocheApp` expose l'application Stimulus.** Pratique pour
   inspecter l'éditeur depuis la console quand quelque chose cloche sur l'iPad.
-- **Langue en session, pas dans l'URL.** Les adresses restent identiques en
-  français et en anglais : le raccourci de l'iPad continue de marcher quelle que
-  soit la langue. Le premier passage suit la préférence du navigateur, puis
-  bascule sur le français. Le code, les routes et les clés de traduction
-  restent en anglais ; seule l'interface est traduite.
+- **Langue en session, pas dans l'URL.** Les adresses restent identiques dans
+  les cinq langues (français, anglais, espagnol, portugais, allemand) : le
+  raccourci de l'iPad continue de marcher quelle que soit la langue. Le premier
+  passage suit la préférence du navigateur, puis bascule sur le français. Le
+  code, les routes et les clés de traduction restent en anglais ; seule
+  l'interface est traduite.
 - **Les noms de notes viennent du catalogue.** Do-Ré-Mi en français, C-D-E en
   anglais : c'est la même touche de piano, mais pas la même façon de la lire.
+  Le dièse est un patron et non un mot à ajouter (`'%note% dièse'`,
+  `'%note%is'`), parce que l'allemand le soude au nom : Cis, Fis, Ais. Et le si
+  allemand s'écrit H — sans conséquence ici, l'application n'écrit jamais de
+  bémols.
+- **Les catalogues sont tenus par un test.** `TranslationCatalogueTest` compare
+  les clés des cinq fichiers et vérifie que chaque `%placeholder%` survit à la
+  traduction : une clé ajoutée d'un seul côté ne peut plus passer inaperçue.
 - **Les tests PHP tournent sur SQLite**, pas sur MariaDB. Un contributeur n'a
   rien à installer, et la consigne de ne toucher qu'à la base `croche` est
   respectée. Le schéma est construit depuis le mapping, les migrations étant

@@ -253,7 +253,9 @@ note_name:
     g: Sol
     a: La
     b: Si
-    sharp_suffix: dièse
+    # %note% stands for the note itself. A pattern rather than a word to
+    # append, because German writes the sharp as one word: '%note%is'.
+    sharp_pattern: '%note% dièse'
 
 avatar:
     cat: Chat
