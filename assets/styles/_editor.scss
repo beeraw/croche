@@ -13,6 +13,7 @@
 
 .editor__bar {
     display: flex;
+    flex-shrink: 0;
     flex-wrap: wrap;
     gap: $space-3;
     align-items: center;
@@ -109,7 +110,10 @@
 
 .editor__stage {
     position: relative;
-    flex: 1;
+    flex: 1 1 auto;
+    // Without this, a flex item refuses to shrink below its content height and
+    // pushes the piano off the bottom of the screen.
+    min-height: 0;
     overflow: auto;
     padding: $space-4;
     background-color: $gray-100;
@@ -213,6 +217,7 @@
 
 .editor__tools {
     display: flex;
+    flex-shrink: 0;
     flex-wrap: wrap;
     gap: $space-4;
     align-items: center;
@@ -340,6 +345,7 @@
 
 .piano {
     position: relative;
+    flex-shrink: 0;
     overflow-x: auto;
     overflow-y: hidden;
     padding: 0;

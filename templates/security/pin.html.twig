@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ profile.displayName }} — Croche{% endblock %}
+
+{% block body %}
+    <div class="login">
+        <a class="login__back" href="{{ path('security.profiles') }}">
+            {{ ux_icon('tabler:arrow-left') }}
+            Changer de profil
+        </a>
+
+        <div class="login__profile">
+            {{ ux_icon('tabler:' ~ profile.avatarIcon.value) }}
+            <strong>{{ profile.displayName }}</strong>
+        </div>
+
+        <div class="container container--narrow">
+            {% include 'partial/_flashes.html.twig' %}
+        </div>
+
+        {% if lockedSeconds > 0 %}
+            <p class="alert alert--error">
+                Trop d'essais. Réessaie dans {{ (lockedSeconds / 60)|round(0, 'ceil') }} minute(s).
+            </p>
+        {% else %}
+            <p class="login__subtitle">Tape ton code à 4 chiffres.</p>
+
+            <form class="pin-pad"
+                  method="post"
+                  action="{{ path('security.pin_check', { id: profile.id }) }}"
+                  data-controller="pin-pad"
+                  data-pin-pad-length-value="4">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('pin_code') }}">
+                <input type="hidden" name="pin" data-pin-pad-target="input">
+
+                <div class="pin-pad__dots" role="status" aria-live="polite"
+                     aria-label="Chiffres saisis">
+                    {% for i in 1..4 %}
+                        <span class="pin-pad__dot" data-pin-pad-target="dot"></span>
+                    {% endfor %}
+                </div>
+
+                <div class="pin-pad__keys">
+                    {% for digit in 1..9 %}
+                        <button type="button" class="pin-pad__key"
+                                data-action="pin-pad#press" data-digit="{{ digit }}">{{ digit }}</button>
+                    {% endfor %}
+
+                    <button type="button" class="pin-pad__key pin-pad__key--action"
+                            data-action="pin-pad#clear" aria-label="Tout effacer">
+                        {{ ux_icon('tabler:x') }}
+                    </button>
+
+                    <button type="button" class="pin-pad__key"
+                            data-action="pin-pad#press" data-digit="0">0</button>
+
+                    <button type="button" class="pin-pad__key pin-pad__key--action"
+                            data-action="pin-pad#backspace" aria-label="Effacer un chiffre">
+                        {{ ux_icon('tabler:backspace') }}
+                    </button>
+                </div>
+            </form>
+        {% endif %}
+    </div>
+{% endblock %}

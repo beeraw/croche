@@ -1,0 +1,119 @@
+{#
+  Bravura glyphs are used for the duration and rest buttons: VexFlow already
+  loads that font, so these cost nothing extra.
+#}
+{% set durations = [
+    { value: 'w', glyph: '&#xE1D2;', label: 'Ronde' },
+    { value: 'h', glyph: '&#xE1D3;', label: 'Blanche' },
+    { value: 'q', glyph: '&#xE1D5;', label: 'Noire' },
+    { value: '8', glyph: '&#xE1D7;', label: 'Croche' },
+] %}
+
+<div class="editor__tools no-print" data-controller="note-palette">
+    <div class="tool-group">
+        <span class="tool-group__label">Portée</span>
+        <div class="stave-switch" role="group" aria-label="Portée active">
+            <button type="button" class="stave-switch__btn is-active"
+                    data-score-editor-target="staveButton"
+                    data-stave="0"
+                    data-action="score-editor#selectStave">Sol</button>
+            <button type="button" class="stave-switch__btn"
+                    data-score-editor-target="staveButton"
+                    data-stave="1"
+                    data-action="score-editor#selectStave">Fa</button>
+        </div>
+    </div>
+
+    <span class="tool-group__sep" aria-hidden="true"></span>
+
+    <div class="tool-group" role="group" aria-label="Durée">
+        <span class="tool-group__label">Durée</span>
+        {% for duration in durations %}
+            <button type="button"
+                    class="tool-btn {{ duration.value == 'q' ? 'is-active' : '' }}"
+                    data-note-palette-target="duration"
+                    data-duration="{{ duration.value }}"
+                    data-action="note-palette#selectDuration"
+                    title="{{ duration.label }}" aria-label="{{ duration.label }}">
+                <span class="tool-btn__glyph" aria-hidden="true">{{ duration.glyph|raw }}</span>
+            </button>
+        {% endfor %}
+    </div>
+
+    <span class="tool-group__sep" aria-hidden="true"></span>
+
+    <div class="tool-group" role="group" aria-label="Altération">
+        <span class="tool-group__label">Altération</span>
+        {% for accidental in [
+            { value: '#', label: 'Dièse' },
+            { value: 'b', label: 'Bémol' },
+            { value: 'n', label: 'Bécarre' },
+        ] %}
+            <button type="button" class="tool-btn"
+                    data-note-palette-target="accidental"
+                    data-accidental="{{ accidental.value }}"
+                    data-action="note-palette#toggleAccidental"
+                    title="{{ accidental.label }}" aria-label="{{ accidental.label }}">
+                <span class="tool-btn__text" aria-hidden="true">{{ { '#': '♯', 'b': '♭', 'n': '♮' }[accidental.value] }}</span>
+            </button>
+        {% endfor %}
+    </div>
+
+    <span class="tool-group__sep" aria-hidden="true"></span>
+
+    <div class="tool-group">
+        <span class="tool-group__label">Silence</span>
+        <button type="button" class="tool-btn"
+                data-note-palette-target="rest"
+                data-action="note-palette#toggleRest"
+                title="Poser un silence" aria-label="Poser un silence">
+            <span class="tool-btn__glyph tool-btn__glyph--rest" aria-hidden="true">&#xE4E5;</span>
+        </button>
+    </div>
+
+    <span class="tool-group__sep" aria-hidden="true"></span>
+
+    <div class="tool-group">
+        <span class="tool-group__label">Note</span>
+        <button type="button" class="btn-icon btn-icon--danger"
+                data-score-editor-target="deleteButton"
+                data-action="score-editor#deleteSelection"
+                title="Supprimer la note sélectionnée" aria-label="Supprimer la note sélectionnée">
+            {{ ux_icon('tabler:trash') }}
+        </button>
+    </div>
+
+    <span class="tool-group__sep" aria-hidden="true"></span>
+
+    <div class="tool-group">
+        <span class="tool-group__label">Mesures</span>
+        <button type="button" class="btn-icon"
+                data-action="score-editor#removeMeasure"
+                title="Retirer une mesure" aria-label="Retirer une mesure">
+            {{ ux_icon('tabler:square-minus') }}
+        </button>
+        <span class="tempo__value" data-score-editor-target="measureCount">4</span>
+        <button type="button" class="btn-icon"
+                data-action="score-editor#addMeasure"
+                title="Ajouter une mesure" aria-label="Ajouter une mesure">
+            {{ ux_icon('tabler:square-plus') }}
+        </button>
+    </div>
+
+    <span class="tool-group__sep" aria-hidden="true"></span>
+
+    <div class="tool-group tempo">
+        <span class="tool-group__label">Tempo</span>
+        {{ ux_icon('tabler:metronome') }}
+        <input class="tempo__input"
+               type="range"
+               min="{{ schema.tempoMin }}"
+               max="{{ schema.tempoMax }}"
+               step="2"
+               value="{{ score.content.tempo|default(90) }}"
+               aria-label="Tempo"
+               data-playback-target="tempoInput"
+               data-action="input->playback#tempoChanged">
+        <span class="tempo__value" data-playback-target="tempoValue">{{ score.content.tempo|default(90) }} bpm</span>
+    </div>
+</div>

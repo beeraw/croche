@@ -1,0 +1,44 @@
+{{ form_start(form) }}
+    {{ form_errors(form) }}
+
+    <div class="field">
+        {{ form_label(form.displayName, null, { label_attr: { class: 'field__label' } }) }}
+        {{ form_widget(form.displayName, { attr: { class: 'input' } }) }}
+        <div class="field__errors">{{ form_errors(form.displayName) }}</div>
+    </div>
+
+    <div class="field">
+        {{ form_label(form.username, null, { label_attr: { class: 'field__label' } }) }}
+        {{ form_widget(form.username, { attr: { class: 'input' } }) }}
+        <p class="field__hint">{{ form_help(form.username) }}</p>
+        <div class="field__errors">{{ form_errors(form.username) }}</div>
+    </div>
+
+    {% if form.pin is defined %}
+        <div class="field">
+            {{ form_label(form.pin, null, { label_attr: { class: 'field__label' } }) }}
+            {{ form_widget(form.pin, { attr: { class: 'input' } }) }}
+            <div class="field__errors">{{ form_errors(form.pin) }}</div>
+        </div>
+    {% endif %}
+
+    <div class="field">
+        <span class="field__label">{{ form_label(form.avatarIcon) }}</span>
+
+        <div class="avatar-picker">
+            {% for choice in form.avatarIcon %}
+                <label class="avatar-picker__option" title="{{ choice.vars.label }}">
+                    {{ form_widget(choice) }}
+                    <span>{{ ux_icon('tabler:' ~ choice.vars.value) }}</span>
+                </label>
+            {% endfor %}
+        </div>
+
+        <div class="field__errors">{{ form_errors(form.avatarIcon) }}</div>
+    </div>
+
+    <div class="cluster">
+        <button class="btn btn--lg" type="submit">{{ button }}</button>
+        <a class="btn btn--ghost" href="{{ path('admin.user.index') }}">Annuler</a>
+    </div>
+{{ form_end(form) }}

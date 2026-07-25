@@ -1,0 +1,14 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Nouveau profil — Croche{% endblock %}
+{% block container_class %}container--narrow{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h1 class="page-header__title">Nouveau profil enfant</h1>
+    </div>
+
+    <div class="card">
+        {{ include('admin/user/_form.html.twig', { button: 'Créer le profil' }) }}
+    </div>
+{% endblock %}

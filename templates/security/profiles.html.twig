@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Qui joue ? — Croche{% endblock %}
+
+{% block body %}
+    <div class="login">
+        <h1 class="login__title">Croche</h1>
+        <p class="login__subtitle">Choisis ton profil pour écrire tes morceaux.</p>
+
+        <div class="container container--narrow">
+            {% include 'partial/_flashes.html.twig' %}
+        </div>
+
+        {% if children is empty %}
+            <p class="empty-state">
+                Aucun profil pour l'instant.<br>
+                L'administrateur doit en créer un.
+            </p>
+        {% else %}
+            <ul class="profile-grid">
+                {% for child in children %}
+                    <li>
+                        <a class="profile-tile" href="{{ path('security.pin', { id: child.id }) }}">
+                            {{ ux_icon('tabler:' ~ child.avatarIcon.value) }}
+                            <span>{{ child.displayName }}</span>
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <p class="login__footer">
+            <a href="{{ path('security.login') }}">Espace administrateur</a>
+        </p>
+    </div>
+{% endblock %}

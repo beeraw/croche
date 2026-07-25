@@ -1,0 +1,50 @@
+<div class="editor__bar no-print">
+    <div class="editor__identity">
+        <a class="editor__back" href="{{ path('score.index') }}" title="Mes morceaux" aria-label="Mes morceaux">
+            {{ ux_icon('tabler:arrow-left') }}
+        </a>
+
+        <input class="editor__title"
+               type="text"
+               value="{{ score.title }}"
+               maxlength="120"
+               aria-label="Titre du morceau"
+               data-autosave-target="title"
+               data-score-editor-target="title"
+               data-action="input->autosave#titleChanged">
+
+        <span class="save-state" data-autosave-target="indicator" data-state="idle" role="status" aria-live="polite">
+            {{ ux_icon('tabler:cloud-check') }}
+            <span data-autosave-target="indicatorText">Enregistré</span>
+        </span>
+    </div>
+
+    <div class="editor__bar-actions">
+        <button type="button" class="btn-icon"
+                data-score-editor-target="undoButton"
+                data-action="score-editor#undo"
+                title="Annuler" aria-label="Annuler">
+            {{ ux_icon('tabler:arrow-back-up') }}
+        </button>
+
+        <button type="button" class="btn-icon"
+                data-score-editor-target="redoButton"
+                data-action="score-editor#redo"
+                title="Rétablir" aria-label="Rétablir">
+            {{ ux_icon('tabler:arrow-forward-up') }}
+        </button>
+
+        <button type="button" class="btn-icon"
+                data-playback-target="playButton"
+                data-action="playback#toggle"
+                title="Écouter" aria-label="Écouter">
+            {{ ux_icon('tabler:player-play-filled') }}
+        </button>
+
+        <button type="button" class="btn-icon"
+                data-action="score-editor#print"
+                title="Imprimer" aria-label="Imprimer">
+            {{ ux_icon('tabler:printer') }}
+        </button>
+    </div>
+</div>

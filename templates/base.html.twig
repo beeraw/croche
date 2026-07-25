@@ -8,7 +8,7 @@
     <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
     {% block stylesheets %}
         {{ encore_entry_link_tags('app') }}
-        {{ encore_entry_link_tags('print', null, null, { media: 'print' }) }}
+        {{ encore_entry_link_tags('print', null, '_default', { media: 'print' }) }}
     {% endblock %}
     {% block javascripts %}
         {{ encore_entry_script_tags('app') }}

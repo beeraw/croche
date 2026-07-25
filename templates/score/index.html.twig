@@ -1,0 +1,70 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Mes morceaux — Croche{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h1 class="page-header__title">Mes morceaux</h1>
+
+        <form method="post" action="{{ path('score.new') }}">
+            <input type="hidden" name="_token" value="{{ csrf_token('score-new') }}">
+            <button class="btn btn--lg" type="submit">
+                {{ ux_icon('tabler:plus') }}
+                Nouveau morceau
+            </button>
+        </form>
+    </div>
+
+    {% if scores is empty %}
+        <p class="empty-state">
+            Tu n'as pas encore de morceau.<br>
+            Appuie sur « Nouveau morceau » pour commencer.
+        </p>
+    {% else %}
+        <ul class="card-grid">
+            {% for score in scores %}
+                <li class="score-card" data-controller="score-card">
+                    <a class="score-card__link" href="{{ path('score.edit', { id: score.id }) }}">
+                        <h2 class="score-card__title">{{ score.title }}</h2>
+                        <span class="score-card__meta">
+                            {{ score.measureCount }} mesure{{ score.measureCount > 1 ? 's' : '' }}
+                            · modifié le {{ score.updatedAt|date('d/m/Y') }}
+                        </span>
+                    </a>
+
+                    <div class="score-card__actions">
+                        <form method="post" action="{{ path('score.rename', { id: score.id }) }}"
+                              data-score-card-target="renameForm" hidden>
+                            <input type="hidden" name="_token" value="{{ csrf_token('score-rename' ~ score.id) }}">
+                            <input type="hidden" name="title" data-score-card-target="renameInput">
+                        </form>
+
+                        <button type="button" class="btn-icon"
+                                data-action="score-card#rename"
+                                data-score-card-current-param="{{ score.title }}"
+                                title="Renommer" aria-label="Renommer">
+                            {{ ux_icon('tabler:pencil') }}
+                        </button>
+
+                        <form method="post" action="{{ path('score.duplicate', { id: score.id }) }}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('score-duplicate' ~ score.id) }}">
+                            <button type="submit" class="btn-icon" title="Dupliquer" aria-label="Dupliquer">
+                                {{ ux_icon('tabler:copy') }}
+                            </button>
+                        </form>
+
+                        <form method="post" action="{{ path('score.delete', { id: score.id }) }}"
+                              data-action="score-card#confirmDelete"
+                              data-score-card-title-param="{{ score.title }}">
+                            <input type="hidden" name="_token" value="{{ csrf_token('score-delete' ~ score.id) }}">
+                            <button type="submit" class="btn-icon btn-icon--danger"
+                                    title="Supprimer" aria-label="Supprimer">
+                                {{ ux_icon('tabler:trash') }}
+                            </button>
+                        </form>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion — Croche{% endblock %}
+
+{% block body %}
+    <div class="login">
+        <a class="login__back" href="{{ path('security.profiles') }}">
+            {{ ux_icon('tabler:arrow-left') }}
+            Retour aux profils
+        </a>
+
+        <h1 class="login__title">Administration</h1>
+
+        <div class="login__panel">
+            {% if error %}
+                <p class="alert alert--error">Identifiant ou mot de passe incorrect.</p>
+            {% endif %}
+
+            <form method="post">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                <label class="field">
+                    <span class="field__label">Identifiant</span>
+                    <input class="input" type="text" name="_username" value="{{ lastUsername }}"
+                           autocomplete="username" autocapitalize="none" spellcheck="false" required autofocus>
+                </label>
+
+                <label class="field">
+                    <span class="field__label">Mot de passe</span>
+                    <input class="input" type="password" name="_password"
+                           autocomplete="current-password" required>
+                </label>
+
+                <button class="btn btn--block btn--lg" type="submit">Se connecter</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

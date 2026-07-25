@@ -33,6 +33,44 @@
     text-align: left;
 }
 
+.login__footer {
+    margin-top: $space-8;
+    margin-bottom: 0;
+    font-size: 0.9375rem;
+}
+
+.login__back {
+    display: inline-flex;
+    gap: $space-2;
+    align-items: center;
+    margin-bottom: $space-5;
+    color: $gray-500;
+    font-weight: 700;
+    text-decoration: none;
+
+    &:hover {
+        color: $primary;
+    }
+}
+
+.login__profile {
+    display: flex;
+    flex-direction: column;
+    gap: $space-2;
+    align-items: center;
+    margin-bottom: $space-5;
+
+    svg {
+        width: 4rem;
+        height: 4rem;
+        color: $accent;
+    }
+
+    strong {
+        font-size: 1.5rem;
+    }
+}
+
 /// Grid of child profiles, tapped to start signing in.
 .profile-grid {
     display: grid;

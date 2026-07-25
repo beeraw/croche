@@ -7,6 +7,7 @@ namespace App\Command;
 use App\Entity\User;
 use App\Enum\AvatarIcon;
 use App\Repository\UserRepository;
+use App\Security\PinCodeHasher;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -33,6 +34,7 @@ final class CreateUserCommand extends Command
         private readonly EntityManagerInterface $entityManager,
         private readonly UserRepository $repository,
         private readonly UserPasswordHasherInterface $hasher,
+        private readonly PinCodeHasher $pinHasher,
     ) {
         parent::__construct();
     }
@@ -92,8 +94,11 @@ final class CreateUserCommand extends Command
             ->setRoles([$isChild ? User::ROLE_CHILD : User::ROLE_ADMIN])
             ->setAvatarIcon($avatar);
 
-        $hash = $this->hasher->hashPassword($user, $secret);
-        $isChild ? $user->setPinCode($hash) : $user->setPassword($hash);
+        if ($isChild) {
+            $user->setPinCode($this->pinHasher->hash($user, $secret));
+        } else {
+            $user->setPassword($this->hasher->hashPassword($user, $secret));
+        }
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();

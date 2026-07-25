@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ score.title }} — Croche{% endblock %}
+{% block body_class %}is-editor{% endblock %}
+
+{% block body %}
+    <div class="editor"
+         data-controller="score-editor autosave playback"
+         data-action="note-palette:change->score-editor#toolChanged
+                      piano-keyboard:press->score-editor#pianoPressed
+                      piano-keyboard:release->score-editor#pianoReleased"
+         data-score-editor-content-value="{{ score.content|json_encode|e('html_attr') }}"
+         data-score-editor-schema-value="{{ schema|json_encode|e('html_attr') }}"
+         data-autosave-url-value="{{ path('api.score.update', { id: score.id }) }}"
+         data-autosave-token-value="{{ csrf_token('score-api') }}"
+         data-autosave-storage-key-value="croche.score.{{ score.id }}"
+         data-playback-tempo-value="{{ score.content.tempo|default(90) }}">
+
+        {% include 'score/_editor_bar.html.twig' %}
+
+        <div class="editor__stage" data-score-editor-target="stage">
+            <div class="editor__print-header print-only">
+                <h1 class="editor__print-title" data-score-editor-target="printTitle">{{ score.title }}</h1>
+                <p class="editor__print-author">{{ score.owner.displayName }}</p>
+            </div>
+
+            <div class="score-sheet">
+                <div class="score-sheet__canvas"
+                     data-score-editor-target="canvas"
+                     data-action="pointerdown->score-editor#stageTapped"></div>
+                <div class="playhead" data-playback-target="playhead"></div>
+            </div>
+
+            <p class="editor__notice" role="status" aria-live="polite"
+               data-score-editor-target="notice"></p>
+        </div>
+
+        {% include 'score/_editor_tools.html.twig' %}
+        {% include 'score/_piano.html.twig' %}
+    </div>
+{% endblock %}

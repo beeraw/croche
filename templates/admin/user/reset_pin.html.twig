@@ -1,0 +1,30 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Code de {{ profile.displayName }} — Croche{% endblock %}
+{% block container_class %}container--narrow{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h1 class="page-header__title">Code de « {{ profile.displayName }} »</h1>
+    </div>
+
+    <div class="card">
+        <p class="text-muted">
+            Le code actuel n'est pas récupérable, il est haché en base. Saisir un
+            nouveau code le remplace et débloque le profil s'il était verrouillé.
+        </p>
+
+        {{ form_start(form) }}
+            <div class="field">
+                {{ form_label(form.pin, null, { label_attr: { class: 'field__label' } }) }}
+                {{ form_widget(form.pin, { attr: { class: 'input' } }) }}
+                <div class="field__errors">{{ form_errors(form.pin) }}</div>
+            </div>
+
+            <div class="cluster">
+                <button class="btn btn--lg" type="submit">Enregistrer le code</button>
+                <a class="btn btn--ghost" href="{{ path('admin.user.index') }}">Annuler</a>
+            </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

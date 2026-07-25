@@ -1,0 +1,65 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Historique de {{ score.title }} — Croche{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <div>
+            <h1 class="page-header__title">Historique</h1>
+            <p class="text-muted">
+                « {{ score.title }} » — {{ score.owner.displayName }}
+            </p>
+        </div>
+
+        <a class="btn btn--ghost" href="{{ path('admin.score.index') }}">
+            {{ ux_icon('tabler:arrow-left') }}
+            Retour
+        </a>
+    </div>
+
+    <p class="text-muted">
+        Les {{ keep }} dernières versions sont conservées. Restaurer remplace le
+        contenu actuel, qui devient lui-même une révision : rien n'est perdu.
+    </p>
+
+    {% if revisions is empty %}
+        <p class="empty-state">Cette partition n'a pas encore d'historique.</p>
+    {% else %}
+        <div class="table-wrap">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Version</th>
+                    <th>Enregistrée</th>
+                    <th>Mesures</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for revision in revisions %}
+                    {% set measures = revision.content.staves[0].measures|default([])|length %}
+                    <tr>
+                        <td>#{{ loop.revindex }}</td>
+                        <td>{{ revision.createdAt|date('d/m/Y à H\\hi\\ms') }}</td>
+                        <td>{{ measures }}</td>
+                        <td>
+                            <div class="table__actions">
+                                <form method="post"
+                                      action="{{ path('admin.score.restore', { id: score.id, revision: revision.id }) }}"
+                                      data-controller="confirm"
+                                      data-confirm-message-value="Restaurer cette version ?">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('score-restore' ~ revision.id) }}">
+                                    <button class="btn btn--ghost" type="submit">
+                                        {{ ux_icon('tabler:arrow-back-up') }}
+                                        Restaurer
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+{% endblock %}

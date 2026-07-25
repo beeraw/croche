@@ -1,0 +1,66 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Partitions — Croche{% endblock %}
+{% block container_class %}container--wide{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h1 class="page-header__title">Toutes les partitions</h1>
+    </div>
+
+    {% if scores is empty %}
+        <p class="empty-state">Aucune partition pour l'instant.</p>
+    {% else %}
+        <div class="table-wrap">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Titre</th>
+                    <th>Profil</th>
+                    <th>Mesures</th>
+                    <th>Modifiée</th>
+                    <th>Révisions</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for score in scores %}
+                    <tr>
+                        <td><strong>{{ score.title }}</strong></td>
+                        <td>
+                            <span class="cluster">
+                                <span class="avatar">{{ ux_icon('tabler:' ~ score.owner.avatarIcon.value) }}</span>
+                                {{ score.owner.displayName }}
+                            </span>
+                        </td>
+                        <td>{{ score.measureCount }}</td>
+                        <td>{{ score.updatedAt|date('d/m/Y à H\\hi') }}</td>
+                        <td>{{ score.revisions|length }}</td>
+                        <td>
+                            <div class="table__actions">
+                                <a class="btn-icon" href="{{ path('score.edit', { id: score.id }) }}"
+                                   title="Ouvrir dans l'éditeur" aria-label="Ouvrir dans l'éditeur">
+                                    {{ ux_icon('tabler:eye') }}
+                                </a>
+                                <a class="btn-icon" href="{{ path('admin.score.history', { id: score.id }) }}"
+                                   title="Historique" aria-label="Historique">
+                                    {{ ux_icon('tabler:history') }}
+                                </a>
+                                <form method="post" action="{{ path('admin.score.delete', { id: score.id }) }}"
+                                      data-controller="confirm"
+                                      data-confirm-message-value="Supprimer « {{ score.title }} » ?">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('score-delete' ~ score.id) }}">
+                                    <button class="btn-icon btn-icon--danger" type="submit"
+                                            title="Supprimer" aria-label="Supprimer">
+                                        {{ ux_icon('tabler:trash') }}
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,11 @@
+{#
+  The virtual keyboard is the main way of entering notes: she finds the pitch
+  by ear, then it lands on the active stave. The keys themselves are built by
+  the piano-keyboard controller so the range stays defined in one place.
+#}
+<div class="piano no-print" data-controller="piano-keyboard"
+     data-piano-keyboard-from-value="c/2"
+     data-piano-keyboard-to-value="c/6"
+     data-piano-keyboard-scroll-to-value="c/4">
+    <div class="piano__keys" data-piano-keyboard-target="keys"></div>
+</div>

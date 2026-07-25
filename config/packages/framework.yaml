@@ -2,11 +2,16 @@
 framework:
     secret: '%env(APP_SECRET)%'
 
-    # Note that the session will be started ONLY if you read or write from it.
-    session: true
+    session:
+        # A week. She should not have to re-enter her code every afternoon,
+        # and iPad Safari discards short-lived sessions eagerly.
+        cookie_lifetime: 604800
+        gc_maxlifetime: 604800
+        cookie_samesite: lax
+        cookie_secure: auto
+        cookie_httponly: true
 
-    #esi: true
-    #fragments: true
+    enabled_locales: ['fr']
 
 when@test:
     framework:

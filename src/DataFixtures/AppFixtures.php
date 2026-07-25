@@ -8,6 +8,7 @@ use App\Entity\Score;
 use App\Entity\User;
 use App\Enum\AvatarIcon;
 use App\Score\ScoreSchema;
+use App\Security\PinCodeHasher;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -17,8 +18,10 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
  */
 class AppFixtures extends Fixture
 {
-    public function __construct(private readonly UserPasswordHasherInterface $hasher)
-    {
+    public function __construct(
+        private readonly UserPasswordHasherInterface $hasher,
+        private readonly PinCodeHasher $pinHasher,
+    ) {
     }
 
     public function load(ObjectManager $manager): void
@@ -36,7 +39,7 @@ class AppFixtures extends Fixture
             ->setDisplayName('Lison')
             ->setRoles([User::ROLE_CHILD])
             ->setAvatarIcon(AvatarIcon::Cat);
-        $child->setPinCode($this->hasher->hashPassword($child, '1234'));
+        $child->setPinCode($this->pinHasher->hash($child, '1234'));
         $manager->persist($child);
 
         $manager->persist(

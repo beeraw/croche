@@ -1,11 +1,12 @@
-# Enable stateless CSRF protection for forms and logins/logouts
+# Classic, session-backed CSRF tokens.
+#
+# Symfony's newer stateless (double-submit cookie) mode would need JavaScript to
+# take part in every submission, including the editor's fetch calls. The app
+# already has a session, so stateful tokens are both simpler and easier to
+# reason about — the API reads its token from the X-CSRF-Token header.
 framework:
     form:
         csrf_protection:
             token_id: submit
 
-    csrf_protection:
-        stateless_token_ids:
-            - submit
-            - authenticate
-            - logout
+    csrf_protection: true
