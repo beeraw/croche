@@ -9,16 +9,20 @@ use App\Repository\UserRepository;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\CustomCredentials;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Contracts\Translation\TranslatorInterface;
+
+use function is_string;
 
 /**
  * Child sign-in: pick a profile tile, then tap a four-digit code.
@@ -39,7 +43,7 @@ final class PinCodeAuthenticator extends AbstractAuthenticator
     ) {
     }
 
-    public function supports(Request $request): ?bool
+    public function supports(Request $request): bool
     {
         return self::CHECK_ROUTE === $request->attributes->get('_route')
             && $request->isMethod('POST');
@@ -64,7 +68,13 @@ final class PinCodeAuthenticator extends AbstractAuthenticator
         );
 
         $credentials = new CustomCredentials(
-            function (string $candidate, User $subject): bool {
+            // Symfony types the checker against any user and any credentials;
+            // the badge above pins both down, so the guard never fires.
+            function (mixed $candidate, UserInterface $subject): bool {
+                if (!is_string($candidate) || !$subject instanceof User) {
+                    return false;
+                }
+
                 if (!$this->hasher->verify($subject, $candidate)) {
                     $this->throttle->registerFailure($subject);
 
@@ -83,19 +93,23 @@ final class PinCodeAuthenticator extends AbstractAuthenticator
         ]);
     }
 
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): Response
     {
         return new RedirectResponse($this->urlGenerator->generate('score.index'));
     }
 
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
     {
+        $session = $request->getSession();
+
         // Flashes travel as finished sentences, the way the controllers write
         // them: the partial that prints them does not translate.
-        $request->getSession()->getFlashBag()->add(
-            'error',
-            $this->translator->trans($this->humanise($request, $exception)),
-        );
+        if ($session instanceof FlashBagAwareSessionInterface) {
+            $session->getFlashBag()->add(
+                'error',
+                $this->translator->trans($this->humanise($request, $exception)),
+            );
+        }
 
         $profileId = $request->attributes->get('id');
 

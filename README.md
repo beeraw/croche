@@ -56,7 +56,7 @@ it again afterwards. Six steps on the library, sixteen in the editor.
 
 ## Requirements
 
-- PHP 8.3 or later, with the `ctype`, `iconv`, `json` and `pdo_mysql` extensions
+- PHP 8.5 or later, with the `ctype`, `iconv`, `json` and `pdo_mysql` extensions
 - Composer 2
 - Node.js 20 or later, Yarn 4 (`corepack enable` is enough to get it)
 - MariaDB 10.11 or later (or MySQL 8)
@@ -174,6 +174,39 @@ are enough to cover Blink and WebKit.
 
 ---
 
+## Quality
+
+Four tools, none of them optional: the whole project is expected to stay at
+zero findings.
+
+| Tool | Covers | Command |
+| --- | --- | --- |
+| PHP-CS-Fixer | Symfony style, `declare(strict_types=1)`, PHP 8.5 idioms | `composer cs-check` / `cs-fix` |
+| PHPStan | static analysis at level 6, Doctrine extension, **no baseline** | `composer phpstan` |
+| Rector | automated modernisation — dead code 20, code quality 20 | `composer rector` / `rector-fix` |
+| ESLint + Stylelint | `assets/`, the Playwright specs, and the SCSS | `yarn lint` |
+
+`composer qa` chains the style check, PHPStan and PHPUnit — that is the gate to
+pass before pushing.
+
+```bash
+composer qa && yarn lint
+```
+
+Rector stays out of `qa` on purpose: it rewrites code rather than judging it, so
+it is run deliberately. Its type-coverage level is at 0, the one dial worth
+raising by hand once the rest holds.
+
+Git hooks come from [CaptainHook](https://captainhook.info); install them once
+per clone, and the `pre-commit` hook then runs the PHP lint, the style check and
+PHPStan on every commit:
+
+```bash
+vendor/bin/captainhook install
+```
+
+---
+
 ## API
 
 Plain Symfony controllers, JSON responses. Mutating calls require a CSRF token
@@ -202,10 +235,6 @@ php bin/console app:user:create admin password --display-name="Administration"
 
 ```bash
 php bin/console app:user:create aicha 2018 --child --display-name=Aïcha --avatar=cat
-```
-
-```bash
-composer cs-check
 ```
 
 ```bash

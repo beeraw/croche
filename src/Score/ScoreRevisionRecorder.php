@@ -41,7 +41,7 @@ final readonly class ScoreRevisionRecorder
             return false;
         }
 
-        $revision = (new ScoreRevision())
+        $revision = new ScoreRevision()
             ->setScore($score)
             ->setContent($previous);
 

@@ -58,7 +58,7 @@ final class ScoreSchema
      */
     public static function beatsPerMeasure(string $timeSignature): float
     {
-        [$beats, $unit] = array_map('intval', explode('/', $timeSignature));
+        [$beats, $unit] = array_map(intval(...), explode('/', $timeSignature));
 
         if ($unit <= 0) {
             return 4.0;

@@ -81,7 +81,7 @@ by accident.
 Build-time-only tooling (`@symfony/webpack-encore`, `webpack`, `sass`, Babel and
 their transitive dependencies) is MIT-licensed and never reaches the browser.
 
-## Test tooling
+## Test and quality tooling
 
 Development-only, never shipped and never loaded by the application.
 
@@ -89,6 +89,12 @@ Development-only, never shipped and never loaded by the application.
 | --- | --- | --- |
 | [@playwright/test](https://github.com/microsoft/playwright) | Apache-2.0 | End-to-end tests. Apache-2.0 is compatible with redistributing this project under MIT; it is a dev dependency and no Playwright code is bundled. |
 | [phpunit/phpunit](https://github.com/sebastianbergmann/phpunit) | BSD-3-Clause | PHP test suite. |
+| [friendsofphp/php-cs-fixer](https://github.com/PHP-CS-Fixer/PHP-CS-Fixer) | MIT | Coding style. |
+| [phpstan/phpstan](https://github.com/phpstan/phpstan) + [phpstan-doctrine](https://github.com/phpstan/phpstan-doctrine) | MIT | Static analysis. |
+| [rector/rector](https://github.com/rectorphp/rector) | MIT | Automated modernisation. |
+| [captainhook/captainhook](https://github.com/captainhookphp/captainhook) | MIT | Git hooks. |
+| [eslint](https://github.com/eslint/eslint) + [@eslint/js](https://github.com/eslint/eslint) | MIT | JavaScript lint. |
+| [stylelint](https://github.com/stylelint/stylelint) + [stylelint-config-standard-scss](https://github.com/stylelint-scss/stylelint-config-standard-scss) | MIT | SCSS lint. |
 
 `npx playwright install` downloads browser builds into a cache outside the
 repository. Those builds carry their own licences (Chromium: BSD-3-Clause and

@@ -21,7 +21,7 @@ final readonly class ScoreFactory
 
     public function createBlank(User $owner, ?string $title = null): Score
     {
-        return (new Score())
+        return new Score()
             ->setOwner($owner)
             ->setTitle($title ?? $this->nextUntitledName($owner))
             ->setContent(ScoreSchema::blankContent());
@@ -32,7 +32,7 @@ final readonly class ScoreFactory
      */
     public function duplicate(Score $source): Score
     {
-        return (new Score())
+        return new Score()
             ->setOwner($source->getOwner())
             ->setTitle($this->nextCopyName($source))
             ->setContent($source->getContent());

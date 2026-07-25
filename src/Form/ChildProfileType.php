@@ -36,7 +36,8 @@ final class ChildProfileType extends AbstractType
                 'label' => 'admin.avatar',
                 'choices' => AvatarIcon::cases(),
                 'choice_label' => static fn (AvatarIcon $icon): string => $icon->label(),
-                'choice_value' => static fn (?AvatarIcon $icon): string => $icon?->value ?? '',
+                // `??` already covers a null $icon: no nullsafe operator needed.
+                'choice_value' => static fn (?AvatarIcon $icon): string => $icon->value ?? '',
                 'expanded' => true,
                 'multiple' => false,
             ]);

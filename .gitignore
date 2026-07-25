@@ -54,6 +54,16 @@ yarn-error.log
 /phpunit.xml
 ###< phpunit ###
 
+###> phpstan/phpstan ###
+# Local override of phpstan.dist.neon, for tightening the level while working.
+/phpstan.neon
+###< phpstan/phpstan ###
+
+###> captainhook/captainhook ###
+# Per-machine hook overrides, e.g. to skip PHPStan on a slow laptop.
+/captainhook.local.json
+###< captainhook/captainhook ###
+
 ###> playwright ###
 /test-results/
 /playwright-report/

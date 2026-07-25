@@ -88,7 +88,7 @@ final class CreateUserCommand extends Command
         /** @var string|null $displayName */
         $displayName = $input->getOption('display-name');
 
-        $user = (new User())
+        $user = new User()
             ->setUsername($username)
             ->setDisplayName($displayName ?? ucfirst($username))
             ->setRoles([$isChild ? User::ROLE_CHILD : User::ROLE_ADMIN])

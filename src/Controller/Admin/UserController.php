@@ -34,7 +34,7 @@ final class UserController extends Controller
     #[Route('/nouveau', name: 'create', methods: ['GET', 'POST'])]
     public function create(Request $request, PinCodeHasher $hasher, TranslatorInterface $translator): Response
     {
-        $profile = (new User())->setRoles([User::ROLE_CHILD]);
+        $profile = new User()->setRoles([User::ROLE_CHILD]);
         $form = $this->createForm(ChildProfileType::class, $profile, ['require_pin' => true])
             ->handleRequest($request);
 

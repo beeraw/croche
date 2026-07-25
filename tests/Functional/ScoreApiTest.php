@@ -237,7 +237,7 @@ final class ScoreApiTest extends DatabaseTestCase
 
     private function createScore(User $owner, string $title): Score
     {
-        $score = (new Score())
+        $score = new Score()
             ->setOwner($owner)
             ->setTitle($title)
             ->setContent(ScoreSchema::blankContent());

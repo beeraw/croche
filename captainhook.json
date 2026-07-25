@@ -1,0 +1,35 @@
+{
+    "commit-msg": {
+        "enabled": false,
+        "actions": []
+    },
+    "pre-commit": {
+        "enabled": true,
+        "actions": [
+            {
+                "action": "\\CaptainHook\\App\\Hook\\PHP\\Action\\Linting",
+                "options": {}
+            },
+            {
+                "action": "vendor/bin/php-cs-fixer fix --dry-run --diff --config=.php-cs-fixer.dist.php",
+                "options": {},
+                "label": "PHP CS Fixer (dry-run)"
+            },
+            {
+                "action": "vendor/bin/phpstan analyse --no-progress --memory-limit=512M",
+                "options": {},
+                "label": "PHPStan"
+            }
+        ]
+    },
+    "pre-push": {
+        "enabled": false,
+        "actions": [
+            {
+                "action": "vendor/bin/phpunit --no-coverage",
+                "options": {},
+                "label": "PHPUnit"
+            }
+        ]
+    }
+}

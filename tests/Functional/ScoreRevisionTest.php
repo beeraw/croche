@@ -107,7 +107,7 @@ final class ScoreRevisionTest extends DatabaseTestCase
 
     private function score(?User $owner = null): Score
     {
-        $score = (new Score())
+        $score = new Score()
             ->setOwner($owner ?? $this->createChild())
             ->setTitle('A piece')
             ->setContent(ScoreSchema::blankContent());

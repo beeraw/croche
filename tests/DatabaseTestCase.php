@@ -74,7 +74,7 @@ abstract class DatabaseTestCase extends WebTestCase
 
     protected function createChild(string $username = 'child', string $pin = '1234'): User
     {
-        $user = (new User())
+        $user = new User()
             ->setUsername($username)
             ->setDisplayName(ucfirst($username))
             ->setRoles([User::ROLE_CHILD])
@@ -91,7 +91,7 @@ abstract class DatabaseTestCase extends WebTestCase
 
     protected function createAdmin(string $username = 'admin', string $password = 'admin'): User
     {
-        $user = (new User())
+        $user = new User()
             ->setUsername($username)
             ->setDisplayName('Administration')
             ->setRoles([User::ROLE_ADMIN])

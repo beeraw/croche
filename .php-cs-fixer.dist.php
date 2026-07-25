@@ -7,8 +7,12 @@ use PhpCsFixer\Finder;
 
 $finder = Finder::create()
     ->in(__DIR__)
-    ->exclude(['var', 'vendor', 'node_modules', 'public'])
-    ->notPath(['config/bundles.php'])
+    ->exclude(['var', 'vendor', 'node_modules'])
+    ->notPath([
+        'config/bundles.php',
+        // Regenerated on every cache warmup; a pure IDE helper.
+        'config/reference.php',
+    ])
     ->name('*.php')
     ->ignoreDotFiles(true)
     ->ignoreVCS(true);
@@ -18,9 +22,13 @@ return (new Config())
     ->setRules([
         '@Symfony' => true,
         '@Symfony:risky' => true,
-        '@PHP83Migration' => true,
+        '@PHP8x5Migration' => true,
+        '@PHP8x5Migration:risky' => true,
         'array_syntax' => ['syntax' => 'short'],
+        'combine_consecutive_issets' => true,
+        'combine_consecutive_unsets' => true,
         'declare_strict_types' => true,
+        'explicit_string_variable' => true,
         'fully_qualified_strict_types' => true,
         'global_namespace_import' => [
             'import_classes' => true,

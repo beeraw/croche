@@ -26,7 +26,7 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        $admin = (new User())
+        $admin = new User()
             ->setUsername('admin')
             ->setDisplayName('Administration')
             ->setRoles([User::ROLE_ADMIN])
@@ -34,7 +34,7 @@ class AppFixtures extends Fixture
         $admin->setPassword($this->hasher->hashPassword($admin, 'admin'));
         $manager->persist($admin);
 
-        $child = (new User())
+        $child = new User()
             ->setUsername('aicha')
             ->setDisplayName('Aïcha')
             ->setRoles([User::ROLE_CHILD])
@@ -43,14 +43,14 @@ class AppFixtures extends Fixture
         $manager->persist($child);
 
         $manager->persist(
-            (new Score())
+            new Score()
                 ->setOwner($child)
                 ->setTitle('Twinkle little star')
                 ->setContent($this->twinkle())
         );
 
         $manager->persist(
-            (new Score())
+            new Score()
                 ->setOwner($child)
                 ->setTitle('My first scale')
                 ->setContent($this->scale())
