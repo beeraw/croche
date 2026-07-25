@@ -2,6 +2,13 @@ app:
     name: Croche
     tagline: Écris tes morceaux, écoute-les, imprime-les.
 
+# Read once, when Croche is added to the home screen: name goes on the install
+# sheet, short_name under the icon, where iPadOS truncates past ~12 characters.
+manifest:
+    name: Croche — écrire de la musique
+    short_name: Croche
+    description: Un cahier de musique pour écrire ses morceaux, les écouter et les imprimer.
+
 nav:
     home: Retour à l'accueil
     my_scores: Mes morceaux
@@ -30,6 +37,13 @@ home:
         de l'être. Pas de nuances, pas de liaisons, pas de paroles. Juste de
         quoi écrire une mélodie et un accompagnement, les entendre, et les
         garder.
+    install_title: À poser sur l'écran d'accueil
+    install_body: >-
+        Sur l'iPad, le bouton de partage propose « Sur l'écran d'accueil ».
+        Croche s'ouvre alors comme une application, sans barre d'adresse ni
+        onglets : le clavier de piano y gagne de la hauteur. Une application
+        lancée depuis l'icône a ses propres cookies, séparés de ceux de Safari
+        — le code est donc à ressaisir une fois, puis la session tient.
     offline_title: Rien ne sort d'ici
     offline_body: >-
         Aucune requête vers l'extérieur : pas de CDN, pas de police distante,

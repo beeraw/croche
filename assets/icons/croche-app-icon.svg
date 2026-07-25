@@ -1,0 +1,18 @@
+<!--
+    Source of the home-screen icons in public/icons/. Same eighth note as
+    public/favicon.svg, with two differences that only matter once the icon is
+    big: the plum square runs edge to edge, because iOS rounds and masks the
+    corners itself and a pre-rounded PNG would show its transparent corners as
+    black; and the note is nudged to the middle of the canvas, which nobody
+    notices at 32px and everybody notices at 512.
+
+    Regenerate with bin/build-icons.sh after any change here.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+    <rect width="32" height="32" fill="#6d3a8e"/>
+    <g transform="translate(1.8 -0.75)" fill="none" stroke="#fffaf3" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="22" r="3.6" fill="#fffaf3"/>
+        <path d="M14.6 22V8.5"/>
+        <path d="M14.6 8.5c4.2 1 6.4 3.2 6.4 6.2"/>
+    </g>
+</svg>

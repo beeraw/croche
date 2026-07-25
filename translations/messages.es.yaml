@@ -2,6 +2,13 @@ app:
     name: Croche
     tagline: Escribe tus piezas, escúchalas, imprímelas.
 
+# Read once, when Croche is added to the home screen: name goes on the install
+# sheet, short_name under the icon, where iPadOS truncates past ~12 characters.
+manifest:
+    name: Croche — escribir música
+    short_name: Croche
+    description: Un cuaderno de música para escribir piezas, escucharlas e imprimirlas.
+
 nav:
     home: Volver al inicio
     my_scores: Mis piezas
@@ -29,6 +36,13 @@ home:
         No es un editor de partituras profesional, y no pretende serlo. Sin
         matices, sin ligaduras, sin letra. Justo lo necesario para escribir una
         melodía y un acompañamiento, oírlos y guardarlos.
+    install_title: Ponla en la pantalla de inicio
+    install_body: >-
+        En el iPad, el botón de compartir ofrece «Añadir a inicio». Croche se
+        abre entonces como una aplicación, sin barra de direcciones ni pestañas:
+        el teclado de piano gana esa altura. Una aplicación abierta desde el
+        icono tiene sus propias cookies, aparte de las de Safari — así que hay
+        que teclear el código una vez más, y luego la sesión se mantiene.
     offline_title: Nada sale de esta página
     offline_body: >-
         Ninguna petición hacia fuera: sin CDN, sin tipografía remota, sin sonido

@@ -2,6 +2,13 @@ app:
     name: Croche
     tagline: Schreib deine Stücke, hör sie dir an, druck sie aus.
 
+# Read once, when Croche is added to the home screen: name goes on the install
+# sheet, short_name under the icon, where iPadOS truncates past ~12 characters.
+manifest:
+    name: Croche — Musik schreiben
+    short_name: Croche
+    description: Ein Musikheft, um Stücke zu schreiben, sie zu hören und zu drucken.
+
 nav:
     home: Zurück zum Anfang
     my_scores: Meine Stücke
@@ -29,6 +36,13 @@ home:
         Sie ist kein professioneller Notensatz und will auch keiner sein. Keine
         Dynamik, keine Bögen, kein Text. Gerade genug, um eine Melodie und eine
         Begleitung zu schreiben, sie zu hören und zu behalten.
+    install_title: Auf den Startbildschirm legen
+    install_body: >-
+        Auf dem iPad bietet die Teilen-Taste „Zum Home-Bildschirm“ an. Croche
+        öffnet sich dann wie eine App, ohne Adressleiste und ohne Tabs: die
+        Klaviatur gewinnt genau diese Höhe. Eine App, die über das Symbol
+        startet, hat ihre eigenen Cookies, getrennt von denen in Safari — der
+        Code muss also einmal neu eingetippt werden, danach hält die Sitzung.
     offline_title: Nichts verlässt diese Seite
     offline_body: >-
         Überhaupt keine Anfragen nach außen: kein CDN, keine Schrift von

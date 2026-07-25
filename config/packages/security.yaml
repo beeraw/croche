@@ -28,6 +28,9 @@ security:
     # Only the first matching rule applies.
     access_control:
         - { path: '^/$', roles: PUBLIC_ACCESS }
+        # Safari reads the manifest when the visitor adds Croche to the home
+        # screen, which they may well do before ever signing in.
+        - { path: '^/manifest\.webmanifest$', roles: PUBLIC_ACCESS }
         - { path: ^/langue, roles: PUBLIC_ACCESS }
         - { path: ^/connexion, roles: PUBLIC_ACCESS }
         - { path: ^/deconnexion, roles: PUBLIC_ACCESS }

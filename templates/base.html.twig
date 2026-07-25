@@ -6,6 +6,23 @@
     <meta name="theme-color" content="#6d3a8e">
     <title>{% block title %}Croche{% endblock %}</title>
     <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
+
+    {# Added to the home screen, Croche runs without Safari's chrome — which is
+       roughly two more centimetres of piano keyboard on the iPad.
+
+       use-credentials is what carries the session cookie to the manifest, and
+       the session is where the chosen language lives; without it the name
+       under the icon would always come out in the browser's language.
+
+       iPadOS has read the manifest since 16.4, but apple-mobile-web-app-capable
+       is what older versions obey, so both stay. The status bar is left in its
+       default light style: black-translucent would slide the page under it, and
+       nothing in the stylesheets reads the safe-area insets. #}
+    <link rel="manifest" href="{{ path('manifest') }}" crossorigin="use-credentials">
+    <link rel="apple-touch-icon" href="{{ asset('icons/croche-180.png') }}">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="{{ 'manifest.short_name'|trans }}">
     {% block stylesheets %}
         {{ encore_entry_link_tags('app') }}
         {{ encore_entry_link_tags('print', null, '_default', { media: 'print' }) }}

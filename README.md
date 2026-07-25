@@ -11,6 +11,7 @@ les entendre, et surtout ne pas les perdre. Pensé pour l'iPad, au doigt.
 - Lecture audio des deux portées avec curseur qui suit
 - Sauvegarde automatique, historique des révisions
 - Impression propre, pour transformer le morceau en vraie partition papier
+- Installable sur l'écran d'accueil de l'iPad, en plein écran
 
 ---
 
@@ -91,7 +92,8 @@ n'existe plus ». C'est normal, et c'est le seul effet de bord.
 Deux suites, indépendantes l'une de l'autre.
 
 **PHPUnit** couvre la validation du document, l'API, le Voter, la limitation de
-tentatives sur le code PIN, la purge des révisions et le changement de langue.
+tentatives sur le code PIN, la purge des révisions, le changement de langue et
+le manifeste d'application.
 Elle tourne sur un SQLite jeté dans `var/` : aucune base MariaDB n'est
 nécessaire, et rien en dehors de `croche` n'est touché.
 
@@ -101,7 +103,8 @@ composer test
 
 **Playwright** couvre ce que seul un vrai navigateur peut montrer : le rendu
 VexFlow, la saisie au doigt, le refus d'une mesure pleine, l'undo, l'autosave,
-la feuille d'impression, et la mesure du timbre de piano rendu hors ligne.
+la feuille d'impression, la mesure du timbre de piano rendu hors ligne, et le
+manifeste qui rend l'application installable.
 
 Elle a besoin d'une instance qui tourne et des fixtures chargées :
 
@@ -120,9 +123,9 @@ La première fois, `yarn playwright install` télécharge les navigateurs.
 
 | Moteur | Pourquoi | État |
 | --- | --- | --- |
-| WebKit | l'iPad, la cible réelle | 33/33 |
-| Chromium | Chrome, Edge, et la majorité du parc | 33/33 |
-| iPad (gen 7) | WebKit, mais en tactile et en portrait | 33/33 |
+| WebKit | l'iPad, la cible réelle | 40/40 |
+| Chromium | Chrome, Edge, et la majorité du parc | 40/40 |
+| iPad (gen 7) | WebKit, mais en tactile et en portrait | 40/40 |
 | Firefox | moteur indépendant, attrape ce que les deux autres partagent | non exécuté ici |
 
 La suite Firefox est configurée mais n'a jamais tourné : sur la machine de
@@ -170,6 +173,14 @@ composer cs-check
 
 ```bash
 php bin/console ux:icons:import tabler:nom-de-licone
+```
+
+Regénérer les icônes d'écran d'accueil après une retouche du visuel source
+(`assets/icons/croche-app-icon.svg`). Demande `rsvg-convert` et ImageMagick ;
+les PNG produits sont commités, donc c'est inutile pour une simple installation :
+
+```bash
+./bin/build-icons.sh
 ```
 
 ---
@@ -254,7 +265,8 @@ assets/
   js/score/            ScoreDocument, ScoreRenderer, UndoStack, pitch helpers
   js/audio/            AudioEngine
   styles/              _variables, _mixins, puis un fichier par composant
-translations/          messages.fr.yaml, messages.en.yaml
+translations/          un messages.<langue>.yaml par langue (fr, en, es, pt, de)
+public/icons/          icônes d'écran d'accueil, générées par bin/build-icons.sh
 tests/
   Unit/, Functional/   PHPUnit
   e2e/                 Playwright
@@ -368,6 +380,30 @@ Choix tranchés en cours de route, à revoir librement.
   `'%note%is'`), parce que l'allemand le soude au nom : Cis, Fis, Ais. Et le si
   allemand s'écrit H — sans conséquence ici, l'application n'écrit jamais de
   bémols.
+- **Le manifeste est une route, pas un fichier dans `public/`.** Un fichier
+  statique aurait été plus simple, mais il fige le nom de l'application dans
+  une seule langue : une famille lusophone aurait installé une icône nommée en
+  français. Le manifeste est donc rendu par `ManifestController`, et `name`
+  comme `short_name` sortent des catalogues comme le reste de l'interface. Le
+  prix à payer est un piège discret : un manifeste est récupéré *sans* cookies
+  par défaut, donc sans la session, donc sans la langue choisie. C'est
+  `crossorigin="use-credentials"` sur la balise `<link>` qui règle ça, et
+  c'est la seule raison pour laquelle cet attribut est là.
+- **Mode `standalone`, sans service worker.** Ajoutée à l'écran d'accueil,
+  Croche s'ouvre sans barre d'adresse ni barre d'onglets — sur l'iPad, c'est
+  autant de hauteur rendue au clavier de piano. Le hors-ligne, lui, reste hors
+  périmètre : il demanderait un service worker, et l'autosave tape l'API de
+  toute façon.
+  Le piège à connaître : **une web app lancée depuis l'icône a son propre bocal
+  à cookies**, séparé de celui de Safari. La session de l'onglet ne suit pas.
+  Le code PIN est donc à ressaisir une fois dans l'application, et ensuite la
+  session tient normalement. Ce n'est pas un bug, c'est iOS.
+- **Les icônes d'écran d'accueil sont des PNG opaques**, dérivés de
+  `public/favicon.svg` par `bin/build-icons.sh`. Opaques parce qu'iOS
+  compose l'icône sur du noir : un PNG transparent donne une icône noire. Et
+  sans coins arrondis, parce qu'iOS pose son propre masque — arrondir deux
+  fois laisse une bordure sombre. Les PNG sont commités : personne n'a besoin
+  de `rsvg-convert` pour installer le projet.
 - **Les catalogues sont tenus par un test.** `TranslationCatalogueTest` compare
   les clés des cinq fichiers et vérifie que chaque `%placeholder%` survit à la
   traduction : une clé ajoutée d'un seul côté ne peut plus passer inaperçue.
