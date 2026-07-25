@@ -342,8 +342,16 @@ Calls made along the way, free to revisit.
 - **Yarn 4, but with `nodeLinker: node-modules`.** The default Plug'n'Play mode
   does away with `node_modules`; Encore, Babel and Playwright all expect to find
   their packages on disk, and changing their minds costs patches this project
-  has no reason to carry. No Yarn version is pinned: `corepack enable` gives a
-  4.x, and they are equivalent here.
+  has no reason to carry.
+- **The Yarn version is pinned**, through `packageManager` in `package.json`.
+  It was left open at first, on the idea that any 4.x would do. What actually
+  happened is that the production server still had the Yarn 1.22 from before the
+  migration: it does not know `--immutable`, ignores it, and quietly rewrote
+  `yarn.lock` in the v1 format on every deploy — which broke the next `git pull`
+  and, worse, meant production was resolving its dependencies itself instead of
+  installing the ones that had been tested. Corepack reads that field and serves
+  the right Yarn whatever is installed globally; without it, it falls back to a
+  1.22 of its own.
 - **Yarn's quarantine is left in place.** By default Yarn refuses any package
   published less than 24 hours ago — the window in which a registry compromise
   does the most damage. Two development dependencies came out fresh and were

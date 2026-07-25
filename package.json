@@ -1,6 +1,7 @@
 {
     "name": "croche",
     "description": "Music notation web app for children",
+    "packageManager": "yarn@4.16.0",
     "license": "MIT",
     "private": true,
     "type": "module",
