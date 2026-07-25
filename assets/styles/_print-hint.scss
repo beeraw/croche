@@ -1,0 +1,7 @@
+@use 'variables' as *;
+
+/// The print stylesheet is a separate entry loaded with media="print".
+/// This file only holds the on-screen counterparts of print-only markup.
+.print-only {
+    display: none;
+}

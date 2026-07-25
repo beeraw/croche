@@ -1,0 +1,91 @@
+// Print sheet: title, child's first name, score. Nothing else.
+// Linked with media="print", so none of this affects the screen.
+
+@use 'variables' as *;
+
+@page {
+    margin: 15mm;
+    size: A4 portrait;
+}
+
+html,
+body {
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    background: #fff !important;
+    color: #000 !important;
+    font-family: $font-family;
+}
+
+// Everything that is interface disappears.
+.navbar,
+.editor__bar,
+.editor__tools,
+.piano,
+.editor__notice,
+.stave-highlight,
+.playhead,
+.flashes,
+.no-print {
+    display: none !important;
+}
+
+.print-only {
+    display: block !important;
+}
+
+.editor,
+.editor__stage,
+.page,
+.page__body {
+    display: block !important;
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    background: none !important;
+}
+
+.score-sheet {
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
+    background: none !important;
+    box-shadow: none !important;
+}
+
+.editor__print-header {
+    display: block !important;
+    margin-bottom: 10mm;
+    text-align: center;
+}
+
+.editor__print-title {
+    margin: 0 0 2mm;
+    font-size: 22pt;
+    font-weight: 800;
+}
+
+.editor__print-author {
+    margin: 0;
+    font-size: 12pt;
+}
+
+.score-sheet__canvas svg {
+    width: 100% !important;
+    height: auto !important;
+}
+
+// VexFlow paints in dark grey; force pure black for a crisper print.
+.score-sheet__canvas svg * {
+    fill: #000 !important;
+    stroke: #000 !important;
+}
+
+.note--selected {
+    fill: #000 !important;
+    stroke: #000 !important;
+}

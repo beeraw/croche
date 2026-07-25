@@ -1,0 +1,65 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+.table-wrap {
+    overflow-x: auto;
+    border: 2px solid $gray-200;
+    border-radius: $radius-lg;
+    background-color: $white;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9375rem;
+}
+
+.table th,
+.table td {
+    padding: $space-3;
+    border-bottom: 1px solid $gray-200;
+    text-align: left;
+    vertical-align: middle;
+}
+
+.table th {
+    color: $gray-500;
+    font-size: 0.8125rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.table tbody tr:hover {
+    background-color: $gray-100;
+}
+
+.table__actions {
+    display: flex;
+    gap: $space-2;
+    justify-content: flex-end;
+}
+
+.badge {
+    display: inline-block;
+    padding: 2px $space-2;
+    border-radius: $radius-pill;
+    background-color: $gray-100;
+    color: $gray-700;
+    font-size: 0.75rem;
+    font-weight: 800;
+}
+
+.badge--admin {
+    background-color: $plum-light;
+    color: $plum-dark;
+}
+
+.badge--child {
+    background-color: $mango-light;
+    color: $mango-dark;
+}

@@ -1,0 +1,427 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+.editor {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+}
+
+// --- Top bar -------------------------------------------------------------
+
+.editor__bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $space-3;
+    align-items: center;
+    justify-content: space-between;
+    padding: $space-2 $space-4;
+    border-bottom: 2px solid $gray-200;
+    background-color: $white;
+}
+
+.editor__identity {
+    display: flex;
+    gap: $space-2;
+    align-items: center;
+    min-width: 0;
+}
+
+.editor__back {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: $radius;
+    color: $gray-700;
+
+    @include touchable;
+
+    &:hover {
+        background-color: $gray-100;
+        color: $primary;
+    }
+
+    svg {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+}
+
+.editor__title {
+    min-width: 6ch;
+    max-width: 32ch;
+    padding: $space-1 $space-2;
+    border: 2px solid transparent;
+    border-radius: $radius-sm;
+    background-color: transparent;
+    font-size: 1.25rem;
+    font-weight: 800;
+
+    &:hover {
+        border-color: $gray-200;
+    }
+
+    &:focus {
+        border-color: $primary;
+        background-color: $white;
+        outline: none;
+    }
+}
+
+/// "Enregistré ✓" indicator. Deliberately quiet.
+.save-state {
+    display: inline-flex;
+    gap: $space-1;
+    align-items: center;
+    color: $gray-400;
+    font-size: 0.875rem;
+    font-weight: 700;
+    white-space: nowrap;
+    transition: color 0.2s ease;
+
+    svg {
+        width: 1.125rem;
+        height: 1.125rem;
+    }
+}
+
+.save-state[data-state='saved'] {
+    color: $success;
+}
+
+.save-state[data-state='saving'] {
+    color: $gray-400;
+}
+
+.save-state[data-state='error'] {
+    color: $danger;
+}
+
+.editor__bar-actions {
+    display: flex;
+    gap: $space-2;
+    align-items: center;
+}
+
+// --- Score surface -------------------------------------------------------
+
+.editor__stage {
+    position: relative;
+    flex: 1;
+    overflow: auto;
+    padding: $space-4;
+    background-color: $gray-100;
+    -webkit-overflow-scrolling: touch;
+}
+
+.score-sheet {
+    position: relative;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: $space-4 $space-3;
+    border-radius: $radius-lg;
+    background-color: $white;
+    box-shadow: $shadow;
+}
+
+.score-sheet__canvas {
+    position: relative;
+    touch-action: manipulation;
+
+    svg {
+        display: block;
+        max-width: 100%;
+        height: auto;
+    }
+}
+
+/// Translucent band marking which of the two staves receives input.
+.stave-highlight {
+    position: absolute;
+    left: 0;
+    border-radius: $radius-sm;
+    background-color: rgb(240 138 36 / 9%);
+    pointer-events: none;
+    transition: top 0.15s ease, height 0.15s ease;
+}
+
+/// Vertical line that tracks playback.
+.playhead {
+    position: absolute;
+    top: 0;
+    width: 3px;
+    border-radius: 2px;
+    background-color: $accent;
+    pointer-events: none;
+    opacity: 0;
+}
+
+.playhead.is-visible {
+    opacity: 1;
+}
+
+.note--selected {
+    fill: $primary;
+    stroke: $primary;
+}
+
+/// Flash shown when a measure cannot take another note.
+.measure-refused {
+    position: absolute;
+    border: 3px solid $danger;
+    border-radius: $radius-sm;
+    background-color: rgb(214 59 82 / 10%);
+    pointer-events: none;
+    animation: measure-refused 0.6s ease-out forwards;
+}
+
+@keyframes measure-refused {
+    0%,
+    60% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+.editor__notice {
+    position: absolute;
+    top: $space-4;
+    left: 50%;
+    z-index: $z-toast;
+    padding: $space-2 $space-4;
+    transform: translateX(-50%);
+    border-radius: $radius-pill;
+    background-color: $berry;
+    color: $white;
+    font-weight: 700;
+    box-shadow: $shadow-lg;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
+.editor__notice.is-visible {
+    opacity: 1;
+}
+
+// --- Tool rows -----------------------------------------------------------
+
+.editor__tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $space-4;
+    align-items: center;
+    justify-content: center;
+    padding: $space-3 $space-4;
+    border-top: 2px solid $gray-200;
+    background-color: $white;
+}
+
+.tool-group {
+    display: flex;
+    gap: $space-2;
+    align-items: center;
+}
+
+.tool-group__label {
+    color: $gray-500;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+
+    @include down(md) {
+        @include visually-hidden;
+    }
+}
+
+.tool-group__sep {
+    align-self: stretch;
+    width: 2px;
+    background-color: $gray-200;
+}
+
+/// Buttons in the duration / accidental palettes.
+.tool-btn {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 2px;
+    align-items: center;
+    justify-content: center;
+    padding: $space-1 $space-2;
+    border: 2px solid $gray-200;
+    border-radius: $radius;
+    background-color: $white;
+    color: $gray-700;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    line-height: 1;
+
+    @include touchable;
+    @include tap-clean;
+
+    &:hover {
+        border-color: $primary;
+        color: $primary;
+    }
+
+    &.is-active {
+        border-color: $primary;
+        background-color: $primary;
+        color: $white;
+    }
+}
+
+/// Music glyphs rendered with Bravura, which VexFlow already loads.
+.tool-btn__glyph {
+    font-family: Bravura, serif;
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+.tool-btn__glyph--rest {
+    font-size: 1.375rem;
+}
+
+.tool-btn__text {
+    font-size: 1.25rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.stave-switch {
+    display: flex;
+    overflow: hidden;
+    border: 2px solid $gray-200;
+    border-radius: $radius-pill;
+}
+
+.stave-switch__btn {
+    padding: 0 $space-4;
+    border: 0;
+    background-color: $white;
+    color: $gray-700;
+    font-weight: 800;
+
+    @include touchable;
+    @include tap-clean;
+
+    &.is-active {
+        background-color: $primary;
+        color: $white;
+    }
+}
+
+.tempo {
+    display: flex;
+    gap: $space-2;
+    align-items: center;
+}
+
+.tempo__input {
+    width: 8rem;
+    accent-color: $primary;
+}
+
+.tempo__value {
+    min-width: 5ch;
+    color: $gray-700;
+    font-size: 0.875rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+// --- Virtual piano -------------------------------------------------------
+
+.piano {
+    position: relative;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0;
+    border-top: 2px solid $gray-200;
+    background-color: $gray-900;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+}
+
+.piano__keys {
+    position: relative;
+    display: flex;
+    height: 132px;
+    padding: 0 $space-2;
+    touch-action: pan-x;
+
+    @include up(md) {
+        height: 152px;
+    }
+}
+
+.piano__key {
+    position: relative;
+    display: flex;
+    flex: 0 0 auto;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: $space-2;
+    border: 0;
+    font-size: 0.6875rem;
+    font-weight: 700;
+
+    @include tap-clean;
+}
+
+.piano__key--white {
+    z-index: 1;
+    width: 46px;
+    height: 100%;
+    border-right: 1px solid $gray-300;
+    border-radius: 0 0 $radius-sm $radius-sm;
+    background-color: $white;
+    color: $gray-400;
+
+    &:active,
+    &.is-pressed {
+        background-color: $mango-light;
+    }
+
+    @include up(md) {
+        width: 54px;
+    }
+}
+
+.piano__key--black {
+    z-index: 2;
+    width: 30px;
+    height: 62%;
+    margin: 0 -15px;
+    border-radius: 0 0 $radius-sm $radius-sm;
+    background-color: $gray-900;
+    color: transparent;
+
+    &:active,
+    &.is-pressed {
+        background-color: $mango-dark;
+    }
+
+    @include up(md) {
+        width: 34px;
+        margin: 0 -17px;
+    }
+}
+
+/// Middle C gets a marker so she can find her bearings.
+.piano__key--anchor {
+    color: $primary;
+    font-weight: 900;
+}
+
+// --- Print ---------------------------------------------------------------
+
+.editor__print-header {
+    display: none;
+}

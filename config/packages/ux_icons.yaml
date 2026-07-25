@@ -1,0 +1,20 @@
+ux_icons:
+    icon_dir: '%kernel.project_dir%/assets/icons'
+
+    default_icon_attributes:
+        fill: currentColor
+        height: '1em'
+        width: '1em'
+
+    # Every icon we use is vendored under assets/icons/tabler/ by
+    # `bin/console ux:icons:import tabler:<name>`. On-the-fly fetching from the
+    # iconify API is disabled outright: the app must never call out at runtime.
+    iconify:
+        enabled: false
+        on_demand: false
+
+    ignore_not_found: false
+
+when@prod:
+    ux_icons:
+        ignore_not_found: true

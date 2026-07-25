@@ -1,0 +1,10 @@
+{% set flashes = app.flashes %}
+{% if flashes is not empty %}
+    <div class="flashes no-print">
+        {% for type, messages in flashes %}
+            {% for message in messages %}
+                <p class="alert alert--{{ type == 'error' ? 'error' : (type == 'success' ? 'success' : 'info') }}">{{ message }}</p>
+            {% endfor %}
+        {% endfor %}
+    </div>
+{% endif %}

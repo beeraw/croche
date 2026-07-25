@@ -1,0 +1,73 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: $z-sticky;
+    border-bottom: 2px solid $gray-200;
+    background-color: $white;
+}
+
+.navbar__inner {
+    display: flex;
+    gap: $space-3;
+    align-items: center;
+    justify-content: space-between;
+    min-height: $touch-target-lg;
+    padding: $space-2 0;
+}
+
+.navbar__brand {
+    display: inline-flex;
+    gap: $space-2;
+    align-items: center;
+    color: $primary;
+    font-size: 1.25rem;
+    font-weight: 900;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+
+    svg {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+}
+
+.navbar__nav {
+    display: flex;
+    gap: $space-2;
+    align-items: center;
+}
+
+.navbar__link {
+    display: inline-flex;
+    gap: $space-2;
+    align-items: center;
+    padding: $space-2 $space-3;
+    border-radius: $radius-pill;
+    color: $gray-700;
+    font-weight: 700;
+    text-decoration: none;
+
+    @include touchable;
+
+    &:hover,
+    &.is-active {
+        background-color: $plum-light;
+        color: $primary;
+    }
+}
+
+.navbar__user {
+    display: inline-flex;
+    gap: $space-2;
+    align-items: center;
+    font-weight: 700;
+
+    svg {
+        width: 1.5rem;
+        height: 1.5rem;
+        color: $accent;
+    }
+}

@@ -1,0 +1,62 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+/// Closed list of Tabler icons offered as avatars. No file upload.
+.avatar-picker {
+    display: grid;
+    gap: $space-2;
+    grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
+}
+
+.avatar-picker__option {
+    display: block;
+}
+
+.avatar-picker__option input {
+    @include visually-hidden;
+}
+
+.avatar-picker__option span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1;
+    border: 2px solid $gray-200;
+    border-radius: $radius;
+    background-color: $white;
+    color: $gray-500;
+    cursor: pointer;
+
+    @include tap-clean;
+
+    svg {
+        width: 2rem;
+        height: 2rem;
+    }
+}
+
+.avatar-picker__option input:checked + span {
+    border-color: $primary;
+    background-color: $plum-light;
+    color: $primary;
+}
+
+.avatar-picker__option input:focus-visible + span {
+    @include focus-ring;
+}
+
+.avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: $touch-target;
+    height: $touch-target;
+    border-radius: 50%;
+    background-color: $mango-light;
+    color: $mango-dark;
+
+    svg {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+}

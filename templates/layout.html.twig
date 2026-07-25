@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="page">
+        {% block navbar %}
+            {% include 'partial/_navbar.html.twig' %}
+        {% endblock %}
+
+        <main class="page__body section">
+            <div class="container {% block container_class %}{% endblock %}">
+                {% include 'partial/_flashes.html.twig' %}
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+    </div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% set user = app.user %}
+<header class="navbar no-print">
+    <div class="container container--wide">
+        <div class="navbar__inner">
+            <a class="navbar__brand" href="{{ path('home') }}">
+                {{ ux_icon('tabler:music') }}
+                Croche
+            </a>
+
+            <nav class="navbar__nav">
+                {% if user %}
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <a class="navbar__link" href="{{ path('admin.user.index') }}">
+                            {{ ux_icon('tabler:users') }}
+                            <span>Profils</span>
+                        </a>
+                        <a class="navbar__link" href="{{ path('admin.score.index') }}">
+                            {{ ux_icon('tabler:music') }}
+                            <span>Partitions</span>
+                        </a>
+                    {% else %}
+                        <a class="navbar__link" href="{{ path('score.index') }}">
+                            {{ ux_icon('tabler:home') }}
+                            <span>Mes morceaux</span>
+                        </a>
+                    {% endif %}
+
+                    <span class="navbar__user">
+                        {{ ux_icon('tabler:' ~ user.avatarIcon) }}
+                        <span>{{ user.displayName }}</span>
+                    </span>
+
+                    <a class="navbar__link" href="{{ path('security.logout') }}" title="Se déconnecter">
+                        {{ ux_icon('tabler:logout') }}
+                        <span class="visually-hidden">Se déconnecter</span>
+                    </a>
+                {% endif %}
+            </nav>
+        </div>
+    </div>
+</header>

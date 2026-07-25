@@ -1,0 +1,87 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+.field {
+    display: block;
+    margin-bottom: $space-4;
+}
+
+.field__label {
+    display: block;
+    margin-bottom: $space-1;
+    font-size: 0.9375rem;
+    font-weight: 700;
+}
+
+.field__hint {
+    margin-top: $space-1;
+    color: $gray-500;
+    font-size: 0.875rem;
+}
+
+.field__errors {
+    margin-top: $space-1;
+    color: $danger;
+    font-size: 0.875rem;
+    font-weight: 700;
+}
+
+.input,
+.select,
+.textarea {
+    display: block;
+    width: 100%;
+    padding: $space-2 $space-3;
+    border: 2px solid $gray-300;
+    border-radius: $radius;
+    background-color: $white;
+    font-size: 1rem;
+
+    @include touchable;
+
+    &:focus {
+        border-color: $primary;
+
+        @include focus-ring;
+    }
+}
+
+.checkbox {
+    display: flex;
+    gap: $space-2;
+    align-items: center;
+
+    input {
+        width: 1.375rem;
+        height: 1.375rem;
+        accent-color: $primary;
+    }
+}
+
+.alert {
+    padding: $space-3 $space-4;
+    border-radius: $radius;
+    font-weight: 600;
+}
+
+.alert--error {
+    background-color: $berry-light;
+    color: $berry-dark;
+}
+
+.alert--success {
+    background-color: $mint-light;
+    color: $mint;
+}
+
+.alert--info {
+    background-color: $plum-light;
+    color: $plum-dark;
+}
+
+.flashes {
+    display: flex;
+    flex-direction: column;
+    gap: $space-2;
+    margin-bottom: $space-4;
+}

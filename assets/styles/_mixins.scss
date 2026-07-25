@@ -1,0 +1,52 @@
+@use 'sass:map';
+@use 'variables' as *;
+
+$breakpoints: (
+    sm: $bp-sm,
+    md: $bp-md,
+    lg: $bp-lg,
+    xl: $bp-xl,
+);
+
+@mixin up($name) {
+    @media (width >= #{map.get($breakpoints, $name)}) {
+        @content;
+    }
+}
+
+@mixin down($name) {
+    @media (width < #{map.get($breakpoints, $name)}) {
+        @content;
+    }
+}
+
+/// Minimum comfortable tap area for a finger on an iPad.
+@mixin touchable($size: $touch-target) {
+    min-width: $size;
+    min-height: $size;
+}
+
+/// Visible focus ring that survives high-contrast and forced-colours modes.
+@mixin focus-ring($color: $primary) {
+    outline: 3px solid $color;
+    outline-offset: 2px;
+}
+
+/// Hide visually while keeping the element available to screen readers.
+@mixin visually-hidden {
+    position: absolute;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    white-space: nowrap;
+    border: 0;
+}
+
+/// Kill the 300ms tap delay and the grey flash on iOS.
+@mixin tap-clean {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
