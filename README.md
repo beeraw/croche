@@ -131,7 +131,8 @@ C'est une contrainte structurante du projet, pas une préférence :
   sont embarquées en base64 dans le bundle VexFlow ;
 - les icônes Tabler sont vendorisées dans `assets/icons/tabler/`, et
   `ux_icons.iconify.enabled` est à `false` ;
-- l'audio est synthétisé en Web Audio, sans soundfont à télécharger.
+- l'audio est synthétisé en Web Audio, sans soundfont ni échantillon : le
+  timbre de piano est calculé, il ne pèse pas un octet.
 
 `symfony/http-client` est en `require-dev` : une installation de production n'a
 tout simplement pas de quoi émettre une requête HTTP sortante.
@@ -250,6 +251,19 @@ Choix tranchés en cours de route, à revoir librement.
   restauration à la réouverture, mais la base fait foi.
 - **Vingt révisions conservées par partition**, purgées à l'écriture. Une
   révision n'est créée que si le contenu a réellement changé.
+- **Audio v1 : synthèse additive par table d'ondes et filtre dynamique**, et
+  non un simple oscillateur triangle avec enveloppe ADSR — ce dernier sonnait
+  « jouet ». Une `PeriodicWave` d'une douzaine d'harmoniques en 1/n^1.5,
+  construite une seule fois, traverse un passe-bas qui se referme pendant la
+  note : les aigus s'éteignent avant le fondamental, c'est le marqueur
+  perceptif décisif. L'enveloppe est percutante — attaque de 4 ms puis
+  décroissance exponentielle continue, jamais de plateau de sustain — et un
+  très court bruit de marteau habille l'attaque. Durée de décroissance et
+  coupure du filtre suivent le registre : un do grave tient encore 60 % de son
+  niveau après 0,9 s, un do aigu moins de 20 %. Budget : un oscillateur, un
+  filtre, un gain par note, plus deux nœuds éphémères pour le marteau.
+  `AudioEngine.TONE.brightness` règle la brillance d'ensemble si le rendu doit
+  être réajusté.
 - **Feuille de style d'impression en entrée Encore séparée**, chargée en
   `media="print"`. Elle ne peut pas polluer l'affichage écran.
 - **Jetons CSRF classiques, adossés à la session**, plutôt que le mode
