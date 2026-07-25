@@ -35,11 +35,11 @@ class AppFixtures extends Fixture
         $manager->persist($admin);
 
         $child = (new User())
-            ->setUsername('lison')
-            ->setDisplayName('Lison')
+            ->setUsername('aicha')
+            ->setDisplayName('Aïcha')
             ->setRoles([User::ROLE_CHILD])
             ->setAvatarIcon(AvatarIcon::Cat);
-        $child->setPinCode($this->pinHasher->hash($child, '1234'));
+        $child->setPinCode($this->pinHasher->hash($child, '2018'));
         $manager->persist($child);
 
         $manager->persist(

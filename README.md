@@ -80,7 +80,7 @@ mise en ligne réelle.
 | Rôle | Identifiant | Secret |
 | --- | --- | --- |
 | Administrateur | `admin` | `admin` |
-| Enfant (Lison) | tuile de profil | code `1234` |
+| Enfant (Aïcha) | tuile de profil | code `2018` |
 
 ## API
 
@@ -109,7 +109,7 @@ php bin/console app:user:create admin motdepasse --display-name="Administration"
 ```
 
 ```bash
-php bin/console app:user:create lison 1234 --child --display-name=Lison --avatar=cat
+php bin/console app:user:create aicha 2018 --child --display-name=Aïcha --avatar=cat
 ```
 
 ```bash
