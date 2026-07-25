@@ -38,7 +38,10 @@ export default class AudioEngine {
         }
 
         if (this.context.state === 'suspended') {
-            this.context.resume();
+            // Safari rejects this when the call did not come from a gesture.
+            // There is nothing useful to do about it, and an unhandled
+            // rejection would only clutter the console.
+            Promise.resolve(this.context.resume()).catch(() => {});
         }
 
         return true;
