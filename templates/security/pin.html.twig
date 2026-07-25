@@ -16,9 +16,11 @@
             <strong>{{ profile.displayName }}</strong>
         </div>
 
-        <div class="container container--narrow">
-            {% include 'partial/_flashes.html.twig' %}
-        </div>
+        {% if lockedSeconds == 0 %}
+            <div class="container container--narrow">
+                {% include 'partial/_flashes.html.twig' %}
+            </div>
+        {% endif %}
 
         {% if lockedSeconds > 0 %}
             <p class="alert alert--error">

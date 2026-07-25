@@ -32,3 +32,13 @@ yarn-error.log
 
 # Regenerated on every cache warmup; pure IDE helper.
 /config/reference.php
+
+###> phpunit/phpunit ###
+/phpunit.xml
+/.phpunit.cache/
+###< phpunit/phpunit ###
+
+###> phpunit ###
+/.phpunit.cache/
+/phpunit.xml
+###< phpunit ###

@@ -74,7 +74,12 @@
             "@auto-scripts"
         ],
         "cs-fix": "vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php",
-        "cs-check": "vendor/bin/php-cs-fixer fix --dry-run --diff --config=.php-cs-fixer.dist.php"
+        "cs-check": "vendor/bin/php-cs-fixer fix --dry-run --diff --config=.php-cs-fixer.dist.php",
+        "test": "phpunit",
+        "qa": [
+            "@cs-check",
+            "@test"
+        ]
     },
     "conflict": {
         "symfony/symfony": "*"
@@ -88,9 +93,13 @@
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^4.3",
         "friendsofphp/php-cs-fixer": "^3.95",
+        "phpunit/phpunit": "^13.2",
+        "symfony/browser-kit": "7.4.*",
+        "symfony/css-selector": "7.4.*",
         "symfony/debug-bundle": "7.4.*",
         "symfony/http-client": "7.4.*",
         "symfony/maker-bundle": "^1.67",
+        "symfony/phpunit-bridge": "^8.1",
         "symfony/stopwatch": "7.4.*",
         "symfony/web-profiler-bundle": "7.4.*"
     },
