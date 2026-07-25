@@ -9,8 +9,8 @@ import { expect } from '@playwright/test';
 export const DEMO = {
     child: 'Aïcha',
     pin: '2018',
-    piece: 'Au clair de la lune',
-    scale: 'Ma première gamme',
+    piece: 'Twinkle little star',
+    scale: 'My first scale',
 };
 
 /**

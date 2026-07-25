@@ -1,65 +1,65 @@
 # Croche
 
-Une application web de notation musicale pour enfants.
+A music notation web app for children.
 
-Croche n'est pas un éditeur de partition professionnel. C'est un outil pour un
-enfant qui lit déjà des partitions simples et veut écrire ses propres morceaux,
-les entendre, et surtout ne pas les perdre. Pensé pour l'iPad, au doigt.
+Croche is not a professional score editor. It is a tool for a child who already
+reads simple sheet music and wants to write her own pieces, hear them, and above
+all not lose them. Built for the iPad, for fingers.
 
-- Grande portée piano (clé de sol + clé de fa, accolade, mesures alignées)
-- Saisie au clavier de piano virtuel ou par tap sur la portée
-- Lecture audio des deux portées avec curseur qui suit
-- Sauvegarde automatique, historique des révisions
-- Impression propre, pour transformer le morceau en vraie partition papier
-- Installable sur l'écran d'accueil de l'iPad, en plein écran
-
----
-
-## À quoi ça ressemble
-
-Captures prises sur un iPad en paysage, avec les données des fixtures.
-
-L'accueil s'adresse au parent qui découvre le projet. L'enfant, elle, passe
-droit au bouton.
-
-![La page d'accueil : le nom, ce que fait l'application, et deux boutons — entrer, ou aller dans l'espace administrateur](docs/screenshots/home.png)
-
-Puis deux écrans, et c'est tout : sa tuile, son code à quatre chiffres. Pas
-d'adresse e-mail, pas de mot de passe à retenir.
-
-| Choisir son profil | Taper son code |
-| --- | --- |
-| ![L'écran de choix du profil, avec une tuile par enfant : une icône de chat et le prénom](docs/screenshots/profiles.png) | ![Le pavé numérique, avec quatre pastilles qui se remplissent au fur et à mesure](docs/screenshots/pin.png) |
-
-Ses morceaux, avec pour chacun le nombre de mesures et la date de la dernière
-retouche. Renommer, dupliquer, supprimer se font depuis la carte.
-
-![La liste des morceaux : deux cartes, et un gros bouton « Nouveau morceau »](docs/screenshots/library.png)
-
-L'éditeur : la grande portée en haut, les outils au milieu, le clavier de piano
-en bas — assez large pour deux mains, et il se fait glisser pour aller chercher
-les octaves voisines. La portée active est signalée par un bandeau, ici la clé
-de sol.
-
-![L'éditeur, avec « Au clair de la lune » sur les deux portées, la barre d'outils et le clavier de piano](docs/screenshots/editor.png)
-
-### La visite guidée
-
-Elle démarre toute seule la première fois, sur chaque écran, et le bouton d'aide
-la rejoue ensuite. Six étapes sur la liste, seize dans l'éditeur.
-
-| Sur la liste | Dans l'éditeur |
-| --- | --- |
-| ![La première bulle de la visite, pointant le bouton « Nouveau morceau »](docs/screenshots/library-tour.png) | ![Une bulle de la visite de l'éditeur, pointant le clavier de piano](docs/screenshots/editor-tour.png) |
+- A full piano staff (treble and bass, braced, bars aligned)
+- Notes entered on a virtual piano keyboard, or by tapping the staff
+- Audio playback of both staves, with a cursor following the music
+- Automatic saving, with a revision history
+- Clean printing, to turn a piece into real sheet music on paper
+- Installable on the iPad home screen, full screen
 
 ---
 
-## Prérequis
+## What it looks like
 
-- PHP 8.3 ou plus, avec les extensions `ctype`, `iconv`, `json`, `pdo_mysql`
+Captures taken on an iPad in landscape, with the fixture data.
+
+The home page speaks to the parent discovering the project. The child goes
+straight for the button.
+
+![The home page: the name, what the app does, and two buttons — enter, or go to the admin area](docs/screenshots/home.png)
+
+Then two screens, and that is all: her tile, her four-digit code. No email
+address, no password to remember.
+
+| Choosing a profile | Typing the code |
+| --- | --- |
+| ![The profile picker, one tile per child: a cat icon and a first name](docs/screenshots/profiles.png) | ![The keypad, with four dots filling up as the digits are typed](docs/screenshots/pin.png) |
+
+Her pieces, each with its number of bars and the date it was last touched.
+Renaming, duplicating and deleting all happen from the card.
+
+![The library: two cards, and a large "New piece" button](docs/screenshots/library.png)
+
+The editor: the large staff at the top, the tools in the middle, the piano
+keyboard at the bottom — wide enough for two hands, and it slides sideways to
+reach the neighbouring octaves. The active staff is marked by a band, here the
+treble.
+
+![The editor, with "Twinkle little star" across both staves, the toolbar and the piano keyboard](docs/screenshots/editor.png)
+
+### The guided tour
+
+It starts on its own the first time, on each screen, and the help button plays
+it again afterwards. Six steps on the library, sixteen in the editor.
+
+| On the library | In the editor |
+| --- | --- |
+| ![The first bubble of the tour, pointing at the "New piece" button](docs/screenshots/library-tour.png) | ![A bubble of the editor tour, pointing at the piano keyboard](docs/screenshots/editor-tour.png) |
+
+---
+
+## Requirements
+
+- PHP 8.3 or later, with the `ctype`, `iconv`, `json` and `pdo_mysql` extensions
 - Composer 2
-- Node.js 20 ou plus, Yarn 4 (`corepack enable` suffit à l'obtenir)
-- MariaDB 10.11 ou plus (ou MySQL 8)
+- Node.js 20 or later, Yarn 4 (`corepack enable` is enough to get it)
+- MariaDB 10.11 or later (or MySQL 8)
 
 ## Installation
 
@@ -70,31 +70,31 @@ composer install
 yarn install
 ```
 
-Créez un fichier `.env.local` — jamais commité — avec vos identifiants réels :
+Create a `.env.local` file — never committed — with your real credentials:
 
 ```dotenv
 DATABASE_URL="mysql://root:root@127.0.0.1:3306/croche?serverVersion=mariadb-10.11.0&charset=utf8mb4"
-APP_SECRET=une-chaine-aleatoire-de-32-caracteres
+APP_SECRET=a-random-32-character-string
 ```
 
-Le `.env` versionné ne contient qu'un DSN d'exemple.
+The versioned `.env` holds nothing but an example DSN.
 
-Créez la base et jouez les migrations :
+Create the database and run the migrations:
 
 ```bash
 php bin/console doctrine:database:create
 php bin/console doctrine:migrations:migrate --no-interaction
 ```
 
-Chargez les fixtures (un administrateur, un profil enfant, deux morceaux) :
+Load the fixtures (one administrator, one child profile, two pieces):
 
 ```bash
 php bin/console doctrine:fixtures:load --no-interaction
 ```
 
-## Lancement
+## Running it
 
-Compilez les assets, puis démarrez le serveur :
+Compile the assets, then start the server:
 
 ```bash
 yarn dev
@@ -104,48 +104,47 @@ yarn dev
 symfony server:start
 ```
 
-En développement, `yarn watch` recompile à la volée.
+In development, `yarn watch` recompiles on the fly.
 
-Pour la production :
+For production:
 
 ```bash
 yarn build
 ```
 
-## Comptes de démonstration
+## Demo accounts
 
-Fournis par les fixtures, avec des prénoms fictifs. À supprimer avant toute
-mise en ligne réelle.
+Provided by the fixtures, with fictional first names. Delete them before
+anything goes online for real.
 
-| Rôle | Identifiant | Secret |
+| Role | Username | Secret |
 | --- | --- | --- |
-| Administrateur | `admin` | `admin` |
-| Enfant (Aïcha) | tuile de profil | code `2018` |
+| Administrator | `admin` | `admin` |
+| Child (Aïcha) | profile tile | code `2018` |
 
-Recharger les fixtures recrée les partitions avec de nouveaux identifiants :
-un onglet resté ouvert sur `/morceaux/12` tombera sur une page « ce morceau
-n'existe plus ». C'est normal, et c'est le seul effet de bord.
+Reloading the fixtures recreates the scores with new identifiers: a tab left
+open on `/morceaux/12` will land on a "this piece no longer exists" page. That
+is normal, and it is the only side effect.
 
 ## Tests
 
-Deux suites, indépendantes l'une de l'autre.
+Two suites, independent of each other.
 
-**PHPUnit** couvre la validation du document, l'API, le Voter, la limitation de
-tentatives sur le code PIN, la purge des révisions, le changement de langue et
-le manifeste d'application.
-Elle tourne sur un SQLite jeté dans `var/` : aucune base MariaDB n'est
-nécessaire, et rien en dehors de `croche` n'est touché.
+**PHPUnit** covers document validation, the API, the Voter, the throttling of
+PIN attempts, the revision purge, the language switch and the app manifest.
+It runs on a SQLite file dropped in `var/`: no MariaDB database is needed, and
+nothing outside `croche` is touched.
 
 ```bash
 composer test
 ```
 
-**Playwright** couvre ce que seul un vrai navigateur peut montrer : le rendu
-VexFlow, la saisie au doigt, le refus d'une mesure pleine, l'undo, l'autosave,
-la feuille d'impression, la mesure du timbre de piano rendu hors ligne, et le
-manifeste qui rend l'application installable.
+**Playwright** covers what only a real browser can show: the VexFlow rendering,
+entry by finger, the refusal of a full bar, undo, autosave, the print sheet, the
+measurement of the piano timbre rendered offline, and the manifest that makes
+the app installable.
 
-Elle a besoin d'une instance qui tourne et des fixtures chargées :
+It needs a running instance and the fixtures loaded:
 
 ```bash
 php bin/console doctrine:fixtures:load --no-interaction && yarn build
@@ -155,51 +154,50 @@ php bin/console doctrine:fixtures:load --no-interaction && yarn build
 yarn test:e2e
 ```
 
-L'adresse visée est `https://croche` ; passez `CROCHE_BASE_URL` pour en changer.
-La première fois, `yarn playwright install` télécharge les navigateurs.
+The address aimed at is `https://croche`; pass `CROCHE_BASE_URL` to change it.
+The first time, `yarn playwright install` downloads the browsers.
 
-### Navigateurs couverts
+### Browsers covered
 
-| Moteur | Pourquoi | État |
+| Engine | Why | State |
 | --- | --- | --- |
-| WebKit | l'iPad, la cible réelle | 48/48 |
-| Chromium | Chrome, Edge, et la majorité du parc | 48/48 |
-| iPad (gen 7) | WebKit, mais en tactile et en portrait | 48/48 |
-| Firefox | moteur indépendant, attrape ce que les deux autres partagent | non exécuté ici |
+| WebKit | the iPad, the real target | 48/48 |
+| Chromium | Chrome, Edge, and most of the field | 48/48 |
+| iPad (gen 7) | WebKit, but touch and portrait | 48/48 |
+| Firefox | an independent engine, catches what the other two share | not run here |
 
-La suite Firefox est configurée mais n'a jamais tourné : sur la machine de
-développement, le bac à sable de macOS refusait de lancer le
-`plugin-container` de Firefox. Les trois autres projets passent intégralement.
-Si `yarn test:e2e` échoue au lancement de Firefox chez vous aussi, retirez
-le projet de `playwright.config.js` — les trois autres suffisent à couvrir
-Blink et WebKit.
+The Firefox suite is configured but has never run: on the development machine,
+the macOS sandbox refused to launch Firefox's `plugin-container`. The other
+three projects pass in full. If `yarn test:e2e` fails to launch Firefox on your
+machine too, remove the project from `playwright.config.js` — the other three
+are enough to cover Blink and WebKit.
 
 ---
 
 ## API
 
-Contrôleurs Symfony classiques, réponses JSON. Les appels mutants exigent un
-jeton CSRF dans l'en-tête `X-CSRF-Token`, et tout accès à une partition
-existante passe par `ScoreVoter`.
+Plain Symfony controllers, JSON responses. Mutating calls require a CSRF token
+in the `X-CSRF-Token` header, and every access to an existing score goes through
+`ScoreVoter`.
 
-| Méthode | Route | Effet |
+| Method | Route | Effect |
 | --- | --- | --- |
-| `GET` | `/api/scores` | ses partitions (toutes, pour un admin) |
-| `GET` | `/api/scores/{id}` | une partition, contenu compris |
-| `POST` | `/api/scores` | création |
-| `PUT` | `/api/scores/{id}` | mise à jour — c'est ce qu'appelle l'autosave |
-| `DELETE` | `/api/scores/{id}` | suppression |
+| `GET` | `/api/scores` | her scores (all of them, for an admin) |
+| `GET` | `/api/scores/{id}` | one score, content included |
+| `POST` | `/api/scores` | creation |
+| `PUT` | `/api/scores/{id}` | update — this is what autosave calls |
+| `DELETE` | `/api/scores/{id}` | deletion |
 
-Le JSON reçu est validé contre le schéma attendu et **reconstruit clé par clé** :
-rien d'inattendu n'atteint la base. Un document mal formé repart en `422` avec
-le chemin fautif.
+The JSON received is validated against the expected schema and **rebuilt key by
+key**: nothing unexpected reaches the database. A malformed document comes back
+as a `422` with the offending path.
 
-## Commandes utiles
+## Useful commands
 
-Créer un administrateur, puis un profil enfant :
+Create an administrator, then a child profile:
 
 ```bash
-php bin/console app:user:create admin motdepasse --display-name="Administration"
+php bin/console app:user:create admin password --display-name="Administration"
 ```
 
 ```bash
@@ -211,22 +209,22 @@ composer cs-check
 ```
 
 ```bash
-php bin/console ux:icons:import tabler:nom-de-licone
+php bin/console ux:icons:import tabler:icon-name
 ```
 
-Regénérer les icônes d'écran d'accueil après une retouche du visuel source
-(`assets/icons/croche-app-icon.svg`). Demande `rsvg-convert` et ImageMagick ;
-les PNG produits sont commités, donc c'est inutile pour une simple installation :
+Regenerate the home screen icons after a change to the source artwork
+(`assets/icons/croche-app-icon.svg`). Needs `rsvg-convert` and ImageMagick; the
+PNGs produced are committed, so this is pointless for a plain install:
 
 ```bash
 ./bin/build-icons.sh
 ```
 
-Regénérer les captures d'écran du README. Le script pilote l'instance comme le
-ferait l'enfant — profil, code, liste, éditeur — et repasse deux écrans avec la
-visite guidée ouverte. Mêmes prérequis que la suite Playwright : une instance
-qui tourne et des fixtures fraîchement chargées, sans quoi un morceau resté d'un
-essai précédent se retrouverait sur l'image :
+Regenerate the README screenshots. The script drives the instance the way the
+child would — profile, code, library, editor — and goes over two screens again
+with the guided tour open. Same requirements as the Playwright suite: a running
+instance and freshly loaded fixtures, without which a piece left over from an
+earlier run would end up in the image:
 
 ```bash
 node bin/screenshots.mjs
@@ -234,28 +232,28 @@ node bin/screenshots.mjs
 
 ---
 
-## Zéro requête sortante
+## Zero outbound requests
 
-C'est une contrainte structurante du projet, pas une préférence :
+This is a structural constraint of the project, not a preference:
 
-- aucune librairie JS par CDN — tout passe par Yarn et Webpack Encore ;
-- aucune police distante — Nunito est dans `assets/fonts/`, Bravura et Academico
-  sont embarquées en base64 dans le bundle VexFlow ;
-- les icônes Tabler sont vendorisées dans `assets/icons/tabler/`, et
-  `ux_icons.iconify.enabled` est à `false` ;
-- l'audio est synthétisé en Web Audio, sans soundfont ni échantillon : le
-  timbre de piano est calculé, il ne pèse pas un octet.
+- no JS library from a CDN — everything goes through Yarn and Webpack Encore;
+- no remote font — Nunito lives in `assets/fonts/`, Bravura and Academico are
+  embedded as base64 inside the VexFlow bundle;
+- the Tabler icons are vendored in `assets/icons/tabler/`, and
+  `ux_icons.iconify.enabled` is `false`;
+- the audio is synthesised with Web Audio, with no soundfont and no sample: the
+  piano timbre is computed, it does not weigh a single byte.
 
-`symfony/http-client` est en `require-dev` : une installation de production n'a
-tout simplement pas de quoi émettre une requête HTTP sortante.
+`symfony/http-client` is a `require-dev` dependency: a production install simply
+has nothing to send an outbound HTTP request with.
 
 ---
 
 ## Architecture
 
-### Modèle de données
+### Data model
 
-Trois entités seulement.
+Three entities, no more.
 
 ```
 User            id, username, displayName, roles[], password, pinCode, avatarIcon, …
@@ -263,8 +261,8 @@ Score           id, owner, title, content (JSON), createdAt, updatedAt
 ScoreRevision   id, score, content (JSON), createdAt
 ```
 
-Une partition est un **document**, pas un ensemble de lignes SQL. Les notes
-vivent dans la colonne JSON `Score.content` :
+A score is a **document**, not a set of SQL rows. The notes live in the
+`Score.content` JSON column:
 
 ```json
 {
@@ -289,212 +287,207 @@ vivent dans la colonne JSON `Score.content` :
 }
 ```
 
-`schemaVersion` est présent dès la version 1 : le format pourra évoluer sans
-migration SQL.
+`schemaVersion` is there from version 1 onwards: the format will be able to
+change without an SQL migration.
 
-**Invariant** : les deux portées ont toujours le même nombre de mesures. Il est
-garanti côté client (`ScoreDocument`) et revalidé côté serveur
-(`ScoreContentValidator`) : une requête qui l'enfreint est rejetée en 422.
+**Invariant**: the two staves always hold the same number of bars. It is
+guaranteed on the client (`ScoreDocument`) and revalidated on the server
+(`ScoreContentValidator`): a request that breaks it is rejected with a 422.
 
-### Découpage
+### Layout
 
 ```
 src/
-  Controller/          Api/, Admin/, plus accueil, langue, enfant et sécurité
+  Controller/          Api/, Admin/, plus home, language, child and security
   Entity/              User, Score, ScoreRevision
   Repository/
   Security/            authenticators, PinCodeHasher, PinCodeThrottle, ScoreVoter
   Score/               ScoreSchema, ScoreContentValidator, ScoreFactory,
                        ScoreRevisionRecorder, ScorePresenter
-  Trait/, Interface/   IdTrait, TimeTrait et leurs contrats
+  Trait/, Interface/   IdTrait, TimeTrait and their contracts
   Listener/            TimeListener, LocaleSubscriber
   Enum/                AvatarIcon, AppLocale
 assets/
-  controllers/         un contrôleur Stimulus par responsabilité
+  controllers/         one Stimulus controller per responsibility
   js/score/            ScoreDocument, ScoreRenderer, UndoStack, pitch helpers
   js/audio/            AudioEngine
-  styles/              _variables, _mixins, puis un fichier par composant
-translations/          un messages.<langue>.yaml par langue (fr, en, es, pt, de)
-public/icons/          icônes d'écran d'accueil, générées par bin/build-icons.sh
+  styles/              _variables, _mixins, then one file per component
+translations/          one messages.<language>.yaml per language (fr, en, es, pt, de)
+public/icons/          home screen icons, generated by bin/build-icons.sh
 tests/
   Unit/, Functional/   PHPUnit
   e2e/                 Playwright
 ```
 
-### Contrôleurs Stimulus
+### Stimulus controllers
 
-| Contrôleur | Responsabilité |
+| Controller | Responsibility |
 | --- | --- |
-| `score-editor` | orchestre le document, le rendu, la sélection, l'undo |
-| `piano-keyboard` | clavier virtuel, mode de saisie principal |
-| `playback` | lecture, curseur, tempo |
-| `autosave` | debounce 2 s, `PUT`, indicateur, tampon `localStorage` |
-| `note-palette` | durées, silences, altérations |
-| `pin-pad` | pavé numérique à 4 chiffres |
-| `tour` | visite guidée, sur la liste et dans l'éditeur |
+| `score-editor` | orchestrates the document, the rendering, the selection, the undo |
+| `piano-keyboard` | virtual keyboard, the main way of entering notes |
+| `playback` | playback, cursor, tempo |
+| `autosave` | 2 s debounce, `PUT`, indicator, `localStorage` buffer |
+| `note-palette` | durations, rests, accidentals |
+| `pin-pad` | four-digit keypad |
+| `tour` | guided tour, on the library and in the editor |
 
 ---
 
-## Décisions prises
+## Decisions taken
 
-Choix tranchés en cours de route, à revoir librement.
+Calls made along the way, free to revisit.
 
-- **Symfony 7.4 (LTS)** plutôt qu'une 7.x plus ancienne : c'est la dernière
-  branche 7 et elle supporte officiellement PHP 8.4 et 8.5.
-- **Yarn 4, mais avec `nodeLinker: node-modules`.** Le mode Plug'n'Play par
-  défaut supprime `node_modules` ; Encore, Babel et Playwright s'attendent tous
-  à trouver leurs paquets sur le disque, et les faire changer d'avis coûte des
-  rustines que le projet n'a aucune raison de porter. Aucune version de Yarn
-  n'est épinglée : `corepack enable` donne une 4.x, elles se valent ici.
-- **La quarantaine de Yarn est laissée en place.** Yarn refuse par défaut tout
-  paquet publié depuis moins de 24 h — le laps où une compromission de registre
-  fait le plus de dégâts. Deux dépendances de développement en sortaient
-  fraîches et ont été redescendues d'un cran (`@playwright/test` 1.61.1, `sass`
-  1.101.7) plutôt que d'abaisser la barrière pour tout le monde.
-- **VexFlow 5 via l'entrée `vexflow/bravura`** plutôt que l'entrée par défaut :
-  elle embarque Bravura et Academico mais pas Petaluma ni Gonville, ce qui
-  économise environ 300 Ko de bundle pour des polices qu'on n'utilise pas.
-- **Nunito repris de mes autres projets** (fichiers `woff2` Google Fonts,
-  sous-ensembles latin et latin-ext), copiés en local et renommés lisiblement.
-  Deux fichiers couvrent les cinq langues de l'interface ; une langue en
-  cyrillique ou en grec demanderait un sous-ensemble de plus.
-- **Deux portées, pas plus.** Le modèle autorise un tableau `staves`, mais tout
-  l'éditeur suppose exactement deux entrées (sol puis fa). Généraliser
-  demanderait de revoir le rendu et le clavier.
-- **Une mesure vide contient un silence de la durée de la mesure**, généré à la
-  volée au rendu plutôt que stocké. Le document reste ainsi le reflet exact de
-  ce que l'enfant a saisi.
-- **Débordement de mesure : refus pur et simple**, avec un flash rouge sur la
-  mesure et un message. Pas de complétion automatique par des silences, pas de
-  report sur la mesure suivante : déroutant pour un enfant.
-- **Undo/redo par instantanés** du document complet (50 niveaux) plutôt que par
-  commandes inversibles. Le document fait quelques kilo-octets, la simplicité
-  vaut mieux ici que l'élégance.
-- **Le code PIN est haché avec le même hasher que les mots de passe**
-  (bcrypt, coût 12). Quatre chiffres restent quatre chiffres : la vraie défense
-  est la limitation de tentatives (5 essais, puis blocage progressif).
-- **Limitation de tentatives en base**, sur `User`, plutôt que via
-  `symfony/rate-limiter` : la contrainte doit suivre le profil et survivre au
-  changement d'appareil, pas être attachée à une IP.
-- **Pas de bouton « Enregistrer ».** Autosave en debounce de 2 s, indicateur
-  discret. `localStorage` sert de tampon en cas d'échec réseau et propose une
-  restauration à la réouverture, mais la base fait foi.
-- **Vingt révisions conservées par partition**, purgées à l'écriture. Une
-  révision n'est créée que si le contenu a réellement changé.
-- **Audio v1 : synthèse additive par table d'ondes et filtre dynamique**, et
-  non un simple oscillateur triangle avec enveloppe ADSR — ce dernier sonnait
-  « jouet ». Une `PeriodicWave` de 14 harmoniques en 1/n^1.2, avec un léger
-  renfort des partiels 2 à 4 où se joue la présence, construite une seule fois.
-  Elle traverse un passe-bas qui s'ouvre large à l'attaque (7 à 11 × la
-  fondamentale, jamais sous 5 kHz pour que les graves gardent leur définition)
-  puis se referme lentement sur la note. L'enveloppe est percutante — attaque
-  de 4 ms puis décroissance exponentielle continue, jamais de plateau de
-  sustain — et un bruit de marteau assez présent détache chaque note dans un
-  trait rapide.
+- **Symfony 7.4 (LTS)** rather than an older 7.x: it is the last of the 7
+  branch and it officially supports PHP 8.4 and 8.5.
+- **Yarn 4, but with `nodeLinker: node-modules`.** The default Plug'n'Play mode
+  does away with `node_modules`; Encore, Babel and Playwright all expect to find
+  their packages on disk, and changing their minds costs patches this project
+  has no reason to carry. No Yarn version is pinned: `corepack enable` gives a
+  4.x, and they are equivalent here.
+- **Yarn's quarantine is left in place.** By default Yarn refuses any package
+  published less than 24 hours ago — the window in which a registry compromise
+  does the most damage. Two development dependencies came out fresh and were
+  stepped down one notch (`@playwright/test` 1.61.1, `sass` 1.101.7) rather than
+  lowering the barrier for everyone.
+- **VexFlow 5 through the `vexflow/bravura` entry point** rather than the
+  default one: it embeds Bravura and Academico but neither Petaluma nor
+  Gonville, which saves about 300 KB of bundle for fonts we do not use.
+- **Nunito carried over from my other projects** (Google Fonts `woff2` files,
+  latin and latin-ext subsets), copied locally and renamed readably. Two files
+  cover the five interface languages; a Cyrillic or Greek language would call
+  for one more subset.
+- **Two staves, no more.** The model allows a `staves` array, but the whole
+  editor assumes exactly two entries (treble then bass). Generalising would mean
+  reworking the rendering and the keyboard.
+- **An empty bar holds a rest the length of the bar**, generated on the fly at
+  render time rather than stored. The document thus stays an exact reflection of
+  what the child entered.
+- **Bar overflow: a flat refusal**, with a red flash on the bar and a message.
+  No automatic padding with rests, no spilling onto the next bar: confusing for
+  a child.
+- **Undo/redo by snapshots** of the whole document (50 levels) rather than by
+  invertible commands. The document is a few kilobytes; simplicity is worth more
+  here than elegance.
+- **The PIN code is hashed with the same hasher as passwords** (bcrypt, cost
+  12). Four digits remain four digits: the real defence is the throttling
+  (5 attempts, then a growing lockout).
+- **Throttling in the database**, on `User`, rather than through
+  `symfony/rate-limiter`: the constraint has to follow the profile and survive a
+  change of device, not be attached to an IP.
+- **No "Save" button.** Autosave on a 2 s debounce, with a quiet indicator.
+  `localStorage` acts as a buffer when the network fails and offers to restore
+  on reopening, but the database is the source of truth.
+- **Twenty revisions kept per score**, purged on write. A revision is only
+  created if the content really changed.
+- **Audio v1: additive synthesis from a wave table with a dynamic filter**,
+  rather than a plain triangle oscillator with an ADSR envelope — that one
+  sounded like a toy. A `PeriodicWave` of 14 harmonics in 1/n^1.2, with a slight
+  boost of partials 2 to 4 where presence lives, built once and for all. It goes
+  through a low-pass that opens wide on the attack (7 to 11 × the fundamental,
+  never below 5 kHz so the low notes keep their definition) then slowly closes
+  over the note. The envelope is percussive — a 4 ms attack then a continuous
+  exponential decay, never a sustain plateau — and a fairly present hammer noise
+  detaches each note in a fast run.
 
-  Trois réglages nommés en haut de la classe : `brightness`, `resonance` et
-  `hammer`. Le registre agit sur tout : durée de résonance, coupure du filtre,
-  et un `registerTilt` qui baisse le grave d'environ 3 dB pour que la main
-  gauche ne couvre pas la mélodie. Mesuré hors ligne sur un la4 : énergie des
-  harmoniques 4 à 10 divisée par deux entre le début et la fin de la note ;
-  un do grave garde 25 % de son niveau à 0,9 s, un do aigu moins de 1 %. Sur
-  « Ma première gamme », qui empile des croches sur une ronde de basse, la
-  crête reste à 0,39 sans un seul échantillon écrêté. Budget : un oscillateur,
-  un filtre, un gain par note, plus deux nœuds éphémères pour le marteau.
-- **Feuille de style d'impression en entrée Encore séparée**, chargée en
-  `media="print"`. Elle ne peut pas polluer l'affichage écran.
-- **Jetons CSRF classiques, adossés à la session**, plutôt que le mode
-  « stateless » (double cookie) de Symfony 7.2+. Ce dernier obligerait le
-  JavaScript à participer à chaque envoi, y compris aux `fetch` de l'éditeur.
-  L'API lit son jeton dans l'en-tête `X-CSRF-Token`.
-- **`serverVersion=mariadb-10.11.0` et non `mariadb-10.11`** dans le DSN :
-  DBAL 4 exige un numéro de version complet `major.minor.patch` et refuse la
-  forme abrégée.
-- **`symfony/http-client` est en `require-dev`.** Il n'est utile qu'à
-  `ux:icons:import`, au moment de vendoriser une icône. En production, l'app
-  n'a même pas de quoi émettre une requête sortante.
-- **Le bandeau de portée active est dessiné dans le SVG**, pas en HTML
-  au-dessus : il suit ainsi le découpage en systèmes sans calcul de position.
-  Il est isolé dans un groupe `vf-active-stave` que l'impression masque.
-- **`window.crocheApp` expose l'application Stimulus.** Pratique pour
-  inspecter l'éditeur depuis la console quand quelque chose cloche sur l'iPad.
-- **Langue en session, pas dans l'URL.** Les adresses restent identiques dans
-  les cinq langues (français, anglais, espagnol, portugais, allemand) : le
-  raccourci de l'iPad continue de marcher quelle que soit la langue. Le premier
-  passage suit la préférence du navigateur, puis bascule sur le français. Le
-  code, les routes et les clés de traduction restent en anglais ; seule
-  l'interface est traduite.
-- **Les noms de notes viennent du catalogue.** Do-Ré-Mi en français, C-D-E en
-  anglais : c'est la même touche de piano, mais pas la même façon de la lire.
-  Le dièse est un patron et non un mot à ajouter (`'%note% dièse'`,
-  `'%note%is'`), parce que l'allemand le soude au nom : Cis, Fis, Ais. Et le si
-  allemand s'écrit H — sans conséquence ici, l'application n'écrit jamais de
-  bémols.
-- **Le manifeste est une route, pas un fichier dans `public/`.** Un fichier
-  statique aurait été plus simple, mais il fige le nom de l'application dans
-  une seule langue : une famille lusophone aurait installé une icône nommée en
-  français. Le manifeste est donc rendu par `ManifestController`, et `name`
-  comme `short_name` sortent des catalogues comme le reste de l'interface. Le
-  prix à payer est un piège discret : un manifeste est récupéré *sans* cookies
-  par défaut, donc sans la session, donc sans la langue choisie. C'est
-  `crossorigin="use-credentials"` sur la balise `<link>` qui règle ça, et
-  c'est la seule raison pour laquelle cet attribut est là.
-- **Mode `standalone`, sans service worker.** Ajoutée à l'écran d'accueil,
-  Croche s'ouvre sans barre d'adresse ni barre d'onglets — sur l'iPad, c'est
-  autant de hauteur rendue au clavier de piano. Le hors-ligne, lui, reste hors
-  périmètre : il demanderait un service worker, et l'autosave tape l'API de
-  toute façon.
-  Le piège à connaître : **une web app lancée depuis l'icône a son propre bocal
-  à cookies**, séparé de celui de Safari. La session de l'onglet ne suit pas.
-  Le code PIN est donc à ressaisir une fois dans l'application, et ensuite la
-  session tient normalement. Ce n'est pas un bug, c'est iOS.
-- **Les icônes d'écran d'accueil sont des PNG opaques**, dérivés de
-  `public/favicon.svg` par `bin/build-icons.sh`. Opaques parce qu'iOS
-  compose l'icône sur du noir : un PNG transparent donne une icône noire. Et
-  sans coins arrondis, parce qu'iOS pose son propre masque — arrondir deux
-  fois laisse une bordure sombre. Les PNG sont commités : personne n'a besoin
-  de `rsvg-convert` pour installer le projet.
-- **Les catalogues sont tenus par un test.** `TranslationCatalogueTest` compare
-  les clés des cinq fichiers et vérifie que chaque `%placeholder%` survit à la
-  traduction : une clé ajoutée d'un seul côté ne peut plus passer inaperçue.
-- **Les tests PHP tournent sur SQLite**, pas sur MariaDB. Un contributeur n'a
-  rien à installer, et la consigne de ne toucher qu'à la base `croche` est
-  respectée. Le schéma est construit depuis le mapping, les migrations étant
-  spécifiques à MySQL. Contrepartie assumée : une régression propre à MariaDB
-  échapperait à cette suite.
-- **Pas de mode sombre**, et pas de framework CSS : les deux ajouteraient plus
-  de surface que de valeur ici.
-- **La visite guidée se décrit dans les gabarits**, pas dans le JavaScript. Un
-  élément annoté `data-tour-step` entre dans la visite de son écran, et le
-  contrôleur `tour` se contente de ramasser ce qui est visible, de trier et de
-  dérouler. Ajouter un bouton à l'éditeur, c'est ajouter trois attributs à côté
-  de lui — pas éditer une liste d'étapes qui vivrait ailleurs et se
-  désynchroniserait. Les textes viennent du catalogue comme le reste.
-- **La visite démarre seule la première fois, une fois par écran** (drapeau
-  `croche.tour.<écran>` en `localStorage`), et le bouton d'aide la rejoue. Une
-  enfant de huit ans ne va pas chercher un bouton d'aide ; le drapeau est posé à
-  l'ouverture, pas à la fin, pour que celle qui la referme d'un geste ne la
-  revoie pas. `signIn()` des tests end-to-end pose les deux drapeaux : sans
-  cela, l'overlay avalerait les clics de toute la suite.
+  Three named settings at the top of the class: `brightness`, `resonance` and
+  `hammer`. The register drives everything: resonance length, filter cutoff, and
+  a `registerTilt` that drops the bass by about 3 dB so the left hand does not
+  cover the melody. Measured offline on an A4: the energy of harmonics 4 to 10
+  halves between the start and the end of the note; a low C keeps 25 % of its
+  level at 0.9 s, a high C less than 1 %. On "My first scale", which stacks
+  eighth notes over a whole note in the bass, the peak stays at 0.39 without a
+  single clipped sample. Budget: one oscillator, one filter and one gain per
+  note, plus two short-lived nodes for the hammer.
+- **The print stylesheet is a separate Encore entry**, loaded with
+  `media="print"`. It cannot pollute the on-screen display.
+- **Classic session-backed CSRF tokens**, rather than the "stateless"
+  (double-submit cookie) mode of Symfony 7.2+. That one would force the
+  JavaScript to take part in every submission, including the editor's `fetch`
+  calls. The API reads its token from the `X-CSRF-Token` header.
+- **`serverVersion=mariadb-10.11.0` and not `mariadb-10.11`** in the DSN: DBAL 4
+  demands a full `major.minor.patch` version number and rejects the short form.
+- **`symfony/http-client` is in `require-dev`.** It is only useful to
+  `ux:icons:import`, when vendoring an icon. In production the app does not even
+  have the means to send an outbound request.
+- **The active-staff band is drawn inside the SVG**, not in HTML on top of it:
+  that way it follows the split into systems with no position arithmetic. It is
+  isolated in a `vf-active-stave` group that printing hides.
+- **`window.crocheApp` exposes the Stimulus application.** Handy for inspecting
+  the editor from the console when something misbehaves on the iPad.
+- **Language in the session, not in the URL.** Addresses stay identical across
+  the five languages (French, English, Spanish, Portuguese, German): the iPad
+  shortcut keeps working whatever the language. The first visit follows the
+  browser preference, then falls back to French. The code, the route names and
+  the translation keys stay in English; only the interface is translated — the
+  URL paths themselves are French words (`/morceaux`, `/profils`).
+- **Note names come from the catalogue.** Do-Ré-Mi in French, C-D-E in English:
+  it is the same piano key, but not the same way of reading it. The sharp is a
+  pattern rather than a word to append (`'%note% dièse'`, `'%note%is'`), because
+  German welds it to the name: Cis, Fis, Ais. And the German B is written H —
+  of no consequence here, the app never writes flats.
+- **The manifest is a route, not a file in `public/`.** A static file would have
+  been simpler, but it freezes the app name into a single language: a
+  Portuguese-speaking family would have installed an icon named in French. So
+  the manifest is rendered by `ManifestController`, and `name` and `short_name`
+  come out of the catalogues like the rest of the interface. The price is a
+  quiet trap: a manifest is fetched *without* cookies by default, so without the
+  session, so without the chosen language. `crossorigin="use-credentials"` on
+  the `<link>` tag is what fixes that, and it is the only reason the attribute
+  is there.
+- **`standalone` mode, with no service worker.** Added to the home screen,
+  Croche opens with no address bar and no tab bar — on the iPad, that is height
+  handed back to the piano keyboard. Offline use stays out of scope: it would
+  call for a service worker, and autosave hits the API anyway.
+  The trap worth knowing: **a web app launched from the icon has its own cookie
+  jar**, separate from Safari's. The session from the tab does not follow. So
+  the PIN code has to be entered once inside the app, and the session holds
+  normally afterwards. This is not a bug, it is iOS.
+- **The home screen icons are opaque PNGs**, derived from `public/favicon.svg`
+  by `bin/build-icons.sh`. Opaque because iOS composites the icon over black: a
+  transparent PNG gives a black icon. And with square corners, because iOS
+  applies its own mask — rounding twice leaves a dark border. The PNGs are
+  committed: nobody needs `rsvg-convert` to install the project.
+- **The catalogues are held by a test.** `TranslationCatalogueTest` compares the
+  keys of the five files and checks that every `%placeholder%` survives
+  translation: a key added on one side only can no longer slip through.
+- **The PHP tests run on SQLite**, not on MariaDB. A contributor has nothing to
+  install, and the rule of only ever touching the `croche` database is
+  respected. The schema is built from the mapping, the migrations being
+  MySQL-specific. Accepted trade-off: a regression specific to MariaDB would
+  escape this suite.
+- **No dark mode**, and no CSS framework: both would add more surface than
+  value here.
+- **The guided tour describes itself in the templates**, not in the JavaScript.
+  An element annotated with `data-tour-step` joins the walk of its screen, and
+  the `tour` controller does nothing but collect what is visible, sort it and
+  drive. Adding a button to the editor means adding three attributes next to it
+  — not editing a list of steps living somewhere else and drifting out of sync.
+  The wording comes from the catalogue like everything else.
+- **The tour starts on its own the first time, once per screen** (a
+  `croche.tour.<screen>` flag in `localStorage`), and the help button plays it
+  again. An eight-year-old will not go looking for a help button; the flag is
+  written when the tour opens rather than when it ends, so a child who waves it
+  away does not meet it again. `signIn()` in the end-to-end tests writes both
+  flags: without that, the overlay would swallow the clicks of the whole suite.
 
 ---
 
 ## Licences
 
-Le **code** de Croche est sous licence [MIT](LICENSE).
+Croche's **code** is under the [MIT](LICENSE) licence.
 
-Certains **assets embarqués** relèvent d'autres licences, toutes compatibles
-avec une diffusion MIT mais assorties de leurs propres obligations :
+Some **embedded assets** fall under other licences, all compatible with an MIT
+distribution but carrying obligations of their own:
 
 - **Nunito** (interface) — SIL Open Font License 1.1
-- **Bravura** (glyphes musicaux, via VexFlow) — SIL OFL 1.1, avec « Bravura »
-  comme nom de police réservé : une version modifiée doit être renommée
-- **Academico** (texte, via VexFlow) — SIL OFL 1.1
+- **Bravura** (music glyphs, through VexFlow) — SIL OFL 1.1, with "Bravura" as a
+  Reserved Font Name: a modified version must be renamed
+- **Academico** (text, through VexFlow) — SIL OFL 1.1
 - **Tabler Icons** — MIT
 - **Twig** — BSD-3-Clause
 
-Le détail — auteurs, versions, obligations, texte de l'OFL — est dans
+The detail — authors, versions, obligations, the OFL text — is in
 [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md).
 
-Aucune dépendance sous GPL, AGPL ou CC-BY-NC n'est utilisée, et il ne faut pas
-en introduire : cela rendrait le projet indiffusable sous MIT.
+No dependency under GPL, AGPL or CC-BY-NC is used, and none must be introduced:
+that would make the project impossible to distribute under MIT.

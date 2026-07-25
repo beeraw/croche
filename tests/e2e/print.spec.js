@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-import { openScore, signIn, useLanguage } from './helpers.js';
+import { DEMO, openScore, signIn, useLanguage } from './helpers.js';
 
 /**
  * Printing is the real reward: a piece leaving the screen as paper. The sheet
@@ -25,8 +25,8 @@ test.describe('the print sheet', () => {
         const header = page.locator('.editor__print-header');
 
         await expect(header).toBeVisible();
-        await expect(header.locator('.editor__print-title')).toContainText('Au clair de la lune');
-        await expect(header.locator('.editor__print-author')).toContainText('Aïcha');
+        await expect(header.locator('.editor__print-title')).toContainText(DEMO.piece);
+        await expect(header.locator('.editor__print-author')).toContainText(DEMO.child);
     });
 
     test('the score itself is still there', async ({ page }) => {

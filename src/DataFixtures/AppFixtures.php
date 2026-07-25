@@ -45,14 +45,14 @@ class AppFixtures extends Fixture
         $manager->persist(
             (new Score())
                 ->setOwner($child)
-                ->setTitle('Au clair de la lune')
-                ->setContent($this->auClairDeLaLune())
+                ->setTitle('Twinkle little star')
+                ->setContent($this->twinkle())
         );
 
         $manager->persist(
             (new Score())
                 ->setOwner($child)
-                ->setTitle('Ma première gamme')
+                ->setTitle('My first scale')
                 ->setContent($this->scale())
         );
 
@@ -60,39 +60,43 @@ class AppFixtures extends Fixture
     }
 
     /**
-     * The opening phrase: melody in the treble, roots held in the bass.
+     * The opening phrase: melody in the treble, chord roots held in the bass.
      *
      * @return array<string, mixed>
      */
-    private function auClairDeLaLune(): array
+    private function twinkle(): array
     {
         $treble = [
             $this->measure([
                 $this->note('c/4', 'q'),
                 $this->note('c/4', 'q'),
-                $this->note('c/4', 'q'),
-                $this->note('d/4', 'q'),
+                $this->note('g/4', 'q'),
+                $this->note('g/4', 'q'),
             ]),
             $this->measure([
-                $this->note('e/4', 'h'),
-                $this->note('d/4', 'h'),
+                $this->note('a/4', 'q'),
+                $this->note('a/4', 'q'),
+                $this->note('g/4', 'h'),
             ]),
             $this->measure([
-                $this->note('c/4', 'q'),
+                $this->note('f/4', 'q'),
+                $this->note('f/4', 'q'),
                 $this->note('e/4', 'q'),
-                $this->note('d/4', 'q'),
-                $this->note('d/4', 'q'),
+                $this->note('e/4', 'q'),
             ]),
             $this->measure([
-                $this->note('c/4', 'w'),
+                $this->note('d/4', 'q'),
+                $this->note('d/4', 'q'),
+                $this->note('c/4', 'h'),
             ]),
         ];
 
+        // I I, IV I, IV I, V I — the roots a beginner's left hand can hold.
         $bass = [
             $this->measure([$this->note('c/3', 'h'), $this->note('c/3', 'h')]),
-            $this->measure([$this->note('g/2', 'h'), $this->note('g/2', 'h')]),
-            $this->measure([$this->note('c/3', 'h'), $this->note('g/2', 'h')]),
-            $this->measure([$this->note('c/3', 'w')]),
+            $this->measure([$this->note('f/2', 'h'), $this->note('c/3', 'h')]),
+            $this->measure([$this->note('f/2', 'h'), $this->note('c/3', 'h')]),
+            $this->measure([$this->note('g/2', 'h'), $this->note('c/3', 'h')]),
         ];
 
         return $this->document($treble, $bass, tempo: 96);

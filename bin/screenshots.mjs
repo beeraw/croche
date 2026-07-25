@@ -20,7 +20,10 @@ import { devices, webkit } from '@playwright/test';
 const baseURL = process.env.CROCHE_BASE_URL ?? 'https://croche';
 const outputDir = join(dirname(fileURLToPath(import.meta.url)), '..', 'docs/screenshots');
 
-const DEMO = { child: 'Aïcha', pin: '2018', piece: 'Au clair de la lune' };
+const DEMO = { child: 'Aïcha', pin: '2018', piece: 'Twinkle little star' };
+
+/** The README is in English, so the interface on its images has to be too. */
+const LOCALE = 'en';
 
 /** The web debug toolbar belongs to the developer, not to the README. */
 const HIDE_DEV_CHROME = '.sf-toolbar, .sf-minitoolbar { display: none !important; }';
@@ -35,7 +38,7 @@ async function newContext({ tours = false } = {}) {
         baseURL,
         // Caddy serves a locally-signed certificate in development.
         ignoreHTTPSErrors: true,
-        locale: 'fr-FR',
+        locale: 'en-GB',
         reducedMotion: 'reduce',
     });
 
@@ -47,7 +50,7 @@ async function newContext({ tours = false } = {}) {
     }
 
     const page = await context.newPage();
-    await page.goto('/langue/fr');
+    await page.goto(`/langue/${LOCALE}`);
 
     return { context, page };
 }
