@@ -202,3 +202,28 @@
         transform: translateX(8px);
     }
 }
+
+/// Error pages. A child should meet a sentence and a way back, never a stack
+/// trace or a bare status code.
+.error-page {
+    max-width: 30rem;
+
+    svg {
+        width: 3.5rem;
+        height: 3.5rem;
+        margin: 0 auto $space-4;
+        color: $gray-300;
+    }
+}
+
+.error-page__title {
+    margin-bottom: $space-3;
+    color: $primary;
+    font-size: 1.75rem;
+}
+
+.error-page__body {
+    margin-bottom: $space-5;
+    color: $gray-500;
+    font-size: 1.0625rem;
+}

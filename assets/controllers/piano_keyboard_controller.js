@@ -59,8 +59,10 @@ export default class extends Controller {
             button.textContent = name;
         }
 
-        // Middle C is the landmark she navigates from.
-        if (key === 'c/4') {
+        // Middle C is the landmark she navigates from. The white key only:
+        // midiToKey spells C sharp as "c/4" with an accidental, so testing the
+        // pitch alone would mark the black key beside it too.
+        if (!black && key === this.scrollToValue) {
             button.classList.add('piano__key--anchor');
         }
 
@@ -94,7 +96,7 @@ export default class extends Controller {
      * Opens on middle C rather than at the far left of the range.
      */
     scrollToAnchor() {
-        const anchor = this.keysTarget.querySelector(`[data-key="${this.scrollToValue}"]`);
+        const anchor = this.keysTarget.querySelector('.piano__key--anchor');
 
         if (!anchor) {
             return;

@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'error.forbidden_title'|trans }} — {{ 'app.name'|trans }}{% endblock %}
+
+{% block body %}
+    <div class="login">
+        <div class="error-page">
+            {{ ux_icon('tabler:lock-open') }}
+            <h1 class="error-page__title">{{ 'error.forbidden_title'|trans }}</h1>
+            <p class="error-page__body">{{ 'error.forbidden_body'|trans }}</p>
+            <a class="btn btn--lg" href="{{ path('home') }}">{{ 'error.go_home'|trans }}</a>
+        </div>
+    </div>
+{% endblock %}

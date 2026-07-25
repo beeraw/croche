@@ -24,7 +24,7 @@ les entendre, et surtout ne pas les perdre. Pensé pour l'iPad, au doigt.
 ## Installation
 
 ```bash
-git clone https://github.com/<votre-compte>/croche.git
+git clone https://github.com/beeraw/croche.git
 cd croche
 composer install
 npm install
@@ -81,6 +81,58 @@ mise en ligne réelle.
 | --- | --- | --- |
 | Administrateur | `admin` | `admin` |
 | Enfant (Aïcha) | tuile de profil | code `2018` |
+
+Recharger les fixtures recrée les partitions avec de nouveaux identifiants :
+un onglet resté ouvert sur `/morceaux/12` tombera sur une page « ce morceau
+n'existe plus ». C'est normal, et c'est le seul effet de bord.
+
+## Tests
+
+Deux suites, indépendantes l'une de l'autre.
+
+**PHPUnit** couvre la validation du document, l'API, le Voter, la limitation de
+tentatives sur le code PIN, la purge des révisions et le changement de langue.
+Elle tourne sur un SQLite jeté dans `var/` : aucune base MariaDB n'est
+nécessaire, et rien en dehors de `croche` n'est touché.
+
+```bash
+composer test
+```
+
+**Playwright** couvre ce que seul un vrai navigateur peut montrer : le rendu
+VexFlow, la saisie au doigt, le refus d'une mesure pleine, l'undo, l'autosave,
+la feuille d'impression, et la mesure du timbre de piano rendu hors ligne.
+
+Elle a besoin d'une instance qui tourne et des fixtures chargées :
+
+```bash
+php bin/console doctrine:fixtures:load --no-interaction && npm run build
+```
+
+```bash
+npm run test:e2e
+```
+
+L'adresse visée est `https://croche` ; passez `CROCHE_BASE_URL` pour en changer.
+La première fois, `npx playwright install` télécharge les navigateurs.
+
+### Navigateurs couverts
+
+| Moteur | Pourquoi | État |
+| --- | --- | --- |
+| WebKit | l'iPad, la cible réelle | 33/33 |
+| Chromium | Chrome, Edge, et la majorité du parc | 33/33 |
+| iPad (gen 7) | WebKit, mais en tactile et en portrait | 33/33 |
+| Firefox | moteur indépendant, attrape ce que les deux autres partagent | non exécuté ici |
+
+La suite Firefox est configurée mais n'a jamais tourné : sur la machine de
+développement, le bac à sable de macOS refusait de lancer le
+`plugin-container` de Firefox. Les trois autres projets passent intégralement.
+Si `npm run test:e2e` échoue au lancement de Firefox chez vous aussi, retirez
+le projet de `playwright.config.js` — les trois autres suffisent à couvrir
+Blink et WebKit.
+
+---
 
 ## API
 
@@ -188,19 +240,24 @@ garanti côté client (`ScoreDocument`) et revalidé côté serveur
 
 ```
 src/
-  Controller/          Api/, Admin/, plus les contrôleurs enfant et sécurité
+  Controller/          Api/, Admin/, plus accueil, langue, enfant et sécurité
   Entity/              User, Score, ScoreRevision
   Repository/
   Security/            authenticators, PinCodeHasher, PinCodeThrottle, ScoreVoter
   Score/               ScoreSchema, ScoreContentValidator, ScoreFactory,
                        ScoreRevisionRecorder, ScorePresenter
   Trait/, Interface/   IdTrait, TimeTrait et leurs contrats
-  Listener/            TimeListener (horodatage automatique)
+  Listener/            TimeListener, LocaleSubscriber
+  Enum/                AvatarIcon, AppLocale
 assets/
   controllers/         un contrôleur Stimulus par responsabilité
   js/score/            ScoreDocument, ScoreRenderer, UndoStack, pitch helpers
   js/audio/            AudioEngine
   styles/              _variables, _mixins, puis un fichier par composant
+translations/          messages.fr.yaml, messages.en.yaml
+tests/
+  Unit/, Functional/   PHPUnit
+  e2e/                 Playwright
 ```
 
 ### Contrôleurs Stimulus
@@ -288,10 +345,20 @@ Choix tranchés en cours de route, à revoir librement.
   Il est isolé dans un groupe `vf-active-stave` que l'impression masque.
 - **`window.crocheApp` expose l'application Stimulus.** Pratique pour
   inspecter l'éditeur depuis la console quand quelque chose cloche sur l'iPad.
-- **Pas de mode sombre**, pas de framework CSS, et pas de suite de tests
-  automatisés livrée dans cette première passe : le périmètre était déjà large.
-  La logique a été vérifiée manuellement, y compris le rendu VexFlow, l'audio
-  et l'impression, pilotés dans un Chrome headless.
+- **Langue en session, pas dans l'URL.** Les adresses restent identiques en
+  français et en anglais : le raccourci de l'iPad continue de marcher quelle que
+  soit la langue. Le premier passage suit la préférence du navigateur, puis
+  bascule sur le français. Le code, les routes et les clés de traduction
+  restent en anglais ; seule l'interface est traduite.
+- **Les noms de notes viennent du catalogue.** Do-Ré-Mi en français, C-D-E en
+  anglais : c'est la même touche de piano, mais pas la même façon de la lire.
+- **Les tests PHP tournent sur SQLite**, pas sur MariaDB. Un contributeur n'a
+  rien à installer, et la consigne de ne toucher qu'à la base `croche` est
+  respectée. Le schéma est construit depuis le mapping, les migrations étant
+  spécifiques à MySQL. Contrepartie assumée : une régression propre à MariaDB
+  échapperait à cette suite.
+- **Pas de mode sombre**, et pas de framework CSS : les deux ajouteraient plus
+  de surface que de valeur ici.
 
 ---
 

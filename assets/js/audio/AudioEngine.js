@@ -138,7 +138,11 @@ export default class AudioEngine {
             this.hammerBuffer = this.buildHammerBuffer();
         }
 
-        if (this.context.state !== 'running') {
+        // An OfflineAudioContext is suspended until it renders, and has no
+        // gesture gate to lift. Firefox in particular does not appreciate
+        // resume() being called on one. The offline path is only ever reached
+        // by the tests, which swap the context to measure the waveform.
+        if (this.context.state !== 'running' && !this.isOffline()) {
             // Safari rejects resume() when the call did not come from a
             // gesture, and can throw synchronously rather than rejecting.
             // Nothing useful to do either way, and an unhandled error would
@@ -153,6 +157,10 @@ export default class AudioEngine {
         }
 
         return true;
+    }
+
+    isOffline() {
+        return typeof this.context?.startRendering === 'function';
     }
 
     /**

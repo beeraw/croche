@@ -42,3 +42,9 @@ yarn-error.log
 /.phpunit.cache/
 /phpunit.xml
 ###< phpunit ###
+
+###> playwright ###
+/test-results/
+/playwright-report/
+/blob-report/
+###< playwright ###

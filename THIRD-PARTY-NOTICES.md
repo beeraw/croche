@@ -80,6 +80,19 @@ by accident.
 Build-time-only tooling (`@symfony/webpack-encore`, `webpack`, `sass`, Babel and
 their transitive dependencies) is MIT-licensed and never reaches the browser.
 
+## Test tooling
+
+Development-only, never shipped and never loaded by the application.
+
+| Package | Licence | Note |
+| --- | --- | --- |
+| [@playwright/test](https://github.com/microsoft/playwright) | Apache-2.0 | End-to-end tests. Apache-2.0 is compatible with redistributing this project under MIT; it is a dev dependency and no Playwright code is bundled. |
+| [phpunit/phpunit](https://github.com/sebastianbergmann/phpunit) | BSD-3-Clause | PHP test suite. |
+
+`npx playwright install` downloads browser builds into a cache outside the
+repository. Those builds carry their own licences (Chromium: BSD-3-Clause and
+others; Firefox: MPL-2.0; WebKit: LGPL/BSD) and are not redistributed here.
+
 ---
 
 ## PHP dependencies

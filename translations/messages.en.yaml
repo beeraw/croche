@@ -189,6 +189,20 @@ admin:
         score_deleted: '"%title%" deleted.'
         version_restored: 'Version from %date% restored.'
 
+error:
+    not_found_title: This page is gone
+    not_found_body: >-
+        The piece you are looking for may have been deleted or renamed.
+        Head back to your pieces — it should be there.
+    forbidden_title: This one is not yours
+    forbidden_body: >-
+        This piece belongs to somebody else. Everyone only ever sees their own
+        scores.
+    generic_title: Something went wrong
+    generic_body: >-
+        It is not your fault. Try again in a moment — your work is saved.
+    go_home: Back to the start
+
 form:
     first_name_required: A first name is required.
     username_required: A username is required.

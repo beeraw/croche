@@ -191,6 +191,21 @@ admin:
         score_deleted: '« %title% » supprimé.'
         version_restored: 'Version du %date% restaurée.'
 
+error:
+    not_found_title: Cette page n'existe plus
+    not_found_body: >-
+        Le morceau que tu cherches a peut-être été supprimé ou renommé.
+        Retourne à tes morceaux, il devrait y être.
+    forbidden_title: Ce n'est pas à toi
+    forbidden_body: >-
+        Ce morceau appartient à quelqu'un d'autre. Chacun ne voit que ses
+        propres partitions.
+    generic_title: Quelque chose s'est mal passé
+    generic_body: >-
+        Ce n'est pas de ta faute. Réessaie dans un instant : ton travail est
+        enregistré.
+    go_home: Retour à l'accueil
+
 form:
     first_name_required: Le prénom est obligatoire.
     username_required: L'identifiant est obligatoire.
