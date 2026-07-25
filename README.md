@@ -82,6 +82,24 @@ mise en ligne réelle.
 | Administrateur | `admin` | `admin` |
 | Enfant (Lison) | tuile de profil | code `1234` |
 
+## API
+
+Contrôleurs Symfony classiques, réponses JSON. Les appels mutants exigent un
+jeton CSRF dans l'en-tête `X-CSRF-Token`, et tout accès à une partition
+existante passe par `ScoreVoter`.
+
+| Méthode | Route | Effet |
+| --- | --- | --- |
+| `GET` | `/api/scores` | ses partitions (toutes, pour un admin) |
+| `GET` | `/api/scores/{id}` | une partition, contenu compris |
+| `POST` | `/api/scores` | création |
+| `PUT` | `/api/scores/{id}` | mise à jour — c'est ce qu'appelle l'autosave |
+| `DELETE` | `/api/scores/{id}` | suppression |
+
+Le JSON reçu est validé contre le schéma attendu et **reconstruit clé par clé** :
+rien d'inattendu n'atteint la base. Un document mal formé repart en `422` avec
+le chemin fautif.
+
 ## Commandes utiles
 
 Créer un administrateur, puis un profil enfant :
@@ -172,9 +190,11 @@ src/
   Controller/          Api/, Admin/, plus les contrôleurs enfant et sécurité
   Entity/              User, Score, ScoreRevision
   Repository/
-  Security/            authenticators, PinCodeThrottle, ScoreVoter
-  Score/               ScoreContentValidator, ScoreFactory, ScoreRevisionRecorder
+  Security/            authenticators, PinCodeHasher, PinCodeThrottle, ScoreVoter
+  Score/               ScoreSchema, ScoreContentValidator, ScoreFactory,
+                       ScoreRevisionRecorder, ScorePresenter
   Trait/, Interface/   IdTrait, TimeTrait et leurs contrats
+  Listener/            TimeListener (horodatage automatique)
 assets/
   controllers/         un contrôleur Stimulus par responsabilité
   js/score/            ScoreDocument, ScoreRenderer, UndoStack, pitch helpers
@@ -232,8 +252,25 @@ Choix tranchés en cours de route, à revoir librement.
   révision n'est créée que si le contenu a réellement changé.
 - **Feuille de style d'impression en entrée Encore séparée**, chargée en
   `media="print"`. Elle ne peut pas polluer l'affichage écran.
-- **Pas de mode sombre**, pas de framework CSS, pas de tests automatisés dans
-  cette première passe : le périmètre était déjà large.
+- **Jetons CSRF classiques, adossés à la session**, plutôt que le mode
+  « stateless » (double cookie) de Symfony 7.2+. Ce dernier obligerait le
+  JavaScript à participer à chaque envoi, y compris aux `fetch` de l'éditeur.
+  L'API lit son jeton dans l'en-tête `X-CSRF-Token`.
+- **`serverVersion=mariadb-10.11.0` et non `mariadb-10.11`** dans le DSN :
+  DBAL 4 exige un numéro de version complet `major.minor.patch` et refuse la
+  forme abrégée.
+- **`symfony/http-client` est en `require-dev`.** Il n'est utile qu'à
+  `ux:icons:import`, au moment de vendoriser une icône. En production, l'app
+  n'a même pas de quoi émettre une requête sortante.
+- **Le bandeau de portée active est dessiné dans le SVG**, pas en HTML
+  au-dessus : il suit ainsi le découpage en systèmes sans calcul de position.
+  Il est isolé dans un groupe `vf-active-stave` que l'impression masque.
+- **`window.crocheApp` expose l'application Stimulus.** Pratique pour
+  inspecter l'éditeur depuis la console quand quelque chose cloche sur l'iPad.
+- **Pas de mode sombre**, pas de framework CSS, et pas de suite de tests
+  automatisés livrée dans cette première passe : le périmètre était déjà large.
+  La logique a été vérifiée manuellement, y compris le rendu VexFlow, l'audio
+  et l'impression, pilotés dans un Chrome headless.
 
 ---
 
