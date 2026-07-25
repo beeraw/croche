@@ -77,7 +77,10 @@
     gap: $space-4;
     width: 100%;
     max-width: 720px;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    // auto-fill rather than auto-fit, and centred: with a single profile a
+    // stretched tile spanning the whole screen looks like a mistake.
+    grid-template-columns: repeat(auto-fill, minmax(160px, 200px));
+    justify-content: center;
 }
 
 .profile-tile {
