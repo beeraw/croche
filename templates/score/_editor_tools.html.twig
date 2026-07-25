@@ -35,7 +35,8 @@
                     data-duration="{{ duration.value }}"
                     data-action="note-palette#selectDuration"
                     title="{{ duration.label }}" aria-label="{{ duration.label }}">
-                <span class="tool-btn__glyph" aria-hidden="true">{{ duration.glyph|raw }}</span>
+                <span class="tool-btn__glyph {{ duration.value == 'w' ? '' : 'tool-btn__glyph--stemmed' }}"
+                      aria-hidden="true">{{ duration.glyph|raw }}</span>
             </button>
         {% endfor %}
     </div>

@@ -274,9 +274,19 @@
 
 /// Music glyphs rendered with Bravura, which VexFlow already loads.
 .tool-btn__glyph {
+    display: block;
     font-family: Bravura, serif;
     font-size: 1.5rem;
     line-height: 1;
+}
+
+/// A note glyph sits on the baseline with its stem rising above it, so a box
+/// that centres the text leaves the ink floating near the top. Measured in
+/// Bravura: the ink of a stemmed note is centred 0.367 em above the baseline,
+/// while a whole note and a rest are centred on it. Push the stemmed ones down
+/// by exactly that, and all five buttons line up.
+.tool-btn__glyph--stemmed {
+    transform: translateY(0.367em);
 }
 
 .tool-btn__glyph--rest {

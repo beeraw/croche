@@ -93,14 +93,21 @@ export default class AudioEngine {
         }
 
         const recover = () => {
-            if (this.context && this.context.state !== 'running') {
+            if (!this.context || this.context.state !== 'running') {
                 this.unlock();
             }
         };
 
-        ['pointerdown', 'touchend', 'keydown'].forEach((type) => {
-            document.addEventListener(type, recover, { capture: true, passive: true });
-        });
+        // Deliberately every gesture type, not just pointer events. Safari is
+        // picky about what counts as a user activation, and the virtual piano
+        // binds pointerdown and calls preventDefault — which on WebKit can be
+        // enough for the context never to leave "suspended". Listening to
+        // click and mouseup as well costs nothing: recover() returns
+        // immediately once the context is running.
+        ['pointerdown', 'pointerup', 'mousedown', 'mouseup', 'click', 'touchstart', 'touchend', 'keydown']
+            .forEach((type) => {
+                document.addEventListener(type, recover, { capture: true, passive: true });
+            });
 
         document.addEventListener('visibilitychange', () => {
             if (document.visibilityState === 'visible') {
