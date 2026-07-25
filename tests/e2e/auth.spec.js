@@ -74,6 +74,41 @@ test.describe('language', () => {
         await expect(page.locator('.login__subtitle')).toContainText('Choisis ton profil');
     });
 
+    test('the switcher is a menu, and picking from it switches', async ({ page }) => {
+        await useLanguage(page, 'fr');
+        await page.goto('/profils');
+
+        const switcher = page.locator('.language');
+        const menu = switcher.locator('.language__menu');
+
+        await expect(switcher.locator('.language__badge')).toHaveText('FR');
+        await expect(menu).toBeHidden();
+
+        await switcher.locator('summary').click();
+        await expect(menu).toBeVisible();
+        await menu.getByRole('link', { name: 'English' }).click();
+
+        await expect(page.locator('.login__subtitle')).toContainText('Pick your profile');
+        await expect(switcher.locator('.language__badge')).toHaveText('EN');
+    });
+
+    test('the menu closes on Escape and on a tap outside', async ({ page }) => {
+        await page.goto('/profils');
+
+        const switcher = page.locator('.language');
+        const menu = switcher.locator('.language__menu');
+
+        await switcher.locator('summary').click();
+        await expect(menu).toBeVisible();
+        await page.keyboard.press('Escape');
+        await expect(menu).toBeHidden();
+
+        await switcher.locator('summary').click();
+        await expect(menu).toBeVisible();
+        await page.locator('.login__subtitle').click();
+        await expect(menu).toBeHidden();
+    });
+
     test('the editor and the piano keys follow the language', async ({ page }) => {
         await useLanguage(page, 'fr');
         await signIn(page);

@@ -3,6 +3,7 @@ app:
     tagline: Write your pieces, hear them, print them.
 
 nav:
+    home: Back to the start
     my_scores: My pieces
     profiles: Profiles
     scores: Scores
@@ -33,8 +34,16 @@ home:
         No outbound requests at all: no CDN, no remote font, no downloaded
         sound. The fonts, the icons and the piano tone are all embedded or
         computed on the spot. Once the page is open, the app talks to nobody.
+    self_host_title: Run your own
+    self_host_body: >-
+        Croche is not an online service. There is no sign-up, and this address
+        is only one family's instance. The code is on GitHub: take it, install
+        it on your own server, and the app becomes yours — your profiles, your
+        pieces, your database, at home.
     source_title: Source code
-    source_body: 'Croche is free software, released under the MIT licence.'
+    source_body: >-
+        Croche is free software, released under the MIT licence. The README
+        explains how to install it.
     source_link: View the project on GitHub
 
 security:

@@ -6,6 +6,11 @@
     <div class="login">
         <div class="login__lang">{% include 'partial/_language.html.twig' with { locales: app_locales() } %}</div>
 
+        <a class="login__back" href="{{ path('home') }}">
+            {{ ux_icon('tabler:arrow-left') }}
+            {{ 'nav.home'|trans }}
+        </a>
+
         <h1 class="login__title">{{ 'app.name'|trans }}</h1>
         <p class="login__subtitle">{{ 'security.pick_profile'|trans }}</p>
 
@@ -30,8 +35,6 @@
 
         <p class="login__footer">
             <a href="{{ path('security.login') }}">{{ 'nav.admin_area'|trans }}</a>
-            ·
-            <a href="{{ path('home') }}">{{ 'app.name'|trans }}</a>
         </p>
     </div>
 {% endblock %}

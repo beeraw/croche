@@ -132,12 +132,20 @@
 
 .score-sheet__canvas {
     position: relative;
+    // A one-finger drag over the paper still scrolls the score.
     touch-action: manipulation;
 
     svg {
         display: block;
         max-width: 100%;
         height: auto;
+    }
+
+    // ...but a drag that starts on a note belongs to the editor. Without this
+    // the browser claims the gesture for scrolling, sends pointercancel, and
+    // the note never moves — which is precisely what happens on an iPad.
+    .vf-stavenote {
+        touch-action: none;
     }
 }
 

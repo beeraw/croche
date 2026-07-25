@@ -1,16 +1,32 @@
 {#
   Language switcher. The locale lives in the session, so every URL stays the
-  same in both languages — the child's bookmark keeps working.
+  same in every language — the child's bookmark keeps working.
+
+  A <details> menu rather than a row of links: the list can grow with new
+  languages without widening the navbar. It opens and closes on its own, so the
+  switcher works before (and without) JavaScript; the `language-menu`
+  controller only adds Escape and tap-outside.
 #}
-<nav class="language" aria-label="{{ 'nav.language'|trans }}">
-    {% for locale in locales %}
-        {% if locale.value == app.request.locale %}
-            <span class="language__current" aria-current="true">{{ locale.short }}</span>
-        {% else %}
-            <a class="language__link"
-               href="{{ path('locale.switch', { locale: locale.value }) }}"
-               lang="{{ locale.value }}"
-               hreflang="{{ locale.value }}">{{ locale.label }}</a>
-        {% endif %}
-    {% endfor %}
-</nav>
+{% set current = app_locale(app.request.locale) %}
+<details class="language" data-controller="language-menu">
+    <summary class="language__button" title="{{ 'nav.language'|trans }}">
+        <span class="visually-hidden">{{ 'nav.language'|trans }}</span>
+        <span class="language__badge" aria-hidden="true">{{ current.short }}</span>
+        {{ ux_icon('tabler:chevron-down', { class: 'language__caret' }) }}
+    </summary>
+
+    <ul class="language__menu">
+        {% for locale in locales %}
+            <li>
+                <a class="language__option{{ locale is same as(current) ? ' is-current' }}"
+                   href="{{ path('locale.switch', { locale: locale.value }) }}"
+                   lang="{{ locale.value }}"
+                   hreflang="{{ locale.value }}"
+                   {%- if locale is same as(current) %} aria-current="true"{% endif %}>
+                    {{ ux_icon('tabler:check', { class: 'language__check' }) }}
+                    {{ locale.label }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</details>

@@ -3,6 +3,7 @@ app:
     tagline: Écris tes morceaux, écoute-les, imprime-les.
 
 nav:
+    home: Retour à l'accueil
     my_scores: Mes morceaux
     profiles: Profils
     scores: Partitions
@@ -35,8 +36,17 @@ home:
         pas de son téléchargé. Les polices, les icônes et le timbre de piano
         sont tous embarqués ou calculés sur place. Une fois la page ouverte,
         l'application ne parle à personne.
+    self_host_title: À installer chez soi
+    self_host_body: >-
+        Croche n'est pas un service en ligne. Il n'y a pas d'inscription, et
+        cette adresse n'est que l'instance d'une famille. Le code est sur
+        GitHub : on le récupère, on l'installe sur son propre serveur, et
+        l'application devient la sienne — ses profils, ses morceaux, sa base de
+        données, chez soi.
     source_title: Code source
-    source_body: 'Croche est un logiciel libre, publié sous licence MIT.'
+    source_body: >-
+        Croche est un logiciel libre, publié sous licence MIT. Le README
+        explique comment l'installer.
     source_link: Voir le projet sur GitHub
 
 security:

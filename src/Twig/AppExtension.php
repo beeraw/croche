@@ -19,4 +19,17 @@ final class AppExtension
     {
         return AppLocale::cases();
     }
+
+    /**
+     * The language a request is being served in.
+     *
+     * Falls back to the default rather than to null: the switcher always has a
+     * language to show on its button, even on a request that never went
+     * through the locale listener.
+     */
+    #[AsTwigFunction('app_locale')]
+    public function locale(string $code): AppLocale
+    {
+        return AppLocale::tryFrom($code) ?? AppLocale::from(AppLocale::DEFAULT);
+    }
 }

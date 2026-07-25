@@ -2,40 +2,106 @@
 @use 'mixins' as *;
 
 .language {
+    position: relative;
+    display: inline-block;
+}
+
+/// The <summary> is the button: the browser's own marker is dropped so it can
+/// look like the rest of the navbar.
+.language__button {
     display: inline-flex;
     gap: $space-1;
     align-items: center;
-}
-
-.language__link,
-.language__current {
-    display: inline-flex;
-    align-items: center;
     justify-content: center;
-    min-width: $touch-target;
     height: $touch-target;
-    padding: 0 $space-2;
+    padding: 0 $space-2 0 $space-3;
     border-radius: $radius-pill;
-    font-size: 0.8125rem;
-    font-weight: 800;
-    letter-spacing: 0.03em;
-    text-decoration: none;
-    text-transform: uppercase;
-
-    @include tap-clean;
-}
-
-.language__current {
-    background-color: $plum-light;
-    color: $primary;
-}
-
-.language__link {
     color: $gray-500;
+    cursor: pointer;
+    list-style: none;
+
+    @include touchable;
+    @include tap-clean;
+
+    &::-webkit-details-marker {
+        display: none;
+    }
 
     &:hover {
         background-color: $gray-100;
         color: $primary;
+    }
+
+    [open] > & {
+        background-color: $plum-light;
+        color: $primary;
+    }
+}
+
+.language__badge {
+    font-size: 0.8125rem;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+.language__caret {
+    width: 1rem;
+    height: 1rem;
+    transition: transform 0.15s ease;
+
+    [open] > .language__button & {
+        transform: rotate(180deg);
+    }
+}
+
+.language__menu {
+    position: absolute;
+    top: calc(100% + #{$space-1});
+    right: 0;
+    z-index: $z-overlay;
+    min-width: 11rem;
+    padding: $space-1;
+    border: 2px solid $gray-200;
+    border-radius: $radius;
+    background-color: $white;
+    box-shadow: $shadow-lg;
+}
+
+.language__option {
+    display: flex;
+    gap: $space-2;
+    align-items: center;
+    min-height: $touch-target;
+    padding: 0 $space-3;
+    border-radius: $radius-sm;
+    color: $gray-700;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+
+    @include tap-clean;
+
+    &:hover {
+        background-color: $gray-100;
+        color: $primary;
+    }
+
+    &.is-current {
+        background-color: $plum-light;
+        color: $primary;
+    }
+}
+
+/// The tick keeps its place on every line, so the labels stay aligned.
+.language__check {
+    flex: none;
+    width: 1.125rem;
+    height: 1.125rem;
+    visibility: hidden;
+
+    .is-current > & {
+        visibility: visible;
     }
 }
 
