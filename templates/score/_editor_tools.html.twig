@@ -10,7 +10,11 @@
 ] %}
 
 <div class="editor__tools no-print" data-controller="note-palette">
-    <div class="tool-group">
+    <div class="tool-group"
+         data-tour-step="3"
+         data-tour-title="{{ 'tour.editor.stave.title'|trans }}"
+         data-tour-text="{{ 'tour.editor.stave.text'|trans }}"
+         data-tour-side="top">
         <span class="tool-group__label">{{ 'editor.stave'|trans }}</span>
         <div class="stave-switch" role="group" aria-label="{{ 'editor.active_stave'|trans }}">
             <button type="button" class="stave-switch__btn is-active"
@@ -26,7 +30,11 @@
 
     <span class="tool-group__sep" aria-hidden="true"></span>
 
-    <div class="tool-group" role="group" aria-label="{{ 'editor.duration'|trans }}">
+    <div class="tool-group" role="group" aria-label="{{ 'editor.duration'|trans }}"
+         data-tour-step="4"
+         data-tour-title="{{ 'tour.editor.duration.title'|trans }}"
+         data-tour-text="{{ 'tour.editor.duration.text'|trans }}"
+         data-tour-side="top">
         <span class="tool-group__label">{{ 'editor.duration'|trans }}</span>
         {% for duration in durations %}
             <button type="button"
@@ -43,7 +51,11 @@
 
     <span class="tool-group__sep" aria-hidden="true"></span>
 
-    <div class="tool-group" role="group" aria-label="{{ 'editor.accidental'|trans }}">
+    <div class="tool-group" role="group" aria-label="{{ 'editor.accidental'|trans }}"
+         data-tour-step="9"
+         data-tour-title="{{ 'tour.editor.accidental.title'|trans }}"
+         data-tour-text="{{ 'tour.editor.accidental.text'|trans }}"
+         data-tour-side="top">
         <span class="tool-group__label">{{ 'editor.accidental'|trans }}</span>
         {% for accidental in [
             { value: '#', label: 'editor.sharp', sign: '♯' },
@@ -62,7 +74,11 @@
 
     <span class="tool-group__sep" aria-hidden="true"></span>
 
-    <div class="tool-group">
+    <div class="tool-group"
+         data-tour-step="10"
+         data-tour-title="{{ 'tour.editor.rest.title'|trans }}"
+         data-tour-text="{{ 'tour.editor.rest.text'|trans }}"
+         data-tour-side="top">
         <span class="tool-group__label">{{ 'editor.rest'|trans }}</span>
         <button type="button" class="tool-btn"
                 data-note-palette-target="rest"
@@ -74,7 +90,11 @@
 
     <span class="tool-group__sep" aria-hidden="true"></span>
 
-    <div class="tool-group">
+    <div class="tool-group"
+         data-tour-step="11"
+         data-tour-title="{{ 'tour.editor.delete.title'|trans }}"
+         data-tour-text="{{ 'tour.editor.delete.text'|trans }}"
+         data-tour-side="top">
         <span class="tool-group__label">{{ 'editor.note'|trans }}</span>
         <button type="button" class="btn-icon btn-icon--danger"
                 data-score-editor-target="deleteButton"
@@ -86,7 +106,11 @@
 
     <span class="tool-group__sep" aria-hidden="true"></span>
 
-    <div class="tool-group">
+    <div class="tool-group"
+         data-tour-step="12"
+         data-tour-title="{{ 'tour.editor.measures.title'|trans }}"
+         data-tour-text="{{ 'tour.editor.measures.text'|trans }}"
+         data-tour-side="top">
         <span class="tool-group__label">{{ 'editor.measures'|trans }}</span>
         <button type="button" class="btn-icon"
                 data-action="score-editor#removeMeasure"
@@ -103,7 +127,11 @@
 
     <span class="tool-group__sep" aria-hidden="true"></span>
 
-    <div class="tool-group tempo">
+    <div class="tool-group tempo"
+         data-tour-step="13"
+         data-tour-title="{{ 'tour.editor.tempo.title'|trans }}"
+         data-tour-text="{{ 'tour.editor.tempo.text'|trans }}"
+         data-tour-side="top" data-tour-align="end">
         <span class="tool-group__label">{{ 'editor.tempo'|trans }}</span>
         {{ ux_icon('tabler:metronome') }}
         <input class="tempo__input"

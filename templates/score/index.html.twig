@@ -2,13 +2,23 @@
 
 {% block title %}{{ 'score.my_scores'|trans }} — {{ 'app.name'|trans }}{% endblock %}
 
+{# Turns on the help button in the navbar, and with it the guided tour of this
+   screen. The steps themselves are the data-tour-* attributes below. #}
+{% block navbar %}
+    {% include 'partial/_navbar.html.twig' with { tour: 'scores' } %}
+{% endblock %}
+
 {% block content %}
     <div class="page-header">
         <h1 class="page-header__title">{{ 'score.my_scores'|trans }}</h1>
 
         <form method="post" action="{{ path('score.new') }}">
             <input type="hidden" name="_token" value="{{ csrf_token('score-new') }}">
-            <button class="btn btn--lg" type="submit">
+            <button class="btn btn--lg" type="submit"
+                    data-tour-step="1"
+                    data-tour-title="{{ 'tour.scores.new.title'|trans }}"
+                    data-tour-text="{{ 'tour.scores.new.text'|trans }}"
+                    data-tour-side="bottom" data-tour-align="end">
                 {{ ux_icon('tabler:plus') }}
                 {{ 'score.new'|trans }}
             </button>
@@ -20,8 +30,14 @@
     {% else %}
         <ul class="card-grid">
             {% for score in scores %}
+                {# Every card carries the same step numbers; the tour keeps the
+                   first visible one, so it explains a card, not each score. #}
                 <li class="score-card" data-controller="score-card">
-                    <a class="score-card__link" href="{{ path('score.edit', { id: score.id }) }}">
+                    <a class="score-card__link" href="{{ path('score.edit', { id: score.id }) }}"
+                       data-tour-step="2"
+                       data-tour-title="{{ 'tour.scores.card.title'|trans }}"
+                       data-tour-text="{{ 'tour.scores.card.text'|trans }}"
+                       data-tour-side="bottom">
                         <h2 class="score-card__title">{{ score.title }}</h2>
                         <span class="score-card__meta">
                             {{ 'score.measures'|trans({ '%count%': score.measureCount }) }}
@@ -40,6 +56,9 @@
                                 data-action="score-card#rename"
                                 data-score-card-current-param="{{ score.title }}"
                                 data-score-card-prompt-param="{{ 'score.rename_prompt'|trans }}"
+                                data-tour-step="3"
+                                data-tour-title="{{ 'tour.scores.rename.title'|trans }}"
+                                data-tour-text="{{ 'tour.scores.rename.text'|trans }}"
                                 title="{{ 'score.rename'|trans }}" aria-label="{{ 'score.rename'|trans }}">
                             {{ ux_icon('tabler:pencil') }}
                         </button>
@@ -47,6 +66,9 @@
                         <form method="post" action="{{ path('score.duplicate', { id: score.id }) }}">
                             <input type="hidden" name="_token" value="{{ csrf_token('score-duplicate' ~ score.id) }}">
                             <button type="submit" class="btn-icon"
+                                    data-tour-step="4"
+                                    data-tour-title="{{ 'tour.scores.duplicate.title'|trans }}"
+                                    data-tour-text="{{ 'tour.scores.duplicate.text'|trans }}"
                                     title="{{ 'score.duplicate'|trans }}" aria-label="{{ 'score.duplicate'|trans }}">
                                 {{ ux_icon('tabler:copy') }}
                             </button>
@@ -57,6 +79,10 @@
                               data-confirm-message-value="{{ 'score.delete_confirm'|trans({ '%title%': score.title }) }}">
                             <input type="hidden" name="_token" value="{{ csrf_token('score-delete' ~ score.id) }}">
                             <button type="submit" class="btn-icon btn-icon--danger"
+                                    data-tour-step="5"
+                                    data-tour-title="{{ 'tour.scores.delete.title'|trans }}"
+                                    data-tour-text="{{ 'tour.scores.delete.text'|trans }}"
+                                    data-tour-align="end"
                                     title="{{ 'score.delete'|trans }}" aria-label="{{ 'score.delete'|trans }}">
                                 {{ ux_icon('tabler:trash') }}
                             </button>

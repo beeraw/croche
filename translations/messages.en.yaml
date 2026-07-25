@@ -152,6 +152,119 @@ editor:
         An unsaved version from %date% was found on this device.
         Recover it? (Cancel keeps the version saved online.)
 
+# The guided tour. Written for the child opening Croche for the first time:
+# short sentences, one idea per bubble. The order of the steps lives in the
+# templates, as data-tour-step attributes.
+tour:
+    help: Help
+    next: Next
+    prev: Back
+    done: Got it
+    close: Close the guide
+    recall:
+        title: Come back any time
+        text: >-
+            This button plays the guide again. Press it if you have forgotten
+            what something does.
+    scores:
+        new:
+            title: A brand new piece
+            text: >-
+                Press here to start a new piece. It opens straight away, ready
+                to write.
+        card:
+            title: Your pieces
+            text: >-
+                Each card is a piece of yours. Press it to open it and carry on
+                writing.
+        rename:
+            title: Change the name
+            text: The pencil gives the piece another name.
+        duplicate:
+            title: Make a copy
+            text: >-
+                You keep your piece and work on a copy. Handy for trying
+                something else without spoiling anything.
+        delete:
+            title: Throw a piece away
+            text: >-
+                The bin deletes the piece for good. Croche asks first, to be
+                sure.
+    editor:
+        title:
+            title: The name of your piece
+            text: Press the title to write it. You can change it whenever you like.
+        saved:
+            title: It saves itself
+            text: >-
+                No button to remember: Croche keeps your piece as you go. The
+                little cloud tells you so.
+        stave:
+            title: Which hand?
+            text: >-
+                "Treble" is the top staff, the right hand. "Bass" is the bottom
+                one, the left hand. Your notes land on whichever is lit up.
+        duration:
+            title: How long the note lasts
+            text: >-
+                Whole, half, quarter or eighth note: pick the length before
+                placing your note.
+        piano:
+            title: Place your notes here
+            text: >-
+                Press a key: you hear the note, and it lands on the staff. Slide
+                the keyboard sideways to reach the low or the high notes.
+        sheet:
+            title: Your score
+            text: >-
+                You can also place a note by pressing straight onto the staff.
+                Press a note to pick it, then drag it up or down to change its
+                pitch.
+        play:
+            title: Listen to your piece
+            text: >-
+                Both hands play together and a line follows the music. Press
+                again to stop.
+        undo:
+            title: Getting it wrong is fine
+            text: >-
+                The left arrow undoes what you have just done, the right one
+                puts it back.
+        accidental:
+            title: Sharps and flats
+            text: >-
+                A sharp ♯ raises the note by a semitone, a flat ♭ lowers it, a
+                natural ♮ takes both away. Pick one before placing the note.
+        rest:
+            title: A moment of silence
+            text: >-
+                A rest takes the place of a note, but you hear nothing. It lasts
+                as long as the length picked next to it.
+        delete:
+            title: Remove a note
+            text: >-
+                Pick a note on the staff first, then press here to rub it out.
+        measures:
+            title: More or fewer bars
+            text: >-
+                The + adds a bar at the end, the − removes the last one if it is
+                empty. The number in the middle says how many you have.
+        tempo:
+            title: Fast or slow
+            text: >-
+                Slide to change the speed of the music: slow on the left, fast
+                on the right.
+        print:
+            title: On real paper
+            text: >-
+                Print your piece to stand it on the piano, or to give it to
+                someone.
+        back:
+            title: Back to your pieces
+            text: >-
+                This arrow takes you back to the list. Everything is already
+                saved, you lose nothing.
+
 admin:
     profiles: Profiles
     new_child: New child profile

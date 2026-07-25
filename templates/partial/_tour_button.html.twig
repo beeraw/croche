@@ -1,0 +1,29 @@
+{#
+  The help button, and the entry point of the guided tour.
+
+  It carries the tour controller, so it is also what decides whether the walk
+  starts on its own the first time a screen is opened. It sits last in the walk
+  as well, so the tour ends by pointing at the way to bring it back.
+
+  name   identifies the screen; "already seen" is remembered per tour
+  class  blends the button into the navbar or into the editor's top bar
+#}
+<button type="button"
+        class="tour-btn {{ class|default('btn-icon') }}"
+        data-controller="tour"
+        data-action="tour#start"
+        data-tour-name-value="{{ name }}"
+        data-tour-auto-value="{{ (auto ?? true) ? 'true' : 'false' }}"
+        data-tour-next-value="{{ 'tour.next'|trans }}"
+        data-tour-prev-value="{{ 'tour.prev'|trans }}"
+        data-tour-done-value="{{ 'tour.done'|trans }}"
+        data-tour-close-value="{{ 'tour.close'|trans }}"
+        data-tour-step="99"
+        data-tour-title="{{ 'tour.recall.title'|trans }}"
+        data-tour-text="{{ 'tour.recall.text'|trans }}"
+        data-tour-side="bottom"
+        data-tour-align="end"
+        title="{{ 'tour.help'|trans }}"
+        aria-label="{{ 'tour.help'|trans }}">
+    {{ ux_icon('tabler:help-circle') }}
+</button>

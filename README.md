@@ -123,9 +123,9 @@ La première fois, `yarn playwright install` télécharge les navigateurs.
 
 | Moteur | Pourquoi | État |
 | --- | --- | --- |
-| WebKit | l'iPad, la cible réelle | 40/40 |
-| Chromium | Chrome, Edge, et la majorité du parc | 40/40 |
-| iPad (gen 7) | WebKit, mais en tactile et en portrait | 40/40 |
+| WebKit | l'iPad, la cible réelle | 48/48 |
+| Chromium | Chrome, Edge, et la majorité du parc | 48/48 |
+| iPad (gen 7) | WebKit, mais en tactile et en portrait | 48/48 |
 | Firefox | moteur indépendant, attrape ce que les deux autres partagent | non exécuté ici |
 
 La suite Firefox est configurée mais n'a jamais tourné : sur la machine de
@@ -282,6 +282,7 @@ tests/
 | `autosave` | debounce 2 s, `PUT`, indicateur, tampon `localStorage` |
 | `note-palette` | durées, silences, altérations |
 | `pin-pad` | pavé numérique à 4 chiffres |
+| `tour` | visite guidée, sur la liste et dans l'éditeur |
 
 ---
 
@@ -414,6 +415,18 @@ Choix tranchés en cours de route, à revoir librement.
   échapperait à cette suite.
 - **Pas de mode sombre**, et pas de framework CSS : les deux ajouteraient plus
   de surface que de valeur ici.
+- **La visite guidée se décrit dans les gabarits**, pas dans le JavaScript. Un
+  élément annoté `data-tour-step` entre dans la visite de son écran, et le
+  contrôleur `tour` se contente de ramasser ce qui est visible, de trier et de
+  dérouler. Ajouter un bouton à l'éditeur, c'est ajouter trois attributs à côté
+  de lui — pas éditer une liste d'étapes qui vivrait ailleurs et se
+  désynchroniserait. Les textes viennent du catalogue comme le reste.
+- **La visite démarre seule la première fois, une fois par écran** (drapeau
+  `croche.tour.<écran>` en `localStorage`), et le bouton d'aide la rejoue. Une
+  enfant de huit ans ne va pas chercher un bouton d'aide ; le drapeau est posé à
+  l'ouverture, pas à la fin, pour que celle qui la referme d'un geste ne la
+  revoie pas. `signIn()` des tests end-to-end pose les deux drapeaux : sans
+  cela, l'overlay avalerait les clics de toute la suite.
 
 ---
 

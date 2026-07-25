@@ -75,6 +75,7 @@ by accident.
 | [@hotwired/stimulus](https://github.com/hotwired/stimulus) | 3.2.2 | MIT | Basecamp, LLC |
 | [@symfony/stimulus-bridge](https://github.com/symfony/stimulus-bridge) | 4.0.1 | MIT | Fabien Potencier / Symfony contributors |
 | [core-js](https://github.com/zloirock/core-js) | 3.49.0 | MIT | Denis Pushkarev |
+| [driver.js](https://github.com/kamranahmedse/driver.js) | 1.8.0 | MIT | Kamran Ahmed |
 | [regenerator-runtime](https://github.com/facebook/regenerator) | 0.14.1 | MIT | Facebook, Inc. |
 
 Build-time-only tooling (`@symfony/webpack-encore`, `webpack`, `sass`, Babel and

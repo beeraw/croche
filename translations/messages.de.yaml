@@ -153,6 +153,124 @@ editor:
         Auf diesem Gerät wurde eine nicht gespeicherte Fassung vom %date% gefunden.
         Wiederherstellen? (Abbrechen behält die online gespeicherte Fassung.)
 
+# Die Führung durch die App. Für das Kind geschrieben, das Croche zum ersten Mal
+# öffnet: kurze Sätze, ein Gedanke pro Sprechblase. Die Reihenfolge der Schritte
+# steht in den Templates, in den data-tour-step-Attributen.
+tour:
+    help: Hilfe
+    next: Weiter
+    prev: Zurück
+    done: Verstanden
+    close: Führung schließen
+    recall:
+        title: Komm jederzeit wieder
+        text: >-
+            Dieser Knopf spielt die Führung noch einmal ab. Drücke ihn, wenn du
+            vergessen hast, wofür etwas gut ist.
+    scores:
+        new:
+            title: Ein ganz neues Stück
+            text: >-
+                Drücke hier, um ein neues Stück anzufangen. Es geht sofort auf,
+                fertig zum Schreiben.
+        card:
+            title: Deine Stücke
+            text: >-
+                Jede Karte ist ein Stück von dir. Drücke darauf, um es zu öffnen
+                und weiterzuschreiben.
+        rename:
+            title: Den Namen ändern
+            text: Der Stift gibt dem Stück einen anderen Namen.
+        duplicate:
+            title: Eine Kopie machen
+            text: >-
+                Du behältst dein Stück und arbeitest an einer Kopie. Praktisch,
+                um etwas anderes auszuprobieren, ohne etwas kaputt zu machen.
+        delete:
+            title: Ein Stück wegwerfen
+            text: >-
+                Der Papierkorb löscht das Stück endgültig. Croche fragt vorher
+                nach, sicher ist sicher.
+    editor:
+        title:
+            title: Der Name deines Stücks
+            text: Drücke auf den Titel, um ihn zu schreiben. Du kannst ihn jederzeit ändern.
+        saved:
+            title: Es speichert sich von allein
+            text: >-
+                Kein Knopf zum Merken: Croche behält dein Stück nach und nach.
+                Das Wölkchen sagt es dir.
+        stave:
+            title: Welche Hand?
+            text: >-
+                „Violin“ ist die obere Notenzeile, die rechte Hand. „Bass“ ist
+                die untere, die linke Hand. Deine Noten landen auf der, die
+                leuchtet.
+        duration:
+            title: Wie lange die Note dauert
+            text: >-
+                Ganze, halbe, Viertel- oder Achtelnote: Wähle die Länge, bevor
+                du deine Note setzt.
+        piano:
+            title: Hier setzt du deine Noten
+            text: >-
+                Drücke eine Taste: Du hörst die Note, und sie landet in der
+                Notenzeile. Schiebe die Tastatur zur Seite, um zu den tiefen
+                oder hohen Noten zu kommen.
+        sheet:
+            title: Deine Noten
+            text: >-
+                Du kannst eine Note auch setzen, indem du direkt in die
+                Notenzeile drückst. Drücke auf eine Note, um sie auszuwählen,
+                und zieh sie nach oben oder unten, um sie höher oder tiefer zu
+                machen.
+        play:
+            title: Hör dir dein Stück an
+            text: >-
+                Beide Hände spielen zusammen, und ein Strich läuft mit der Musik
+                mit. Drücke noch einmal zum Anhalten.
+        undo:
+            title: Sich zu vertun ist nicht schlimm
+            text: >-
+                Der linke Pfeil macht rückgängig, was du gerade getan hast, der
+                rechte holt es zurück.
+        accidental:
+            title: Kreuz und Be
+            text: >-
+                Das Kreuz ♯ hebt die Note um einen Halbton, das Be ♭ senkt sie,
+                das Auflösungszeichen ♮ nimmt beides weg. Wähle, bevor du die
+                Note setzt.
+        rest:
+            title: Ein Moment Stille
+            text: >-
+                Die Pause nimmt den Platz einer Note ein, aber man hört nichts.
+                Sie dauert so lange wie die Länge, die du daneben gewählt hast.
+        delete:
+            title: Eine Note wegnehmen
+            text: >-
+                Wähle zuerst eine Note in der Notenzeile aus und drücke dann
+                hier, um sie zu löschen.
+        measures:
+            title: Mehr oder weniger Takte
+            text: >-
+                Das + hängt hinten einen Takt an, das − nimmt den letzten weg,
+                wenn er leer ist. Die Zahl in der Mitte sagt, wie viele du hast.
+        tempo:
+            title: Schnell oder langsam
+            text: >-
+                Schieb, um das Tempo der Musik zu ändern: links langsam, rechts
+                schnell.
+        print:
+            title: Auf echtes Papier
+            text: >-
+                Drucke dein Stück aus, um es aufs Klavier zu stellen oder um es
+                jemandem zu schenken.
+        back:
+            title: Zurück zu deinen Stücken
+            text: >-
+                Dieser Pfeil bringt dich zurück zur Liste. Es ist schon alles
+                gespeichert, du verlierst nichts.
+
 admin:
     profiles: Profile
     new_child: Neues Kinderprofil

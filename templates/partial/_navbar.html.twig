@@ -31,6 +31,13 @@
                     </span>
                 {% endif %}
 
+                {# Screens with a guided tour ask for the button by passing a
+                   tour name; the others simply do not show one. #}
+                {% if tour is defined %}
+                    {% include 'partial/_tour_button.html.twig'
+                        with { name: tour, class: 'navbar__link' } only %}
+                {% endif %}
+
                 {% include 'partial/_language.html.twig' with { locales: app_locales() } %}
 
                 {% if user %}

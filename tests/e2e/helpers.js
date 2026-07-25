@@ -14,9 +14,31 @@ export const DEMO = {
 };
 
 /**
- * Signs in through the profile picker and the keypad, the way the child does.
+ * Marks the guided tours as already seen.
+ *
+ * They greet a first-time visitor on the library and in the editor, and the
+ * overlay swallows every click while a bubble is open — which would stop any
+ * test that is not about the tour itself. The flags written here are the ones
+ * the controller writes once a child has been through it.
  */
-export async function signIn(page, { name = DEMO.child, pin = DEMO.pin } = {}) {
+export async function silenceTours(page) {
+    await page.addInitScript(() => {
+        window.localStorage.setItem('croche.tour.scores', '1');
+        window.localStorage.setItem('croche.tour.editor', '1');
+    });
+}
+
+/**
+ * Signs in through the profile picker and the keypad, the way the child does.
+ *
+ * Pass `tours: true` to leave the guided tours armed; every other test wants
+ * them out of the way.
+ */
+export async function signIn(page, { name = DEMO.child, pin = DEMO.pin, tours = false } = {}) {
+    if (!tours) {
+        await silenceTours(page);
+    }
+
     await page.goto('/profils');
     await page.getByRole('link', { name }).click();
 

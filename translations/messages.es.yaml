@@ -153,6 +153,122 @@ editor:
         En este dispositivo se ha encontrado una versión sin guardar del %date%.
         ¿Recuperarla? (Cancelar mantiene la versión guardada en línea.)
 
+# La visita guiada. Escrita para la niña o el niño que abre Croche por primera
+# vez: frases cortas, una idea por burbuja. El orden de los pasos está en las
+# plantillas, en los atributos data-tour-step.
+tour:
+    help: Ayuda
+    next: Siguiente
+    prev: Atrás
+    done: Entendido
+    close: Cerrar la guía
+    recall:
+        title: Vuelve cuando quieras
+        text: >-
+            Este botón vuelve a poner la guía. Púlsalo si se te ha olvidado
+            para qué sirve algo.
+    scores:
+        new:
+            title: Una pieza nueva
+            text: >-
+                Pulsa aquí para empezar una pieza nueva. Se abre enseguida,
+                lista para escribir.
+        card:
+            title: Tus piezas
+            text: >-
+                Cada tarjeta es una pieza tuya. Púlsala para abrirla y seguir
+                escribiendo.
+        rename:
+            title: Cambiar el nombre
+            text: El lápiz le pone otro nombre a la pieza.
+        duplicate:
+            title: Hacer una copia
+            text: >-
+                Guardas tu pieza y trabajas sobre una copia. Va muy bien para
+                probar otra cosa sin estropear nada.
+        delete:
+            title: Tirar una pieza
+            text: >-
+                La papelera borra la pieza para siempre. Croche pregunta antes,
+                por si acaso.
+    editor:
+        title:
+            title: El nombre de tu pieza
+            text: Pulsa el título para escribirlo. Puedes cambiarlo cuando quieras.
+        saved:
+            title: Se guarda solo
+            text: >-
+                No hay ningún botón que recordar: Croche va guardando tu pieza
+                sobre la marcha. La nubecita te lo dice.
+        stave:
+            title: ¿Qué mano?
+            text: >-
+                «Sol» es el pentagrama de arriba, la mano derecha. «Fa» es el de
+                abajo, la mano izquierda. Tus notas se ponen en el que está
+                encendido.
+        duration:
+            title: Cuánto dura la nota
+            text: >-
+                Redonda, blanca, negra o corchea: elige la duración antes de
+                poner la nota.
+        piano:
+            title: Pon aquí tus notas
+            text: >-
+                Pulsa una tecla: oyes la nota y se pone en el pentagrama.
+                Desliza el teclado hacia los lados para llegar a las notas
+                graves o agudas.
+        sheet:
+            title: Tu partitura
+            text: >-
+                También puedes poner una nota pulsando directamente en el
+                pentagrama. Pulsa una nota para elegirla y arrástrala hacia
+                arriba o hacia abajo para cambiar su altura.
+        play:
+            title: Escucha tu pieza
+            text: >-
+                Las dos manos suenan a la vez y una línea sigue la música. Pulsa
+                otra vez para parar.
+        undo:
+            title: Equivocarse no pasa nada
+            text: >-
+                La flecha de la izquierda deshace lo que acabas de hacer, la de
+                la derecha lo vuelve a poner.
+        accidental:
+            title: Sostenidos y bemoles
+            text: >-
+                El sostenido ♯ sube la nota medio tono, el bemol ♭ la baja y el
+                becuadro ♮ quita los dos. Elige antes de poner la nota.
+        rest:
+            title: Un momento de silencio
+            text: >-
+                El silencio ocupa el sitio de una nota, pero no se oye nada.
+                Dura lo que marque la duración elegida al lado.
+        delete:
+            title: Quitar una nota
+            text: >-
+                Elige primero una nota en el pentagrama y luego pulsa aquí para
+                borrarla.
+        measures:
+            title: Más o menos compases
+            text: >-
+                El + añade un compás al final y el − quita el último si está
+                vacío. El número del medio dice cuántos tienes.
+        tempo:
+            title: Rápido o despacio
+            text: >-
+                Desliza para cambiar la velocidad de la música: a la izquierda
+                despacio, a la derecha rápido.
+        print:
+            title: En papel de verdad
+            text: >-
+                Imprime tu pieza para ponerla en el piano o para regalársela a
+                alguien.
+        back:
+            title: Volver a tus piezas
+            text: >-
+                Esta flecha te lleva de vuelta a la lista. Todo está ya
+                guardado, no pierdes nada.
+
 admin:
     profiles: Perfiles
     new_child: Nuevo perfil de niño

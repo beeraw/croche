@@ -19,6 +19,10 @@
      data-piano-keyboard-to-value="c/6"
      data-piano-keyboard-scroll-to-value="c/4"
      data-piano-keyboard-names-value="{{ noteNames|json_encode|e('html_attr') }}"
-     data-piano-keyboard-sharp-value="{{ 'note_name.sharp_pattern'|trans }}">
+     data-piano-keyboard-sharp-value="{{ 'note_name.sharp_pattern'|trans }}"
+     data-tour-step="5"
+     data-tour-title="{{ 'tour.editor.piano.title'|trans }}"
+     data-tour-text="{{ 'tour.editor.piano.text'|trans }}"
+     data-tour-side="top" data-tour-align="center">
     <div class="piano__keys" data-piano-keyboard-target="keys"></div>
 </div>

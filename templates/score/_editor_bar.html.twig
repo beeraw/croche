@@ -1,6 +1,9 @@
 <div class="editor__bar no-print">
     <div class="editor__identity">
         <a class="editor__back" href="{{ path('score.index') }}"
+           data-tour-step="15"
+           data-tour-title="{{ 'tour.editor.back.title'|trans }}"
+           data-tour-text="{{ 'tour.editor.back.text'|trans }}"
            title="{{ 'editor.back'|trans }}" aria-label="{{ 'editor.back'|trans }}">
             {{ ux_icon('tabler:arrow-left') }}
         </a>
@@ -12,10 +15,16 @@
                aria-label="{{ 'editor.title_label'|trans }}"
                data-autosave-target="title"
                data-score-editor-target="title"
-               data-action="input->autosave#titleChanged">
+               data-action="input->autosave#titleChanged"
+               data-tour-step="1"
+               data-tour-title="{{ 'tour.editor.title.title'|trans }}"
+               data-tour-text="{{ 'tour.editor.title.text'|trans }}">
 
         <span class="save-state" data-autosave-target="indicator" data-state="idle"
-              role="status" aria-live="polite">
+              role="status" aria-live="polite"
+              data-tour-step="2"
+              data-tour-title="{{ 'tour.editor.saved.title'|trans }}"
+              data-tour-text="{{ 'tour.editor.saved.text'|trans }}">
             {{ ux_icon('tabler:cloud-check') }}
             <span data-autosave-target="indicatorText">{{ 'editor.saved'|trans }}</span>
         </span>
@@ -25,6 +34,10 @@
         <button type="button" class="btn-icon"
                 data-score-editor-target="undoButton"
                 data-action="score-editor#undo"
+                data-tour-step="8"
+                data-tour-title="{{ 'tour.editor.undo.title'|trans }}"
+                data-tour-text="{{ 'tour.editor.undo.text'|trans }}"
+                data-tour-align="end"
                 title="{{ 'editor.undo'|trans }}" aria-label="{{ 'editor.undo'|trans }}">
             {{ ux_icon('tabler:arrow-back-up') }}
         </button>
@@ -39,14 +52,24 @@
         <button type="button" class="btn-icon"
                 data-playback-target="playButton"
                 data-action="playback#toggle"
+                data-tour-step="7"
+                data-tour-title="{{ 'tour.editor.play.title'|trans }}"
+                data-tour-text="{{ 'tour.editor.play.text'|trans }}"
+                data-tour-align="end"
                 title="{{ 'editor.play'|trans }}" aria-label="{{ 'editor.play'|trans }}">
             {{ ux_icon('tabler:player-play-filled') }}
         </button>
 
         <button type="button" class="btn-icon"
                 data-action="score-editor#print"
+                data-tour-step="14"
+                data-tour-title="{{ 'tour.editor.print.title'|trans }}"
+                data-tour-text="{{ 'tour.editor.print.text'|trans }}"
+                data-tour-align="end"
                 title="{{ 'editor.print'|trans }}" aria-label="{{ 'editor.print'|trans }}">
             {{ ux_icon('tabler:printer') }}
         </button>
+
+        {% include 'partial/_tour_button.html.twig' with { name: 'editor' } only %}
     </div>
 </div>

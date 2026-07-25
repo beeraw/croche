@@ -154,6 +154,120 @@ editor:
         Foi encontrada neste aparelho uma versão não guardada de %date%.
         Recuperá-la? (Cancelar mantém a versão guardada online.)
 
+# A visita guiada. Escrita para a criança que abre o Croche pela primeira vez:
+# frases curtas, uma ideia por balão. A ordem dos passos está nos templates,
+# nos atributos data-tour-step.
+tour:
+    help: Ajuda
+    next: Seguinte
+    prev: Voltar
+    done: Percebi
+    close: Fechar o guia
+    recall:
+        title: Volta quando quiseres
+        text: >-
+            Este botão volta a mostrar o guia. Carrega nele se te esqueceste
+            para que serve alguma coisa.
+    scores:
+        new:
+            title: Uma peça novinha
+            text: >-
+                Carrega aqui para começar uma peça nova. Abre-se logo, pronta a
+                escrever.
+        card:
+            title: As tuas peças
+            text: >-
+                Cada cartão é uma peça tua. Carrega nele para a abrir e
+                continuar a escrever.
+        rename:
+            title: Mudar o nome
+            text: O lápis dá outro nome à peça.
+        duplicate:
+            title: Fazer uma cópia
+            text: >-
+                Guardas a tua peça e trabalhas numa cópia. Dá jeito para
+                experimentar outra coisa sem estragar nada.
+        delete:
+            title: Deitar uma peça fora
+            text: >-
+                O caixote apaga a peça de vez. O Croche pergunta primeiro, para
+                ter a certeza.
+    editor:
+        title:
+            title: O nome da tua peça
+            text: Carrega no título para o escreveres. Podes mudá-lo quando quiseres.
+        saved:
+            title: Guarda-se sozinho
+            text: >-
+                Não há botão nenhum para decorar: o Croche vai guardando a tua
+                peça à medida que escreves. A nuvenzinha diz-te isso.
+        stave:
+            title: Que mão?
+            text: >-
+                «Sol» é a pauta de cima, a mão direita. «Fá» é a de baixo, a mão
+                esquerda. As tuas notas vão para a que está acesa.
+        duration:
+            title: Quanto tempo dura a nota
+            text: >-
+                Semibreve, mínima, semínima ou colcheia: escolhe a duração antes
+                de pores a nota.
+        piano:
+            title: Põe aqui as tuas notas
+            text: >-
+                Carrega numa tecla: ouves a nota e ela vai para a pauta. Arrasta
+                o teclado para o lado para chegares às notas graves ou agudas.
+        sheet:
+            title: A tua partitura
+            text: >-
+                Também podes pôr uma nota carregando diretamente na pauta.
+                Carrega numa nota para a escolheres e arrasta-a para cima ou
+                para baixo para mudares a altura.
+        play:
+            title: Ouve a tua peça
+            text: >-
+                As duas mãos tocam ao mesmo tempo e um traço acompanha a música.
+                Carrega outra vez para parar.
+        undo:
+            title: Enganares-te não faz mal
+            text: >-
+                A seta da esquerda desfaz o que acabaste de fazer, a da direita
+                põe outra vez.
+        accidental:
+            title: Sustenidos e bemóis
+            text: >-
+                O sustenido ♯ sobe a nota meio tom, o bemol ♭ desce-a e o
+                bequadro ♮ tira os dois. Escolhe antes de pores a nota.
+        rest:
+            title: Um momento de silêncio
+            text: >-
+                A pausa ocupa o lugar de uma nota, mas não se ouve nada. Dura o
+                tempo da duração escolhida mesmo ao lado.
+        delete:
+            title: Tirar uma nota
+            text: >-
+                Escolhe primeiro uma nota na pauta e depois carrega aqui para a
+                apagares.
+        measures:
+            title: Mais ou menos compassos
+            text: >-
+                O + acrescenta um compasso no fim e o − tira o último se estiver
+                vazio. O número do meio diz quantos tens.
+        tempo:
+            title: Depressa ou devagar
+            text: >-
+                Arrasta para mudar a velocidade da música: à esquerda devagar, à
+                direita depressa.
+        print:
+            title: Em papel a sério
+            text: >-
+                Imprime a tua peça para a pores em cima do piano ou para a
+                ofereceres a alguém.
+        back:
+            title: Voltar às tuas peças
+            text: >-
+                Esta seta leva-te de volta à lista. Está tudo guardado, não
+                perdes nada.
+
 admin:
     profiles: Perfis
     new_child: Novo perfil de criança

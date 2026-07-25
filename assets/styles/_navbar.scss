@@ -59,6 +59,13 @@
     }
 }
 
+// The help button wears .navbar__link to sit with the rest of the bar, but it
+// is a <button>, which the reset leaves with its user-agent chrome.
+button.navbar__link {
+    border: 0;
+    background: none;
+}
+
 .navbar__user {
     display: inline-flex;
     gap: $space-2;

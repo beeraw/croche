@@ -155,6 +155,122 @@ editor:
         Une version non enregistrée du %date% a été retrouvée sur cet appareil.
         La récupérer ? (Annuler garde la version enregistrée en ligne.)
 
+# The guided tour. Written for the child who opens Croche for the first time:
+# short sentences, tutoiement, one idea per bubble. The step order lives in the
+# templates, as data-tour-step attributes.
+tour:
+    help: Aide
+    next: Suivant
+    prev: Retour
+    done: J'ai compris
+    close: Fermer le guide
+    recall:
+        title: Reviens quand tu veux
+        text: >-
+            Ce bouton rejoue le guide. Appuie dessus si tu as oublié à quoi
+            sert quelque chose.
+    scores:
+        new:
+            title: Un morceau tout neuf
+            text: >-
+                Appuie ici pour commencer un nouveau morceau. Il s'ouvre tout
+                de suite, prêt à écrire.
+        card:
+            title: Tes morceaux
+            text: >-
+                Chaque carte est un morceau à toi. Appuie dessus pour l'ouvrir
+                et continuer à écrire.
+        rename:
+            title: Changer le nom
+            text: Le crayon sert à donner un autre nom au morceau.
+        duplicate:
+            title: Faire une copie
+            text: >-
+                Tu gardes ton morceau et tu travailles sur une copie. Pratique
+                pour essayer autre chose sans rien abîmer.
+        delete:
+            title: Jeter un morceau
+            text: >-
+                La poubelle supprime le morceau pour de bon. Croche demande
+                d'abord si tu es sûr.
+    editor:
+        title:
+            title: Le nom de ton morceau
+            text: Appuie sur le titre pour l'écrire. Tu peux le changer quand tu veux.
+        saved:
+            title: C'est enregistré tout seul
+            text: >-
+                Aucun bouton à retenir : Croche garde ton morceau au fur et à
+                mesure. Le petit nuage te le dit.
+        stave:
+            title: Quelle main ?
+            text: >-
+                « Sol », c'est la portée du haut, la main droite. « Fa », c'est
+                celle du bas, la main gauche. Tes notes se posent sur celle qui
+                est allumée.
+        duration:
+            title: Combien de temps dure la note
+            text: >-
+                Ronde, blanche, noire ou croche : choisis la durée avant de
+                poser ta note.
+        piano:
+            title: Pose tes notes ici
+            text: >-
+                Appuie sur une touche : tu entends la note, et elle se pose sur
+                la portée. Fais glisser le clavier sur le côté pour aller
+                chercher les notes graves ou aiguës.
+        sheet:
+            title: Ta partition
+            text: >-
+                Tu peux aussi poser une note en appuyant directement sur la
+                portée. Appuie sur une note pour la choisir, puis fais-la
+                glisser vers le haut ou vers le bas pour changer sa hauteur.
+        play:
+            title: Écoute ton morceau
+            text: >-
+                Les deux mains jouent ensemble et un trait suit la musique.
+                Appuie encore pour arrêter.
+        undo:
+            title: Se tromper n'est pas grave
+            text: >-
+                La flèche de gauche annule ce que tu viens de faire, celle de
+                droite le remet.
+        accidental:
+            title: Dièse et bémol
+            text: >-
+                Le dièse ♯ monte la note d'un demi-ton, le bémol ♭ la descend,
+                le bécarre ♮ enlève les deux. Choisis avant de poser la note.
+        rest:
+            title: Un moment de silence
+            text: >-
+                Le silence prend la place d'une note, mais on n'entend rien. Il
+                dure aussi longtemps que la durée choisie juste à côté.
+        delete:
+            title: Enlever une note
+            text: >-
+                Choisis d'abord une note sur la portée, puis appuie ici pour
+                l'effacer.
+        measures:
+            title: Plus ou moins de mesures
+            text: >-
+                Le + ajoute une mesure à la fin, le − retire la dernière si
+                elle est vide. Le nombre du milieu dit combien tu en as.
+        tempo:
+            title: Vite ou lentement
+            text: >-
+                Fais glisser pour changer la vitesse de la musique : à gauche
+                c'est lent, à droite c'est rapide.
+        print:
+            title: Sur du vrai papier
+            text: >-
+                Imprime ton morceau pour le poser sur le piano, ou pour
+                l'offrir à quelqu'un.
+        back:
+            title: Retour à tes morceaux
+            text: >-
+                Cette flèche te ramène à la liste. Tout est déjà enregistré, tu
+                ne perds rien.
+
 admin:
     profiles: Profils
     new_child: Nouveau profil enfant

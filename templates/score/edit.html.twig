@@ -60,7 +60,11 @@
                 <p class="editor__print-author">{{ score.owner.displayName }}</p>
             </div>
 
-            <div class="score-sheet">
+            <div class="score-sheet"
+                 data-tour-step="6"
+                 data-tour-title="{{ 'tour.editor.sheet.title'|trans }}"
+                 data-tour-text="{{ 'tour.editor.sheet.text'|trans }}"
+                 data-tour-side="bottom" data-tour-align="center">
                 <div class="score-sheet__canvas"
                      data-score-editor-target="canvas"
                      data-action="pointerdown->score-editor#stageTapped"></div>
