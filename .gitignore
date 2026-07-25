@@ -40,6 +40,10 @@ yarn-error.log
 # Regenerated on every cache warmup; pure IDE helper.
 /config/reference.php
 
+# Deployment script, kept on the production server only: it names that host's
+# service and PHP-FPM units, which no other checkout shares.
+/bin/pull
+
 ###> phpunit/phpunit ###
 /phpunit.xml
 /.phpunit.cache/
