@@ -141,16 +141,6 @@
     }
 }
 
-/// Translucent band marking which of the two staves receives input.
-.stave-highlight {
-    position: absolute;
-    left: 0;
-    border-radius: $radius-sm;
-    background-color: rgb(240 138 36 / 9%);
-    pointer-events: none;
-    transition: top 0.15s ease, height 0.15s ease;
-}
-
 /// Vertical line that tracks playback.
 .playhead {
     position: absolute;

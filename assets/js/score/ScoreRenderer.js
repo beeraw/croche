@@ -119,11 +119,18 @@ export default class ScoreRenderer {
         const active = pairs[0][state.activeStave === 0 ? 'treble' : 'bass'];
         this.drawActiveBand(active, SIDE_MARGIN, x - SIDE_MARGIN);
 
+        // The playhead spans the whole system, from the top of the treble to
+        // the bottom of the bass, so it reads as one cursor rather than two.
+        const system = {
+            top: pairs[0].treble.getTopLineTopY(),
+            bottom: pairs[0].bass.getBottomLineBottomY(),
+        };
+
         pairs.forEach(({ index, treble, bass }) => {
             treble.setContext(this.context).draw();
             bass.setContext(this.context).draw();
 
-            this.formatMeasure(document, index, treble, bass);
+            this.formatMeasure(document, index, treble, bass, system);
 
             this.measures.push(
                 this.measureGeometry(0, index, treble),
@@ -148,7 +155,7 @@ export default class ScoreRenderer {
      * Formats both staves of one measure in a single pass, which is what keeps
      * the barlines aligned.
      */
-    formatMeasure(document, measureIndex, trebleStave, bassStave) {
+    formatMeasure(document, measureIndex, trebleStave, bassStave, system) {
         const numBeats = beatsPerMeasure(document.timeSignature);
         const voices = [];
         const beams = [];
@@ -180,7 +187,7 @@ export default class ScoreRenderer {
 
         voices.forEach(({ voice, stave, entries }) => {
             voice.draw(this.context, stave);
-            entries.forEach((entry) => this.recordNote(entry, stave));
+            entries.forEach((entry) => this.recordNote(entry, stave, system));
         });
 
         beams.forEach((beam) => beam.setContext(this.context).draw());
@@ -228,7 +235,7 @@ export default class ScoreRenderer {
         return { staveNotes, entries };
     }
 
-    recordNote({ staveIndex, measureIndex, noteIndex, staveNote }, stave) {
+    recordNote({ staveIndex, measureIndex, noteIndex, staveNote }, stave, system) {
         const box = staveNote.getBoundingBox();
 
         this.notes.push({
@@ -239,6 +246,9 @@ export default class ScoreRenderer {
             y: box ? box.getY() + box.getH() / 2 : stave.getYForLine(2),
             top: stave.getTopLineTopY(),
             height: stave.getBottomLineBottomY() - stave.getTopLineTopY(),
+            // Bounds of the whole system, for the playback cursor.
+            systemTop: system.top,
+            systemHeight: system.bottom - system.top,
             element: staveNote.getSVGElement(),
         });
     }
@@ -261,15 +271,21 @@ export default class ScoreRenderer {
 
     /**
      * Soft tint marking which stave the next note will land on.
+     *
+     * Wrapped in its own group so the print stylesheet can drop it: printing
+     * forces every shape in the SVG to solid black, which would turn this
+     * translucent band into a bar across the staff.
      */
     drawActiveBand(stave, x, width) {
         const top = stave.getTopLineTopY() - 10;
         const height = stave.getBottomLineBottomY() - stave.getTopLineTopY() + 20;
 
+        this.context.openGroup('active-stave');
         this.context.save();
         this.context.setFillStyle('rgba(240, 138, 36, 0.10)');
         this.context.fillRect(x - 6, top, width + 12, height);
         this.context.restore();
+        this.context.closeGroup();
     }
 
     applySelection(selection) {

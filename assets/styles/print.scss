@@ -25,7 +25,6 @@ body {
 .editor__tools,
 .piano,
 .editor__notice,
-.stave-highlight,
 .playhead,
 .flashes,
 .no-print {
@@ -79,8 +78,14 @@ body {
     height: auto !important;
 }
 
+// The on-screen tint marking the active stave has no business on paper — and
+// the rule below would render it as a solid black bar.
+.score-sheet__canvas svg .vf-active-stave {
+    display: none !important;
+}
+
 // VexFlow paints in dark grey; force pure black for a crisper print.
-.score-sheet__canvas svg * {
+.score-sheet__canvas svg *:not(.vf-active-stave, .vf-active-stave *) {
     fill: #000 !important;
     stroke: #000 !important;
 }

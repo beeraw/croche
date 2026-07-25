@@ -177,12 +177,10 @@ export default class extends Controller {
         const scale = renderer.displayScale();
         const playhead = this.playheadTarget;
 
-        // The cursor spans both staves of the system the note belongs to.
-        const top = current.staveIndex === 0 ? geometry.top : geometry.top - 100;
-
+        // The cursor spans the whole system, both staves at once.
         playhead.style.left = `${scale.offsetLeft + geometry.x * scale.x}px`;
-        playhead.style.top = `${scale.offsetTop + top * scale.y}px`;
-        playhead.style.height = `${(geometry.height + 100) * scale.y}px`;
+        playhead.style.top = `${scale.offsetTop + geometry.systemTop * scale.y}px`;
+        playhead.style.height = `${geometry.systemHeight * scale.y}px`;
         playhead.classList.add('is-visible');
     }
 
