@@ -77,12 +77,42 @@ export default class AudioEngine {
         // Built once, on the first unlock, then shared by every note.
         this.wave = null;
         this.hammerBuffer = null;
+
+        this.watchForGestures();
     }
 
     /**
-     * iOS will not produce a sound from a context created outside a user
-     * gesture, and suspends it again on every navigation. Call this from the
-     * first tap and it is handled once and for all.
+     * iOS does not just gate the first sound behind a user gesture: it also
+     * suspends the context when the tab is backgrounded, when a call comes in,
+     * and sometimes on simply rotating the iPad. A single unlock at startup is
+     * therefore not enough — every tap is treated as another chance to recover.
+     */
+    watchForGestures() {
+        if (typeof document === 'undefined') {
+            return;
+        }
+
+        const recover = () => {
+            if (this.context && this.context.state !== 'running') {
+                this.unlock();
+            }
+        };
+
+        ['pointerdown', 'touchend', 'keydown'].forEach((type) => {
+            document.addEventListener(type, recover, { capture: true, passive: true });
+        });
+
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+                recover();
+            }
+        });
+    }
+
+    /**
+     * Creates the context if needed and does its best to get it running.
+     * Safe to call from anywhere; only actually works from a user gesture on
+     * iOS, which is why every entry point calls it rather than assuming.
      */
     unlock() {
         if (!this.context) {
@@ -101,14 +131,38 @@ export default class AudioEngine {
             this.hammerBuffer = this.buildHammerBuffer();
         }
 
-        if (this.context.state === 'suspended') {
-            // Safari rejects this when the call did not come from a gesture.
-            // There is nothing useful to do about it, and an unhandled
-            // rejection would only clutter the console.
-            Promise.resolve(this.context.resume()).catch(() => {});
+        if (this.context.state !== 'running') {
+            // Safari rejects resume() when the call did not come from a
+            // gesture, and can throw synchronously rather than rejecting.
+            // Nothing useful to do either way, and an unhandled error would
+            // only clutter the console.
+            try {
+                Promise.resolve(this.context.resume()).catch(() => {});
+            } catch {
+                // Context not in a resumable state.
+            }
+
+            this.nudge();
         }
 
         return true;
+    }
+
+    /**
+     * The long-standing iOS workaround: a context sometimes refuses to leave
+     * "suspended" until a source has actually been started on it. One silent
+     * sample is enough, and costs nothing anywhere else.
+     */
+    nudge() {
+        try {
+            const source = this.context.createBufferSource();
+
+            source.buffer = this.context.createBuffer(1, 1, this.context.sampleRate);
+            source.connect(this.context.destination);
+            source.start(0);
+        } catch {
+            // Context in a state that refuses new sources; nothing to do.
+        }
     }
 
     get currentTime() {
