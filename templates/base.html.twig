@@ -31,7 +31,14 @@
         {{ encore_entry_script_tags('app') }}
     {% endblock %}
 </head>
-<body class="{% block body_class %}{% endblock %}">
+<body class="{% block body_class %}{% endblock %}"
+      data-controller="navigation"
+      data-action="click->navigation#tapped
+                   submit->navigation#submitted
+                   pageshow@window->navigation#reset">
+{# Installed on the home screen, Croche has no browser chrome and therefore no
+   loading indicator of its own. This is the whole of it. #}
+<div class="nav-progress no-print" data-navigation-target="bar" aria-hidden="true"></div>
 {% block body %}{% endblock %}
 </body>
 </html>

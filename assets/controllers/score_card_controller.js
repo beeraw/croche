@@ -25,6 +25,8 @@ export default class extends Controller {
         }
 
         this.renameInputTarget.value = trimmed;
-        this.renameFormTarget.submit();
+        // requestSubmit, not submit: the plain one skips the submit event, and
+        // with it the loading bar that covers the wait for the reloaded page.
+        this.renameFormTarget.requestSubmit();
     }
 }

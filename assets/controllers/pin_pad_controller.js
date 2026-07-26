@@ -72,7 +72,10 @@ export default class extends Controller {
         this.submitted = true;
         this.inputTarget.value = this.digits;
         // A short beat so the last dot is visibly filled before the page leaves.
-        window.setTimeout(() => this.element.submit(), 120);
+        // requestSubmit rather than submit: the plain one bypasses the submit
+        // event, and with it whatever the page has hung on leaving — here, the
+        // loading bar that covers the wait for the library.
+        window.setTimeout(() => this.element.requestSubmit(), 120);
     }
 
     render() {

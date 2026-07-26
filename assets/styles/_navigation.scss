@@ -1,0 +1,66 @@
+@use 'variables' as *;
+
+/// Progress bar for a page that is on its way.
+///
+/// It never reaches the end, because nothing here knows when the page will
+/// arrive — the page arriving is what takes the bar away. The easing is what
+/// does the work: quick off the mark, then slower and slower, so it always
+/// looks like it is still going somewhere without ever promising a finish.
+.nav-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: $z-toast;
+    width: 0;
+    height: 4px;
+    border-radius: 0 $radius-pill $radius-pill 0;
+    background: linear-gradient(90deg, $primary, $accent);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+
+.nav-progress.is-running {
+    width: 92%;
+    opacity: 1;
+    transition: width 12s cubic-bezier(0, 0.75, 0.15, 1), opacity 0.1s ease;
+}
+
+/// The control she just tapped, while its page is on its way.
+///
+/// Dimmed first and brightened by the pulse, rather than the other way round:
+/// a reader who has asked for less movement gets no animation at all, and the
+/// dimming has to be what is left when it goes.
+.is-pending {
+    cursor: progress;
+    opacity: 0.6;
+    animation: pending-pulse 1.1s ease-in-out infinite;
+}
+
+/// Buttons with a label have room for a spinner beside it, and it reads faster
+/// than any amount of fading. Icon buttons and cards keep the pulse alone.
+.btn.is-pending {
+    animation: none;
+}
+
+.btn.is-pending::after {
+    content: '';
+    width: 1em;
+    height: 1em;
+    border: 2px solid currentcolor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: pending-spin 0.7s linear infinite;
+}
+
+@keyframes pending-pulse {
+    50% {
+        opacity: 1;
+    }
+}
+
+@keyframes pending-spin {
+    to {
+        transform: rotate(1turn);
+    }
+}
