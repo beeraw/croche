@@ -30,65 +30,132 @@
 ///
 /// A state that holds rather than one that fades in and out: it has to read at
 /// whatever moment she happens to look, and a pulse spends half its time back
-/// at full strength. What is left when animation is turned off — the tint, and
-/// a ring that has stopped turning — still says the same thing.
+/// at full strength.
+///
+/// Three shapes of control, three idioms, because a ring that suits a button is
+/// a ring dropped on top of a card:
+///
+///   1. a control with a label lays the ring out beside it, in the row it
+///      already keeps for its icon and its text;
+///   2. a control that is nothing but an icon hands its place over to the ring,
+///      so its footprint never changes and the bar around it never moves;
+///   3. a card or a tile is too big for a ring to belong anywhere in
+///      particular, and its title can run up to any edge, so it carries a sweep
+///      along its bottom instead.
+///
+/// What survives prefers-reduced-motion — the tint, a ring that has stopped
+/// turning, a sweep resting on its track — says the same thing as the moving
+/// version.
 .is-pending {
     position: relative;
     cursor: progress;
 }
 
-/// Pinned rather than laid out in the flow: a control that grows as it is
-/// tapped drags the rest of the page along with it. currentcolor so the ring
-/// shows up on a filled button and on a white card alike.
+/// 1. The ring, laid out in the flow so it lands in that row of icon and text.
+///    currentcolor so it shows up on a filled button and on a white card alike.
 .is-pending::after {
     content: '';
-    position: absolute;
-    top: 50%;
-    right: $space-3;
-    width: 1.25rem;
-    height: 1.25rem;
-    margin-top: -0.625rem;
-    border: 3px solid currentcolor;
-    border-right-color: transparent;
-    border-radius: 50%;
-    opacity: 0.7;
-    animation: pending-spin 0.7s linear infinite;
-}
-
-/// An icon button is all icon: nowhere to put a ring that would not sit on top
-/// of the very thing it is turning for.
-.btn-icon.is-pending::after {
-    content: none;
-}
-
-/// A button with a label already lays its icon and its text out in a row, so
-/// the ring joins that row rather than being pinned on top of the last letter.
-.btn.is-pending::after {
-    position: static;
     width: 1em;
     height: 1em;
-    margin-top: 0;
-    border-width: 2px;
+    border: 2px solid currentcolor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    opacity: 0.75;
+    animation: pending-spin 0.7s linear infinite;
+    // A link inside a sentence has no row and no gap to inherit, so the ring
+    // carries its own spacing and sits on the baseline of the words.
+    display: inline-block;
+    margin-inline-start: 0.4em;
+    vertical-align: -0.15em;
 }
 
-/// The tint has to follow the shape of what it covers, so the surfaces that get
-/// one are named rather than caught by a blanket rule. Anything not listed here
-/// still gets the ring.
-.profile-tile.is-pending,
+/// ...and the controls that do lay their contents out in a row already space
+/// them; there the gap is the spacing, and a margin on top of it would push the
+/// ring further from the label than the icon sits from it.
+.btn.is-pending::after,
+.navbar__link.is-pending::after,
+.navbar__brand.is-pending::after,
+.login__back.is-pending::after,
+.language__option.is-pending::after {
+    margin-inline-start: 0;
+}
+
+/// 2. Icon-only controls. The icon steps aside rather than sharing the space:
+///    44px is a fingertip, not a place to fit two things.
+.btn-icon.is-pending > svg,
+.editor__back.is-pending > svg {
+    opacity: 0;
+}
+
+.btn-icon.is-pending::after,
+.editor__back.is-pending::after {
+    position: absolute;
+    inset: 0;
+    width: 1.25rem;
+    height: 1.25rem;
+    margin: auto;
+    opacity: 1;
+}
+
 .btn-icon.is-pending {
     border-color: $primary;
     background-color: $plum-light;
+    color: $primary;
 }
 
-/// A card is tinted whole, not just the strip its link happens to occupy.
-/// Split off on its own so that a browser without :has() drops this rule alone.
-.score-card:has(.score-card__link.is-pending) {
+/// 3. Large surfaces. The tint is what says "this one", and the sweep along the
+///    bottom is what says "still going" — the same movement as the bar at the
+///    top of the screen, at the scale of the thing that was tapped.
+.profile-tile.is-pending {
     border-color: $primary;
     background-color: $plum-light;
+}
+
+/// The link fills only the top strip of its card, but the card is what she
+/// tapped, so the card is what answers. Kept in a rule of its own so that a
+/// browser without :has() drops this one alone.
+.score-card:has(.score-card__link.is-pending) {
+    position: relative;
+    border-color: $primary;
+    background-color: $plum-light;
+}
+
+.score-card__link.is-pending::after {
+    content: none;
+}
+
+.profile-tile.is-pending::after,
+.score-card:has(.score-card__link.is-pending)::after {
+    content: '';
+    position: absolute;
+    right: $space-4;
+    bottom: $space-3;
+    left: $space-4;
+    width: auto;
+    height: 4px;
+    margin: 0;
+    border: 0;
+    border-radius: $radius-pill;
+    background-color: rgb(109 58 142 / 22%);
+    background-image: linear-gradient(90deg, $primary, $accent);
+    background-repeat: no-repeat;
+    background-size: 40% 100%;
+    opacity: 1;
+    animation: pending-sweep 1.2s ease-in-out infinite;
 }
 
 @keyframes pending-spin {
     to {
         transform: rotate(1turn);
+    }
+}
+
+@keyframes pending-sweep {
+    0% {
+        background-position: -60% 0;
+    }
+
+    100% {
+        background-position: 160% 0;
     }
 }
