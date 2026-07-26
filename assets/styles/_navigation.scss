@@ -103,9 +103,39 @@
     color: $primary;
 }
 
+/// In the navbar the links stand shoulder to shoulder, so a ring that adds
+/// width to one of them shoves its neighbours sideways for the length of the
+/// wait. There the icon steps down instead and the ring takes its slot in the
+/// row, at the 1em both are drawn at, so the bar keeps its measurements.
+.navbar__link.is-pending > svg,
+.navbar__brand.is-pending > svg {
+    display: none;
+}
+
+.navbar__link.is-pending::after,
+.navbar__brand.is-pending::after {
+    order: -1;
+}
+
+/// The brand draws its note larger than the links draw theirs, so its ring
+/// follows suit rather than leaving a gap where the icon was.
+.navbar__brand.is-pending::after {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
 /// 3. Large surfaces. The tint is what says "this one", and the sweep along the
 ///    bottom is what says "still going" — the same movement as the bar at the
 ///    top of the screen, at the scale of the thing that was tapped.
+///
+///    It runs the full width, cut by the corners rather than held clear of
+///    them: an inset bar floats in the padding, and on a card that padding is
+///    already carrying the row of actions.
+.profile-tile.is-pending,
+.score-card:has(.score-card__link.is-pending) {
+    overflow: hidden;
+}
+
 .profile-tile.is-pending {
     border-color: $primary;
     background-color: $plum-light;
@@ -128,14 +158,14 @@
 .score-card:has(.score-card__link.is-pending)::after {
     content: '';
     position: absolute;
-    right: $space-4;
-    bottom: $space-3;
-    left: $space-4;
+    right: 0;
+    bottom: 0;
+    left: 0;
     width: auto;
     height: 4px;
     margin: 0;
     border: 0;
-    border-radius: $radius-pill;
+    border-radius: 0;
     background-color: rgb(109 58 142 / 22%);
     background-image: linear-gradient(90deg, $primary, $accent);
     background-repeat: no-repeat;

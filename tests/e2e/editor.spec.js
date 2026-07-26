@@ -244,6 +244,48 @@ test.describe('marking a note', () => {
         await expect(page.locator('.play-button__icon--stop')).toBeHidden();
     });
 
+    test('a drag that runs off the staff stops one octave out', async ({ page }) => {
+        await openScore(page);
+
+        const result = await editor(page).eval(`
+            c.activeStave = 0;
+            c.selection = null;
+            c.render();
+
+            const before = c.document.note(0, 0, 0).keys[0];
+            const entry = c.renderer.notes.find(
+                (n) => n.staveIndex === 0 && n.measureIndex === 0 && n.noteIndex === 0,
+            );
+            const measure = c.renderer.measures.find((m) => m.staveIndex === 0 && m.measureIndex === 0);
+            const svg = document.querySelector('.score-sheet__canvas svg');
+            const rect = svg.getBoundingClientRect();
+            const sx = rect.width / svg.viewBox.baseVal.width;
+            const sy = rect.height / svg.viewBox.baseVal.height;
+            const step = (measure.stave.getSpacingBetweenLines() / 2) * sy;
+            const x = rect.left + entry.x * sx;
+            const y = rect.top + entry.y * sy;
+
+            document.querySelector('.score-sheet__canvas').dispatchEvent(new PointerEvent('pointerdown', {
+                clientX: x, clientY: y, bubbles: true, cancelable: true, pointerId: 9, isPrimary: true,
+            }));
+            // Far enough down to have reached the bottom of the keyboard before.
+            window.dispatchEvent(new PointerEvent('pointermove', {
+                clientX: x, clientY: y + step * 40, bubbles: true, pointerId: 9, isPrimary: true,
+            }));
+            const during = c.document.note(0, 0, 0).keys[0];
+            window.dispatchEvent(new PointerEvent('pointerup', {
+                clientX: x, clientY: y + step * 40, bubbles: true, pointerId: 9, isPrimary: true,
+            }));
+
+            c.undo();
+            return { before, during };
+        `);
+
+        expect(result.before).toBe('c/4');
+        // One octave down, not the three the whole keyboard would have allowed.
+        expect(result.during).toBe('c/3');
+    });
+
     test('dragging across the score does not sweep a text selection over it', async ({ page }) => {
         await openScore(page);
 

@@ -9,6 +9,16 @@ import { sharedAudioEngine } from '../js/audio/AudioEngine.js';
 const DRAG_THRESHOLD = 6;
 
 /**
+ * How far a drag may carry a note, in diatonic steps: one octave either way.
+ *
+ * Wide enough to transpose a phrase properly, tight enough that a finger
+ * slipping down the iPad does not fling the note to the bottom of the keyboard
+ * under a stack of ledger lines. Tapping the staff is held far closer than
+ * this — a tap is a guess at a position, where a drag is a deliberate carry.
+ */
+const DRAG_RANGE = 7;
+
+/**
  * The editor's brain.
  *
  * Owns the document, the renderer, the undo stack and the current selection.
@@ -242,7 +252,8 @@ export default class extends Controller {
                 return;
             }
 
-            const steps = this.renderer.stepsFromPixels(measure, delta);
+            const travelled = this.renderer.stepsFromPixels(measure, delta);
+            const steps = Math.max(-DRAG_RANGE, Math.min(DRAG_RANGE, travelled));
 
             if (steps === moved) {
                 return;
