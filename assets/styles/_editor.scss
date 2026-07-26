@@ -106,6 +106,34 @@
     align-items: center;
 }
 
+/// Play / stop. Mango while it plays, matching the notes lighting up on the
+/// staff, so the one button to press to make it stop is the one that changed.
+.play-button {
+    &.is-active {
+        border-color: $accent;
+        background-color: $accent;
+        color: $white;
+    }
+
+    &.is-active:hover {
+        border-color: $mango-dark;
+        background-color: $mango-dark;
+    }
+}
+
+.play-button__icon {
+    display: inline-flex;
+}
+
+.play-button__icon--stop,
+.play-button.is-active .play-button__icon--play {
+    display: none;
+}
+
+.play-button.is-active .play-button__icon--stop {
+    display: inline-flex;
+}
+
 // --- Score surface -------------------------------------------------------
 
 .editor__stage {
@@ -134,6 +162,13 @@
     position: relative;
     // A one-finger drag over the paper still scrolls the score.
     touch-action: manipulation;
+    // Dragging a note with a mouse must not sweep a text selection across the
+    // score on the way: VexFlow draws its glyphs as <text>, and without this
+    // the browser cheerfully highlights every one it passes over. The prefix is
+    // still what Safari obeys, on the iPad included.
+    // stylelint-disable-next-line property-no-vendor-prefix
+    -webkit-user-select: none;
+    user-select: none;
 
     svg {
         display: block;
@@ -164,9 +199,56 @@
     opacity: 1;
 }
 
+/// The note the next tool action will apply to.
 .note--selected {
     fill: $primary;
     stroke: $primary;
+}
+
+/// The note being read out during playback. Declared after the selection so a
+/// note that is both keeps the playback colour — that is the one that moves.
+.note--playing {
+    fill: $mango-dark;
+    stroke: $mango-dark;
+}
+
+/// Halo behind a marked note. A recoloured notehead is a couple of millimetres
+/// of ink; this is what carries as far as the piano stool.
+.note-halo {
+    pointer-events: none;
+}
+
+.note-halo--selected {
+    fill: rgb(109 58 142 / 13%);
+    stroke: rgb(109 58 142 / 45%);
+    stroke-width: 2;
+}
+
+.note-halo--playing {
+    fill: rgb(240 138 36 / 26%);
+    stroke: $accent;
+    stroke-width: 2;
+    // Grows out of the notehead rather than out of the top-left of its box.
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: note-playing 0.45s ease-out;
+}
+
+@keyframes note-playing {
+    0% {
+        transform: scale(0.7);
+        opacity: 0.4;
+    }
+
+    45% {
+        transform: scale(1.12);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
 /// Flash shown when a measure cannot take another note.

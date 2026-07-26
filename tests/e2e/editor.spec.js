@@ -176,6 +176,102 @@ test.describe('entering notes', () => {
     });
 });
 
+test.describe('marking a note', () => {
+    test('the selection is marked, and the mark follows it', async ({ page }) => {
+        await openScore(page);
+
+        await editor(page).eval('c.selection = { staveIndex: 0, measureIndex: 0, noteIndex: 0 }; c.render();');
+        await expect(page.locator('.note--selected')).toHaveCount(1);
+        await expect(page.locator('.note-halo--selected')).toHaveCount(1);
+
+        const first = await page.locator('.note-halo--selected').getAttribute('x');
+
+        await editor(page).eval('c.selection = { staveIndex: 0, measureIndex: 0, noteIndex: 1 }; c.render();');
+        await expect(page.locator('.note-halo--selected')).toHaveCount(1);
+        expect(await page.locator('.note-halo--selected').getAttribute('x')).not.toBe(first);
+
+        await editor(page).eval('c.selection = null; c.render();');
+        await expect(page.locator('.note-halo--selected')).toHaveCount(0);
+    });
+
+    test('the mark sits on the notehead, not over the stem', async ({ page }) => {
+        await openScore(page);
+
+        const spaces = await editor(page).eval(`
+            c.selection = { staveIndex: 0, measureIndex: 0, noteIndex: 0 };
+            c.render();
+
+            const halo = document.querySelector('.note-halo--selected');
+            const measure = c.renderer.measures.find((m) => m.staveIndex === 0 && m.measureIndex === 0);
+            return Number(halo.getAttribute('height')) / measure.stave.getSpacingBetweenLines();
+        `);
+
+        // A quarter note's stem runs some three staff spaces; measuring the
+        // note through the SVG rather than through VexFlow gives Bravura's em
+        // box instead of its ink, and the mark comes out as a column.
+        expect(spaces).toBeLessThan(2.5);
+    });
+
+    test('playback lights the note each hand is on, and puts it out at the end', async ({ page }) => {
+        await openScore(page);
+
+        await page.getByRole('button', { name: /Écouter|Play/ }).click();
+
+        // The opening bar has notes on both staves, so both light together.
+        await expect.poll(
+            () => page.locator('.note--playing').count(),
+            { timeout: 5_000 },
+        ).toBe(2);
+        await expect(page.locator('.note-halo--playing')).toHaveCount(2);
+
+        await page.getByRole('button', { name: /Arrêter|Stop/ }).click();
+        await expect(page.locator('.note--playing')).toHaveCount(0);
+        await expect(page.locator('.note-halo--playing')).toHaveCount(0);
+    });
+
+    test('the play button becomes a stop button while it plays', async ({ page }) => {
+        await openScore(page);
+
+        await expect(page.locator('.play-button__icon--play')).toBeVisible();
+        await expect(page.locator('.play-button__icon--stop')).toBeHidden();
+
+        await page.getByRole('button', { name: /Écouter|Play/ }).click();
+        await expect(page.locator('.play-button__icon--stop')).toBeVisible();
+        await expect(page.locator('.play-button__icon--play')).toBeHidden();
+
+        await page.getByRole('button', { name: /Arrêter|Stop/ }).click();
+        await expect(page.locator('.play-button__icon--play')).toBeVisible();
+        await expect(page.locator('.play-button__icon--stop')).toBeHidden();
+    });
+
+    test('dragging across the score does not sweep a text selection over it', async ({ page }) => {
+        await openScore(page);
+
+        // Starts above every staff, so the drag places nothing and moves
+        // nothing: the piece this suite shares comes out of it untouched.
+        const from = await page.locator('.score-sheet__canvas').evaluate((canvas) => {
+            const rect = canvas.getBoundingClientRect();
+
+            return { x: rect.left + 40, y: rect.top + 3 };
+        });
+
+        await page.mouse.move(from.x, from.y);
+        await page.mouse.down();
+
+        for (let step = 1; step <= 14; step += 1) {
+            await page.mouse.move(from.x + step * 45, from.y + step * 22);
+        }
+
+        // VexFlow draws its glyphs as <text>, and without user-select Safari
+        // highlights every one the drag crosses — which is the whole score.
+        const selected = await page.evaluate(() => window.getSelection().toString());
+        await page.mouse.up();
+
+        expect(selected).toBe('');
+        expect(await editor(page).eval('return c.document.note(0, 0, 0).keys[0];')).toBe('c/4');
+    });
+});
+
 test.describe('undo and redo', () => {
     test('they walk back and forth through the edits', async ({ page }) => {
         await openScore(page);

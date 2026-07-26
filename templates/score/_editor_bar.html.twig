@@ -49,7 +49,10 @@
             {{ ux_icon('tabler:arrow-forward-up') }}
         </button>
 
-        <button type="button" class="btn-icon"
+        {# Both icons ship in the markup and the stylesheet swaps them: a button
+           that keeps showing a ▶ while the piece plays gives the child nothing
+           to press to make it stop. #}
+        <button type="button" class="btn-icon play-button"
                 data-playback-target="playButton"
                 data-action="playback#toggle"
                 data-tour-step="7"
@@ -57,7 +60,12 @@
                 data-tour-text="{{ 'tour.editor.play.text'|trans }}"
                 data-tour-align="end"
                 title="{{ 'editor.play'|trans }}" aria-label="{{ 'editor.play'|trans }}">
-            {{ ux_icon('tabler:player-play-filled') }}
+            <span class="play-button__icon play-button__icon--play">
+                {{ ux_icon('tabler:player-play-filled') }}
+            </span>
+            <span class="play-button__icon play-button__icon--stop">
+                {{ ux_icon('tabler:player-stop-filled') }}
+            </span>
         </button>
 
         <button type="button" class="btn-icon"

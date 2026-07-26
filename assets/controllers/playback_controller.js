@@ -24,6 +24,7 @@ export default class extends Controller {
         this.playing = false;
         this.frame = null;
         this.timeline = [];
+        this.current = [];
         this.renderTempo();
     }
 
@@ -66,12 +67,14 @@ export default class extends Controller {
         this.timeline = timeline.marks;
         this.totalSeconds = timeline.total;
         this.playing = true;
+        this.current = [];
         this.renderPlayButton();
         this.tick();
     }
 
     stop() {
         this.playing = false;
+        this.current = [];
         this.audio.stop();
 
         if (this.frame) {
@@ -80,6 +83,7 @@ export default class extends Controller {
         }
 
         this.hidePlayhead();
+        this.editor?.renderer?.setPlayingNotes([]);
         this.renderPlayButton();
     }
 
@@ -114,7 +118,9 @@ export default class extends Controller {
                         });
                     }
 
-                    marks.push({ at, staveIndex, measureIndex, noteIndex });
+                    // `until` is the written value, not the shortened sounding
+                    // one: the note stays lit for as long as it is being read.
+                    marks.push({ at, until: at + seconds, staveIndex, measureIndex, noteIndex });
                     beat += DURATION_BEATS[note.duration];
                     total = Math.max(total, at + seconds);
                 });
@@ -146,10 +152,15 @@ export default class extends Controller {
     }
 
     movePlayhead(elapsed) {
-        const editor = this.editor;
-        const renderer = editor?.renderer;
+        const renderer = this.editor?.renderer;
 
-        if (!renderer || !this.hasPlayheadTarget) {
+        if (!renderer) {
+            return;
+        }
+
+        this.lightUpNotes(renderer, elapsed);
+
+        if (!this.hasPlayheadTarget) {
             return;
         }
 
@@ -186,6 +197,39 @@ export default class extends Controller {
         playhead.style.top = `${scale.offsetTop + geometry.systemTop * scale.y}px`;
         playhead.style.height = `${geometry.systemHeight * scale.y}px`;
         playhead.classList.add('is-visible');
+    }
+
+    /**
+     * Lights the note each hand is on. Both staves at once, and only while the
+     * note is actually sounding — a line that only ever marks one stave leaves
+     * the left hand guessing, and one that never goes out marks the whole bar.
+     */
+    lightUpNotes(renderer, elapsed) {
+        const perStave = new Map();
+
+        for (const mark of this.timeline) {
+            if (mark.at > elapsed) {
+                break;
+            }
+
+            if (mark.until > elapsed) {
+                perStave.set(mark.staveIndex, mark);
+            }
+        }
+
+        const sounding = [...perStave.values()];
+
+        // Marks come straight from the timeline and are never rebuilt during a
+        // run, so comparing references is enough to spot a change.
+        const unchanged = sounding.length === this.current.length
+            && sounding.every((mark, index) => mark === this.current[index]);
+
+        if (unchanged) {
+            return;
+        }
+
+        this.current = sounding;
+        renderer.setPlayingNotes(sounding);
     }
 
     hidePlayhead() {

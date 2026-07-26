@@ -43,6 +43,8 @@ export default class ScoreRenderer {
         this.notes = [];
         /** @type {Array<{staveIndex: number, measureIndex: number, x: number, width: number, top: number, height: number, stave: Stave}>} */
         this.measures = [];
+        /** Notes the playback cursor is on, redrawn after every render. */
+        this.playingNotes = [];
     }
 
     /**
@@ -70,6 +72,7 @@ export default class ScoreRenderer {
         }
 
         this.applySelection(state.selection);
+        this.applyPlaying();
 
         return { width, height };
     }
@@ -249,8 +252,40 @@ export default class ScoreRenderer {
             // Bounds of the whole system, for the playback cursor.
             systemTop: system.top,
             systemHeight: system.bottom - system.top,
+            halo: this.headBox(staveNote),
             element: staveNote.getSVGElement(),
         });
+    }
+
+    /**
+     * Ink box of a note's heads and its accidental — no stem, no beam, no flag.
+     *
+     * Measured through VexFlow rather than with getBBox() on the SVG: the glyphs
+     * are drawn as <text> in Bravura, and getBBox() on text returns the font's
+     * em box, which is several staff spaces tall. A halo built from that comes
+     * out as a column standing on the note instead of a mark around it.
+     */
+    headBox(staveNote) {
+        let box = null;
+
+        [...staveNote.noteHeads, ...(staveNote.modifiers ?? [])].forEach((part) => {
+            const measured = part.getBoundingBox?.();
+
+            if (!measured || measured.getW() === 0 || measured.getH() === 0) {
+                return;
+            }
+
+            const current = {
+                x: measured.getX(),
+                y: measured.getY(),
+                width: measured.getW(),
+                height: measured.getH(),
+            };
+
+            box = box ? this.unionBox(box, current) : current;
+        });
+
+        return box;
     }
 
     measureGeometry(staveIndex, measureIndex, stave) {
@@ -293,13 +328,95 @@ export default class ScoreRenderer {
             return;
         }
 
-        const match = this.notes.find(
-            (entry) => entry.staveIndex === selection.staveIndex
-                && entry.measureIndex === selection.measureIndex
-                && entry.noteIndex === selection.noteIndex,
-        );
+        const match = this.noteEntry(selection);
 
-        match?.element?.classList.add('note--selected');
+        if (!match?.element) {
+            return;
+        }
+
+        match.element.classList.add('note--selected');
+        this.drawHalo(match.halo, 'note-halo note-halo--selected');
+    }
+
+    /**
+     * Marks the note the playback cursor has reached.
+     *
+     * Called on every note change rather than through a full re-render: redrawing
+     * the whole score sixteen times a bar would drop frames on the iPad, and the
+     * cursor has to stay glued to the sound.
+     */
+    setPlayingNotes(notes) {
+        this.playingNotes = notes;
+        this.applyPlaying();
+    }
+
+    applyPlaying() {
+        this.element.querySelectorAll('.note--playing')
+            .forEach((element) => element.classList.remove('note--playing'));
+        this.element.querySelectorAll('.note-halo--playing')
+            .forEach((halo) => halo.remove());
+
+        this.playingNotes.forEach((note) => {
+            const match = this.noteEntry(note);
+
+            if (!match?.element) {
+                return;
+            }
+
+            match.element.classList.add('note--playing');
+            this.drawHalo(match.halo, 'note-halo note-halo--playing');
+        });
+    }
+
+    noteEntry({ staveIndex, measureIndex, noteIndex }) {
+        return this.notes.find(
+            (entry) => entry.staveIndex === staveIndex
+                && entry.measureIndex === measureIndex
+                && entry.noteIndex === noteIndex,
+        ) ?? null;
+    }
+
+    /**
+     * Rounded halo behind one note.
+     *
+     * Recolouring the glyph alone is not enough: a notehead is a few millimetres
+     * of ink, and the child reads the score from the piano stool. The halo is
+     * what carries at that distance.
+     *
+     * It is inserted at the very start of the SVG because in SVG draw order is
+     * paint order — anything meant to sit behind the staff has to come first.
+     */
+    drawHalo(box, className) {
+        const svg = this.element.querySelector('svg');
+
+        if (!svg || !box) {
+            return;
+        }
+
+        const padX = 7;
+        const padY = 7;
+        const halo = svg.ownerDocument.createElementNS('http://www.w3.org/2000/svg', 'rect');
+
+        halo.setAttribute('class', className);
+        halo.setAttribute('x', String(box.x - padX));
+        halo.setAttribute('y', String(box.y - padY));
+        halo.setAttribute('width', String(box.width + padX * 2));
+        halo.setAttribute('height', String(box.height + padY * 2));
+        halo.setAttribute('rx', '9');
+
+        svg.insertBefore(halo, svg.firstChild);
+    }
+
+    unionBox(a, b) {
+        const x = Math.min(a.x, b.x);
+        const y = Math.min(a.y, b.y);
+
+        return {
+            x,
+            y,
+            width: Math.max(a.x + a.width, b.x + b.width) - x,
+            height: Math.max(a.y + a.height, b.y + b.height) - y,
+        };
     }
 
     // --- Hit testing -----------------------------------------------------
@@ -388,11 +505,7 @@ export default class ScoreRenderer {
      * Playhead geometry for one note, in drawing coordinates.
      */
     playheadFor(staveIndex, measureIndex, noteIndex) {
-        return this.notes.find(
-            (entry) => entry.staveIndex === staveIndex
-                && entry.measureIndex === measureIndex
-                && entry.noteIndex === noteIndex,
-        ) ?? null;
+        return this.noteEntry({ staveIndex, measureIndex, noteIndex });
     }
 
     /**

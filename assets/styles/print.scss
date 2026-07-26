@@ -78,19 +78,22 @@ body {
     height: auto !important;
 }
 
-// The on-screen tint marking the active stave has no business on paper — and
-// the rule below would render it as a solid black bar.
-.score-sheet__canvas svg .vf-active-stave {
+// The on-screen tint marking the active stave, and the halos marking the
+// selected and playing notes, have no business on paper — and the rule below
+// would render them as solid black blocks.
+.score-sheet__canvas svg .vf-active-stave,
+.score-sheet__canvas svg .note-halo {
     display: none !important;
 }
 
 // VexFlow paints in dark grey; force pure black for a crisper print.
-.score-sheet__canvas svg *:not(.vf-active-stave, .vf-active-stave *) {
+.score-sheet__canvas svg *:not(.vf-active-stave, .vf-active-stave *, .note-halo) {
     fill: #000 !important;
     stroke: #000 !important;
 }
 
-.note--selected {
+.note--selected,
+.note--playing {
     fill: #000 !important;
     stroke: #000 !important;
 }
