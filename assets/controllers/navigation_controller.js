@@ -1,7 +1,15 @@
 import { Controller } from '@hotwired/stimulus';
 
-/** Grace period before the bar appears. A page that fast needs no explaining. */
-const BAR_DELAY = 140;
+/**
+ * Grace period before the bar appears.
+ *
+ * Low enough that any real wait shows it — checking the code against a hash
+ * takes a couple of hundred milliseconds on its own, and anything coming over a
+ * network takes longer still. High enough that a page served in twenty-odd
+ * milliseconds, which is every local navigation, passes underneath without
+ * flashing a bar nobody had time to read.
+ */
+const BAR_DELAY = 50;
 
 /**
  * Tells the child her tap registered.

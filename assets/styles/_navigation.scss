@@ -12,9 +12,10 @@
     left: 0;
     z-index: $z-toast;
     width: 0;
-    height: 4px;
+    height: 8px;
     border-radius: 0 $radius-pill $radius-pill 0;
     background: linear-gradient(90deg, $primary, $accent);
+    box-shadow: 0 0 14px rgb(240 138 36 / 55%);
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.2s ease;
@@ -55,12 +56,12 @@
 ///    currentcolor so it shows up on a filled button and on a white card alike.
 .is-pending::after {
     content: '';
-    width: 1em;
-    height: 1em;
-    border: 2px solid currentcolor;
+    width: 1.4em;
+    height: 1.4em;
+    border: 3px solid currentcolor;
     border-right-color: transparent;
     border-radius: 50%;
-    opacity: 0.75;
+    opacity: 1;
     animation: pending-spin 0.7s linear infinite;
     // A link inside a sentence has no row and no gap to inherit, so the ring
     // carries its own spacing and sits on the baseline of the words.
@@ -91,15 +92,15 @@
 .editor__back.is-pending::after {
     position: absolute;
     inset: 0;
-    width: 1.25rem;
-    height: 1.25rem;
+    width: 1.5rem;
+    height: 1.5rem;
     margin: auto;
     opacity: 1;
 }
 
 .btn-icon.is-pending {
     border-color: $primary;
-    background-color: $plum-light;
+    background-color: rgb(109 58 142 / 22%);
     color: $primary;
 }
 
@@ -115,6 +116,8 @@
 .navbar__link.is-pending::after,
 .navbar__brand.is-pending::after {
     order: -1;
+    width: 1em;
+    height: 1em;
 }
 
 /// The brand draws its note larger than the links draw theirs, so its ring
@@ -122,6 +125,50 @@
 .navbar__brand.is-pending::after {
     width: 1.5rem;
     height: 1.5rem;
+}
+
+/// The keypad is the one wait in the app long enough to need covering — the
+/// code is checked against a hash, which takes a few tenths of a second by
+/// design. Its form has no box of its own, so a ring hung on it would float
+/// under the keys; the four dots answer instead. She has just watched the last
+/// one fill, so that is where she is already looking, and they are what the
+/// markup already calls the status of this screen.
+.pin-pad.is-pending::after {
+    content: none;
+}
+
+.pin-pad.is-pending .pin-pad__dot {
+    animation: pin-checking 0.9s ease-in-out infinite;
+}
+
+.pin-pad.is-pending .pin-pad__dot:nth-child(2) {
+    animation-delay: 0.1s;
+}
+
+.pin-pad.is-pending .pin-pad__dot:nth-child(3) {
+    animation-delay: 0.2s;
+}
+
+.pin-pad.is-pending .pin-pad__dot:nth-child(4) {
+    animation-delay: 0.3s;
+}
+
+/// Read one after the other, rather than blinking together: a row that pulses
+/// as one reads as an error, a row that runs reads as being gone through.
+@keyframes pin-checking {
+    0%,
+    55%,
+    100% {
+        transform: scale(1);
+        border-color: $primary;
+        background-color: $primary;
+    }
+
+    28% {
+        transform: scale(1.6);
+        border-color: $accent;
+        background-color: $accent;
+    }
 }
 
 /// 3. Large surfaces. The tint is what says "this one", and the sweep along the
@@ -134,11 +181,23 @@
 .profile-tile.is-pending,
 .score-card:has(.score-card__link.is-pending) {
     overflow: hidden;
+    animation: pending-breathe 1.2s ease-in-out infinite;
+}
+
+/// Breathing on top of the tint and the sweep, so the surface she touched moves
+/// under the finger that touched it. Kept small on purpose: a tile lifts by 2px
+/// on hover already, and a card that heaved would read as an error rather than
+/// as a wait. It also has to stay inside the grid gap — neighbours must not be
+/// nudged by a card that swells.
+@keyframes pending-breathe {
+    50% {
+        transform: scale(1.025);
+    }
 }
 
 .profile-tile.is-pending {
     border-color: $primary;
-    background-color: $plum-light;
+    background-color: rgb(109 58 142 / 22%);
 }
 
 /// The link fills only the top strip of its card, but the card is what she
@@ -146,8 +205,9 @@
 /// browser without :has() drops this one alone.
 .score-card:has(.score-card__link.is-pending) {
     position: relative;
+    border-width: 3px;
     border-color: $primary;
-    background-color: $plum-light;
+    background-color: rgb(109 58 142 / 22%);
 }
 
 .score-card__link.is-pending::after {
@@ -162,7 +222,7 @@
     bottom: 0;
     left: 0;
     width: auto;
-    height: 4px;
+    height: 8px;
     margin: 0;
     border: 0;
     border-radius: 0;
