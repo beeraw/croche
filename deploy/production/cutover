@@ -62,21 +62,29 @@ $SITE {
 EOF
 }
 
-# The Caddyfile of before the cutover with the block of the site, from its address line to the first closing brace at
-# the start of a line, replaced.
+# A Caddyfile ($1) with the block of the site, from its address line to the first closing brace at the start of a
+# line, replaced by the block in $2; without $2, the block itself. Only that block ever changes: the other sites of
+# rossem may have moved since the prepare phase (another cutover), and they keep their current block.
 caddyfile_with() {
-    python3 - "$DIR/Caddyfile.avant-bascule" "$SITE" "$1" <<'EOF'
+    python3 - "$1" "$SITE" "${2:-}" <<'EOF'
 import sys
 lines = open(sys.argv[1], encoding='utf-8').read().split('\n')
-block = open(sys.argv[3], encoding='utf-8').read().rstrip('\n')
 start = next(i for i, l in enumerate(lines) if l.strip() == sys.argv[2] + ' {')
 end = next(i for i in range(start + 1, len(lines)) if lines[i] == '}')
+if not sys.argv[3]:
+    print('\n'.join(lines[start:end + 1]))
+    sys.exit()
+block = open(sys.argv[3], encoding='utf-8').read().rstrip('\n')
 print('\n'.join(lines[:start] + [block] + lines[end + 1:]).rstrip('\n'))
 EOF
 }
 
+# Puts the block in $1 in place of the site's block in the live Caddyfile, validates the result, then reloads Caddy.
 switch_caddy() {
-    cp "$1" "$CADDYFILE"
+    caddyfile_with "$CADDYFILE" "$1" > "$DIR/Caddyfile.next"
+    chmod 644 "$DIR/Caddyfile.next"
+    $CADDY_VALIDATE "$DIR/Caddyfile.next" >/dev/null 2>&1 || { $CADDY_VALIDATE "$DIR/Caddyfile.next"; exit 1; }
+    cp "$DIR/Caddyfile.next" "$CADDYFILE"
     sh -c "$CADDY_RELOAD"
 }
 
@@ -119,11 +127,14 @@ EOF
     log "Base vide"
     compose up -d --wait database
 
+    # The site's block of before the cutover, which the rollback puts back, and a copy of the whole file for reference.
     [ -f "$DIR/Caddyfile.avant-bascule" ] || cp -p "$CADDYFILE" "$DIR/Caddyfile.avant-bascule"
+    [ -f "$DIR/block-avant-bascule.caddy" ] || caddyfile_with "$DIR/Caddyfile.avant-bascule" > "$DIR/block-avant-bascule.caddy"
     container_block > "$DIR/block-containers.caddy"
     maintenance_block > "$DIR/block-maintenance.caddy"
-    caddyfile_with "$DIR/block-containers.caddy" > "$DIR/Caddyfile.containers"
-    caddyfile_with "$DIR/block-maintenance.caddy" > "$DIR/Caddyfile.maintenance"
+    # Checked now on the current Caddyfile; freeze and open rebuild them from the live file when they switch.
+    caddyfile_with "$CADDYFILE" "$DIR/block-containers.caddy" > "$DIR/Caddyfile.containers"
+    caddyfile_with "$CADDYFILE" "$DIR/block-maintenance.caddy" > "$DIR/Caddyfile.maintenance"
     chmod 644 "$DIR/Caddyfile.containers" "$DIR/Caddyfile.maintenance"
     for f in maintenance containers; do
         $CADDY_VALIDATE "$DIR/Caddyfile.$f" >/dev/null 2>&1 || { $CADDY_VALIDATE "$DIR/Caddyfile.$f"; exit 1; }
@@ -133,7 +144,7 @@ EOF
 
 phase_freeze() {
     log "Page de maintenance"
-    switch_caddy "$DIR/Caddyfile.maintenance"
+    switch_caddy "$DIR/block-maintenance.caddy"
     log "Gelé : plus aucune écriture dans l'ancienne base (ni worker ni crontab à arrêter)."
 }
 
@@ -161,7 +172,7 @@ phase_start() {
 
 phase_open() {
     log "Caddy vers les conteneurs"
-    switch_caddy "$DIR/Caddyfile.containers"
+    switch_caddy "$DIR/block-containers.caddy"
     touch "$DIR/.opened"
     log "Ouvert."
 }
@@ -169,7 +180,7 @@ phase_open() {
 phase_rollback() {
     if [ -f "$DIR/.opened" ]; then
         log "Page de maintenance"
-        switch_caddy "$DIR/Caddyfile.maintenance"
+        switch_caddy "$DIR/block-maintenance.caddy"
         log "Arrêt des conteneurs, puis retour des données écrites depuis la bascule"
         compose stop app
         (cd "$DIR" && docker compose exec -T database sh -c 'exec mariadb-dump -uroot -p"$MARIADB_ROOT_PASSWORD" --single-transaction --routines --triggers --events --default-character-set=utf8mb4 croche') \
@@ -193,7 +204,7 @@ phase_rollback() {
         host_console cache:clear
     fi
     log "Caddy vers l'ancien site"
-    switch_caddy "$DIR/Caddyfile.avant-bascule"
+    switch_caddy "$DIR/block-avant-bascule.caddy"
     systemctl reload php8.5-fpm
     log "Revenu à l'ancien site."
 }
