@@ -144,9 +144,11 @@ phase_data() {
     log "Copie : $(du -h "$DIR/bascule.sql" | cut -f1). Chargement dans le conteneur"
     db_root -e 'DROP DATABASE IF EXISTS croche; CREATE DATABASE croche CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci; GRANT ALL ON croche.* TO croche;' </dev/null
     db_root croche < "$DIR/bascule.sql"
-    local tables
+    # As many tables as the old database: a fixed floor was wrong for small databases (hadisi has 12).
+    local expected tables
+    expected=$(legacy_db mariadb -N -e 'SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = DATABASE()' </dev/null)
     tables=$(db_root -N -e 'SELECT COUNT(*) FROM information_schema.tables WHERE table_schema="croche"' </dev/null)
-    [ "$tables" -ge 3 ] || { log "ÉCHEC : $tables tables seulement dans la base chargée."; exit 1; }
+    [ "$tables" -ge 1 ] && [ "$tables" = "$expected" ] || { log "ÉCHEC : $tables tables dans la base chargée, $expected dans l'ancienne."; exit 1; }
     log "Base chargée : $tables tables."
 }
 
