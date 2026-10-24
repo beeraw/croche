@@ -1,0 +1,99 @@
+#!/bin/bash
+# Releases a commit of Croche by git pull.
+#
+#   croche-deploy <environment directory> <commit>
+#
+# The environment directory holds compose.yaml and .env; the code is the git checkout named by CROCHE_SRC in .env,
+# mounted over /app in the containers. The release moves that checkout to the commit, then only does what the commit
+# needs: the system image when Dockerfile or docker/ changed (built here, no registry), composer when the lock did,
+# the front files when assets/ or the yarn files did. Migrations and the cache always run, and app restarts at the
+# end, which the host's Caddy covers by holding requests for up to 15 s. The database container is
+# started when it is not running, never recreated: a release leaves it alone.
+#
+# Going back is releasing an older commit. A failure halfway leaves the checkout on the new commit with the previous
+# containers still running.
+set -euo pipefail
+
+DIR=${1:?"usage: croche-deploy <environment directory> <commit>"}
+SHA=${2:?"usage: croche-deploy <environment directory> <commit>"}
+[[ "$SHA" =~ ^[0-9a-f]{7,40}$ ]] || { echo "Commit invalide : $SHA" >&2; exit 1; }
+cd "$DIR"
+
+exec 9>"$DIR/.deploy.lock"
+flock -n 9 || { echo "Une livraison est déjà en cours dans $DIR." >&2; exit 1; }
+
+log() { echo "[$(date +%H:%M:%S)] $*"; }
+env_get() { grep -E "^$1=" .env | tail -1 | cut -d= -f2- || true; }
+compose() { docker compose "$@" </dev/null; }
+console() { compose run --rm --no-deps -T app php bin/console "$@"; }
+
+SRC=$(env_get CROCHE_SRC)
+SRC=${SRC:-/var/www/croche.beeraw.yt/_online}
+OWNER=$(stat -c %U "$SRC")
+as_owner() { sudo -u "$OWNER" -H "$@"; }
+PORT=$(env_get CROCHE_PORT)
+PORT=${PORT:-8101}
+
+log "1/6 Code"
+as_owner git -C "$SRC" fetch -q origin
+OLD=$(as_owner git -C "$SRC" rev-parse HEAD)
+as_owner git -C "$SRC" checkout -q -B main "$SHA"
+CHANGED=$(as_owner git -C "$SRC" diff --name-only "$OLD" "$SHA")
+changed() { grep -qE "$1" <<<"$CHANGED"; }
+log "$OLD → $SHA ($(as_owner git -C "$SRC" log -1 --format=%s "$SHA"))"
+# compose.yaml is a copy, so that it exists before the checkout carries it (deploy/production/cutover): it follows the
+# code here. This script is a copy too, but it cannot replace itself while running: it says so instead.
+if changed '^deploy/production/compose\.yaml$'; then
+    cp "$SRC/deploy/production/compose.yaml" compose.yaml
+    log "compose.yaml mis à jour."
+fi
+if changed '^deploy/server/croche-deploy$'; then
+    log "croche-deploy a changé dans ce commit : le réinstaller depuis le checkout après la livraison."
+fi
+
+if changed '^(Dockerfile|docker/)' || ! docker image inspect croche:system >/dev/null 2>&1; then
+    log "2/6 Image système"
+    compose build -q app
+else
+    log "2/6 Image système inchangée"
+fi
+
+# The vendor/ of the former installation holds the dev packages (bin/pull ran a plain composer install): the first
+# release also reinstalls without them.
+if changed '^(composer\.(json|lock)|symfony\.lock)$' || grep -q '"dev": true' "$SRC/vendor/composer/installed.json" 2>/dev/null; then
+    log "3/6 Composer"
+    compose run --rm --no-deps -T app composer install --no-dev --no-interaction --no-progress --optimize-autoloader
+else
+    log "3/6 Dépendances PHP inchangées"
+fi
+
+if changed '^(assets/|package\.json$|yarn\.lock$|\.yarnrc\.yml$|webpack\.config\.js$)' || [ ! -f "$SRC/public/build/entrypoints.json" ]; then
+    log "4/6 Fichiers front"
+    as_owner bash -c 'cd "$1" && yarn install --immutable && yarn build' _ "$SRC"
+else
+    log "4/6 Fichiers front inchangés"
+fi
+
+log "5/6 Migrations et cache"
+compose up -d --wait --no-recreate database
+console doctrine:migrations:migrate --no-interaction --allow-no-migration
+# cache:clear boots on the cache compiled for the previous commit: if that commit removed a bundle, the boot fails on
+# a class that no longer exists, and only then is the stale cache purged.
+if ! console cache:clear; then
+    log "Le cache précédent ne démarre plus : purge."
+    rm -rf "$SRC/var/cache/prod"
+    console cache:clear
+fi
+
+log "6/6 Redémarrage"
+compose up -d --no-deps --force-recreate app
+for _ in $(seq 1 60); do
+    if curl -fsS -m 2 "http://127.0.0.1:$PORT/healthz" >/dev/null 2>&1; then
+        log "Livré : $SHA."
+        exit 0
+    fi
+    sleep 1
+done
+log "ÉCHEC : l'application ne répond pas après le redémarrage."
+compose logs --tail 40 app || true
+exit 1

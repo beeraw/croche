@@ -1,0 +1,20 @@
+# Block of croche.beeraw.yt in /etc/caddy/Caddyfile on rossem, once the site runs in Docker: the same block as before
+# (probe and bot filters, HSTS, access log), php_fastcgi and file_server replaced by a proxy to FrankenPHP, which serves
+# public/ itself. lb_try_duration holds the requests during the few seconds a release restarts the container, instead
+# of answering 502. No other block of the Caddyfile points at this site (no www. nor alias to redirect).
+https://croche.beeraw.yt {
+	import block_probes
+	import block_bots
+
+	encode zstd gzip
+	reverse_proxy 127.0.0.1:8101 {
+		lb_try_duration 15s
+		health_uri /healthz
+	}
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+	}
+	log {
+		output file /var/log/caddy/croche.beeraw.yt.access.log
+	}
+}

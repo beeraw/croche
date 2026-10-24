@@ -112,6 +112,26 @@ For production:
 yarn build
 ```
 
+### Docker on the Mac
+
+The development site can also run under Docker, with the production image, at
+`https://croche.local.beeraw.yt` (the Mac's Caddy forwards it to
+`127.0.0.1:8101`). The checkout is mounted into the container in the `dev`
+environment, and the database is a MariaDB 12.3 container published on
+`127.0.0.1:3327`, which `bin/console` run on the Mac reaches too (`.env.dev`).
+Croche sends no e-mail, so there is nothing to redirect.
+
+```bash
+docker compose -f deploy/local/compose.yaml up -d --build   # start (app + database)
+deploy/local/load-database                                   # replace the container's database with the Mac's MariaDB one
+docker compose -f deploy/local/compose.yaml logs -f app      # logs
+docker compose -f deploy/local/compose.yaml down             # stop
+```
+
+`composer install` and `yarn build` still run on the Mac, in the checkout. To
+run the Playwright suite against this site:
+`CROCHE_BASE_URL=https://croche.local.beeraw.yt yarn test:e2e`.
+
 ## Demo accounts
 
 Provided by the fixtures, with fictional first names. Delete them before
@@ -224,6 +244,19 @@ in the `X-CSRF-Token` header, and every access to an existing score goes through
 The JSON received is validated against the expected schema and **rebuilt key by
 key**: nothing unexpected reaches the database. A malformed document comes back
 as a `422` with the offending path.
+
+## Deployment
+
+Production runs on rossem under Docker (the `app` container plus a MariaDB
+container). A push on `main` triggers the GitHub Actions workflow
+`.github/workflows/main.yaml`, which runs `croche-deploy` on the server
+(`deploy/server/croche-deploy`): `git pull` of the checkout mounted in the
+container, then only what the commit needs — system image if `Dockerfile` or
+`docker/` changed, `composer install` if the lock changed, `yarn build` if the
+front changed. Always: migrations, `cache:clear`, restart, wait for `/healthz`.
+No test runs in the workflow: run `composer qa && yarn lint` before pushing.
+The move from PHP-FPM and the first deployment are described in
+[deploy/README.md](deploy/README.md) (in French).
 
 ## Useful commands
 

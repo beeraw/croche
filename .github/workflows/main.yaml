@@ -1,0 +1,49 @@
+name: CD main
+
+# A push on main is released to production by git pull on rossem (deploy/server/croche-deploy), which only rebuilds
+# the system image, reinstalls composer or rebuilds the front files when the commit touches them. No test runs here:
+# the QA (composer qa, yarn lint) is run by hand before pushing. Run by hand from the Actions tab (or gh workflow run main.yaml
+# -f version=…) to release a given commit, which is how to go back.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Commit à livrer (vide = le dernier commit de main)
+        type: string
+        required: false
+
+concurrency:
+  group: deliver-production
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deliver:
+    name: Livrer en production
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolve the version
+        id: version
+        run: |
+          SHA=$(git rev-parse "${{ inputs.version || github.sha }}^{commit}")
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
+          echo "Version : $SHA — $(git log -1 --format=%s "$SHA")"
+
+      - name: Release on rossem
+        uses: appleboy/ssh-action@v1.2.2
+        with:
+          host: ${{ secrets.MAIN_HOST }}
+          username: ${{ secrets.MAIN_USERNAME }}
+          key: ${{ secrets.MAIN_KEY }}
+          port: ${{ secrets.MAIN_PORT }}
+          command_timeout: 15m
+          script: sudo /usr/local/bin/croche-deploy /srv/croche-production ${{ steps.version.outputs.sha }}

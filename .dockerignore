@@ -1,0 +1,3 @@
+# The system image never holds the code (it is mounted over /app): only docker/ is sent to the build.
+*
+!docker/

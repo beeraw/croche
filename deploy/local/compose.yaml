@@ -1,0 +1,61 @@
+# Croche's development site on the Mac. Same system image and same database container as production; the checkout is
+# mounted over /app, and the Mac's Caddy forwards https://croche.local.beeraw.yt to 127.0.0.1:8101. The database is
+# published on 127.0.0.1:3327 for bin/console run on the Mac (.env.dev).
+#
+#   docker compose -f deploy/local/compose.yaml up -d --build
+#   deploy/local/load-database                 # replaces the container's database with the Mac's MariaDB one
+#
+# Development environment: errors shown and code changes picked up without restart. Croche sends no e-mail, so nothing
+# is redirected; no worker and no cron container either, the application has neither messages nor scheduled jobs.
+
+name: croche-local
+
+services:
+    app:
+        image: croche:system
+        build:
+            context: ../..
+        # deploy:www-data, as on rossem.
+        user: "1001:33"
+        volumes:
+            - ../..:/app
+        environment:
+            APP_ENV: dev
+            APP_DEBUG: 1
+            # bin/console on the Mac compiles its cache with the Mac's paths: the container keeps its own.
+            APP_CACHE_DIR: /app/var/docker-cache
+            DATABASE_URL: mysql://croche:croche@database:3306/croche?serverVersion=mariadb-12.3.3&charset=utf8mb4
+            OPCACHE_VALIDATE_TIMESTAMPS: 1
+            # FrankenPHP listens on every interface of the container, published on the Mac's loopback only, and trusts
+            # the Docker gateway the Mac's Caddy comes through.
+            CROCHE_BIND: 0.0.0.0
+            SYMFONY_TRUSTED_PROXIES: 127.0.0.1,PRIVATE_SUBNETS
+        ports:
+            - 127.0.0.1:8101:8101
+        depends_on:
+            database:
+                condition: service_healthy
+        restart: unless-stopped
+
+    database:
+        image: mariadb:12.3
+        environment:
+            TZ: Indian/Mayotte
+            MARIADB_DATABASE: croche
+            MARIADB_USER: croche
+            MARIADB_PASSWORD: croche
+            MARIADB_ROOT_PASSWORD: root
+        command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+        volumes:
+            - database:/var/lib/mysql
+        ports:
+            - 127.0.0.1:3327:3306
+        healthcheck:
+            test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+            interval: 5s
+            timeout: 5s
+            retries: 20
+        restart: unless-stopped
+
+volumes:
+    database:

@@ -1,0 +1,24 @@
+#!/bin/bash
+# Copies the database of the Mac's MariaDB (named by DATABASE_URL in .env.local or .env) into the database container of
+# deploy/local/compose.yaml, replacing what it held. The Mac's database is only read.
+#
+#   deploy/local/load-database
+set -euo pipefail
+
+ROOT=$(cd "$(dirname "$0")/../.." && pwd)
+cd "$ROOT"
+compose() { docker compose -f deploy/local/compose.yaml "$@"; }
+
+url=$(cat .env .env.local 2>/dev/null | grep -E '^DATABASE_URL=' | tail -1 | cut -d= -f2- | tr -d '"' || true)
+[ -n "$url" ] || { echo "Aucun DATABASE_URL dans .env ni .env.local." >&2; exit 1; }
+eval "$(php -r '$u = parse_url($argv[1]); printf("user=%s pass=%s host=%s port=%s db=%s", escapeshellarg(urldecode($u["user"])), escapeshellarg(urldecode($u["pass"] ?? "")), escapeshellarg($u["host"]), escapeshellarg((string) ($u["port"] ?? 3306)), escapeshellarg(ltrim($u["path"], "/")));' "$url")"
+
+compose up -d --wait database
+echo "Copie de $db ($host) dans le conteneur…"
+compose exec -T database mariadb -uroot -proot \
+    -e 'DROP DATABASE IF EXISTS croche; CREATE DATABASE croche CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci; GRANT ALL ON croche.* TO croche;' </dev/null
+MYSQL_PWD=$pass mariadb-dump -h"$host" -P"$port" -u"$user" --single-transaction --quick --routines --triggers \
+        --default-character-set=utf8mb4 "$db" \
+    | compose exec -T database mariadb -uroot -proot --default-character-set=utf8mb4 croche
+tables=$(compose exec -T database mariadb -uroot -proot -N -e 'SELECT COUNT(*) FROM information_schema.tables WHERE table_schema="croche"' </dev/null)
+echo "Base chargée : $tables tables."

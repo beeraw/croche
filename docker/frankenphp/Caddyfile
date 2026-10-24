@@ -1,0 +1,22 @@
+{
+	frankenphp
+	auto_https off
+	admin off
+	servers {
+		trusted_proxies static private_ranges
+	}
+}
+
+# Plain HTTP, published on the host's loopback only: TLS, the bot and probe filters belong to the host's Caddy, which
+# forwards croche.beeraw.yt here through the Docker gateway.
+http://:{$CROCHE_PORT:8101} {
+	bind {$CROCHE_BIND:127.0.0.1}
+	root * /app/public
+	encode zstd gzip
+	php_server
+
+	log {
+		output stdout
+		format json
+	}
+}

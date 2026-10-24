@@ -1,0 +1,204 @@
+#!/bin/bash
+# Moves Croche on rossem from PHP-FPM and the host's MariaDB to the containers, once, as Dashboard's
+# deploy/production/cutover did on tazenda. Run as root, one phase at a time; each one says what it changed.
+#
+#   cutover prepare <commit>   environment directory, passwords, croche-deploy, system image, empty database, both
+#                              Caddyfiles written and validated. The site is not touched.
+#   cutover freeze             maintenance page. The outage starts here; no worker nor scheduled job to stop.
+#   cutover data               copies the database of the host's MariaDB into its container.
+#   cutover start              releases the commit with croche-deploy: checkout, migrations, app.
+#   cutover open               points Caddy at the containers. The outage ends here.
+#   cutover rollback           back to the old site, from any phase. Once the containers have served, their database
+#                              is copied back first and its migrations brought down, so nothing is lost.
+#
+# Nothing has to be cloned: the script reads the files of <commit> from the production checkout with git show, and the
+# checkout itself only moves at the start phase. Get it onto the server the same way:
+#
+#   git -C /var/www/croche.beeraw.yt/_online fetch origin
+#   git -C /var/www/croche.beeraw.yt/_online show <commit>:deploy/production/cutover > /root/croche-cutover
+#
+# The defaults describe production; a rehearsal overrides them through the environment.
+set -euo pipefail
+
+DIR=${CROCHE_DIR:-/srv/croche-production}
+SRC=${CROCHE_SRC:-/var/www/croche.beeraw.yt/_online}
+CADDYFILE=${CROCHE_CADDYFILE:-/etc/caddy/Caddyfile}
+CADDY_VALIDATE=${CROCHE_CADDY_VALIDATE:-sudo -u caddy caddy validate --adapter caddyfile --config}
+CADDY_RELOAD=${CROCHE_CADDY_RELOAD:-systemctl reload caddy}
+DEPLOY=${CROCHE_DEPLOY:-/usr/local/bin/croche-deploy}
+SITE=${CROCHE_SITE:-https://croche.beeraw.yt}
+
+START=$(date +%s)
+log() { printf '[%s +%ss] %s\n' "$(date +%H:%M:%S)" "$(( $(date +%s) - START ))" "$*"; }
+env_get() { grep -E "^$1=" "$DIR/.env" | tail -1 | cut -d= -f2-; }
+compose() { (cd "$DIR" && docker compose "$@" </dev/null); }
+db_root() { (cd "$DIR" && docker compose exec -T database mariadb -uroot -p"$(env_get DB_ROOT_PASSWORD)" --default-character-set=utf8mb4 "$@"); }
+OWNER=$(stat -c %U "$SRC")
+as_owner() { sudo -u "$OWNER" -H "$@"; }
+host_console() { as_owner bash -c 'cd "$1" && shift && php bin/console "$@"' _ "$SRC" "$@"; }
+
+# Runs a MariaDB client against the old site's database, with the credentials of the checkout's .env.local or .env:
+# the DATABASE_URL there keeps naming the host's MariaDB, the containers get theirs from compose.yaml.
+legacy_db() {
+    local url
+    url=$(cd "$SRC" && cat .env .env.local 2>/dev/null | grep -E '^DATABASE_URL=' | tail -1 | cut -d= -f2- | tr -d '"' || true)
+    [ -n "$url" ] || { log "ÉCHEC : aucun DATABASE_URL dans $SRC/.env ni .env.local."; exit 1; }
+    eval "$(php -r '$u = parse_url($argv[1]); printf("local user=%s pass=%s host=%s port=%s db=%s", escapeshellarg(urldecode($u["user"])), escapeshellarg(urldecode($u["pass"] ?? "")), escapeshellarg($u["host"]), escapeshellarg((string) ($u["port"] ?? 3306)), escapeshellarg(ltrim($u["path"], "/")));' "$url")"
+    MYSQL_PWD=$pass "$@" -h"$host" -P"$port" -u"$user" --default-character-set=utf8mb4 "$db"
+}
+
+container_block() {
+    grep -v '^#' "$DIR/Caddyfile.production" | sed -e "s|^https://croche.beeraw.yt {|$SITE {|" \
+        -e "s|127.0.0.1:8101|127.0.0.1:$(env_get CROCHE_PORT)|"
+}
+
+maintenance_block() {
+    cat <<EOF
+$SITE {
+	import block_probes
+	header Retry-After 300
+	respond "Croche est en maintenance pour quelques minutes." 503
+}
+EOF
+}
+
+# The Caddyfile of before the cutover with the block of the site, from its address line to the first closing brace at
+# the start of a line, replaced.
+caddyfile_with() {
+    python3 - "$CADDYFILE.avant-bascule" "$SITE" "$1" <<'EOF'
+import sys
+lines = open(sys.argv[1], encoding='utf-8').read().split('\n')
+block = open(sys.argv[3], encoding='utf-8').read().rstrip('\n')
+start = next(i for i, l in enumerate(lines) if l.strip() == sys.argv[2] + ' {')
+end = next(i for i in range(start + 1, len(lines)) if lines[i] == '}')
+print('\n'.join(lines[:start] + [block] + lines[end + 1:]).rstrip('\n'))
+EOF
+}
+
+switch_caddy() {
+    cp "$1" "$CADDYFILE"
+    sh -c "$CADDY_RELOAD"
+}
+
+phase_prepare() {
+    local sha=${1:?"usage: cutover prepare <commit>"}
+    [[ "$sha" =~ ^[0-9a-f]{7,40}$ ]] || { echo "Commit invalide : $sha" >&2; exit 1; }
+    as_owner git -C "$SRC" fetch -q origin
+    sha=$(as_owner git -C "$SRC" rev-parse --verify "$sha^{commit}")
+
+    mkdir -p "$DIR/mysql"
+    if [ ! -f "$DIR/.env" ]; then
+        umask 077
+        cat > "$DIR/.env" <<EOF
+CROCHE_SRC=$SRC
+CROCHE_PORT=${CROCHE_PORT:-8101}
+CROCHE_DB_PORT=${CROCHE_DB_PORT:-3317}
+DB_PASSWORD=$(openssl rand -hex 24)
+DB_ROOT_PASSWORD=$(openssl rand -hex 24)
+EOF
+        umask 022
+        log ".env écrit (mots de passe tirés au hasard)."
+    fi
+    echo "$sha" > "$DIR/.commit"
+    # What the rollback brings the old site back to: its commit and the last migration it knows.
+    if [ ! -f "$DIR/.ancien-commit" ]; then
+        as_owner git -C "$SRC" rev-parse HEAD > "$DIR/.ancien-commit"
+        host_console doctrine:migrations:current --no-interaction | awk 'NF { print $1; exit }' > "$DIR/.ancienne-migration"
+    fi
+    log "Ancien site : $(cat "$DIR/.ancien-commit"), migration $(cat "$DIR/.ancienne-migration")."
+
+    for f in compose.yaml Caddyfile.production; do
+        as_owner git -C "$SRC" show "$sha:deploy/production/$f" > "$DIR/$f"
+    done
+    as_owner git -C "$SRC" show "$sha:deploy/server/croche-deploy" > "$DEPLOY"
+    chmod 755 "$DEPLOY"
+    log "compose.yaml et croche-deploy du commit $sha installés."
+
+    log "Image système"
+    as_owner git -C "$SRC" archive "$sha" Dockerfile docker | docker build -q -t croche:system - >/dev/null
+    log "Base vide"
+    compose up -d --wait database
+
+    [ -f "$CADDYFILE.avant-bascule" ] || cp -p "$CADDYFILE" "$CADDYFILE.avant-bascule"
+    container_block > "$DIR/block-containers.caddy"
+    maintenance_block > "$DIR/block-maintenance.caddy"
+    caddyfile_with "$DIR/block-containers.caddy" > "$DIR/Caddyfile.containers"
+    caddyfile_with "$DIR/block-maintenance.caddy" > "$DIR/Caddyfile.maintenance"
+    chmod 644 "$DIR/Caddyfile.containers" "$DIR/Caddyfile.maintenance"
+    for f in maintenance containers; do
+        $CADDY_VALIDATE "$DIR/Caddyfile.$f" >/dev/null 2>&1 || { $CADDY_VALIDATE "$DIR/Caddyfile.$f"; exit 1; }
+    done
+    log "Prêt. Caddyfiles validés : $DIR/Caddyfile.maintenance, $DIR/Caddyfile.containers."
+}
+
+phase_freeze() {
+    log "Page de maintenance"
+    switch_caddy "$DIR/Caddyfile.maintenance"
+    log "Gelé : plus aucune écriture dans l'ancienne base (ni worker ni crontab à arrêter)."
+}
+
+phase_data() {
+    log "Copie de la base"
+    legacy_db mariadb-dump --single-transaction --quick --routines --triggers > "$DIR/bascule.sql"
+    tail -1 "$DIR/bascule.sql" | grep -q 'Dump completed' || { log "ÉCHEC : copie incomplète."; exit 1; }
+    log "Copie : $(du -h "$DIR/bascule.sql" | cut -f1). Chargement dans le conteneur"
+    db_root -e 'DROP DATABASE IF EXISTS croche; CREATE DATABASE croche CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci; GRANT ALL ON croche.* TO croche;' </dev/null
+    db_root croche < "$DIR/bascule.sql"
+    local tables
+    tables=$(db_root -N -e 'SELECT COUNT(*) FROM information_schema.tables WHERE table_schema="croche"' </dev/null)
+    [ "$tables" -ge 3 ] || { log "ÉCHEC : $tables tables seulement dans la base chargée."; exit 1; }
+    log "Base chargée : $tables tables."
+}
+
+phase_start() {
+    log "Livraison de $(cat "$DIR/.commit")"
+    "$DEPLOY" "$DIR" "$(cat "$DIR/.commit")"
+    curl -fsS -m 5 "http://127.0.0.1:$(env_get CROCHE_PORT)/healthz" >/dev/null
+    log "Conteneurs en service sur :$(env_get CROCHE_PORT)."
+}
+
+phase_open() {
+    log "Caddy vers les conteneurs"
+    switch_caddy "$DIR/Caddyfile.containers"
+    touch "$DIR/.opened"
+    log "Ouvert."
+}
+
+phase_rollback() {
+    if [ -f "$DIR/.opened" ]; then
+        log "Page de maintenance"
+        switch_caddy "$DIR/Caddyfile.maintenance"
+        log "Arrêt des conteneurs, puis retour des données écrites depuis la bascule"
+        compose stop app
+        (cd "$DIR" && docker compose exec -T database sh -c 'exec mariadb-dump -uroot -p"$MARIADB_ROOT_PASSWORD" --single-transaction --routines --triggers --events --default-character-set=utf8mb4 croche') \
+            </dev/null > "$DIR/retour.sql"
+        tail -1 "$DIR/retour.sql" | grep -q 'Dump completed' || { log "ÉCHEC : copie de retour incomplète, rien n'est rechargé."; exit 1; }
+        legacy_db mariadb < "$DIR/retour.sql"
+        # The data comes back with the schema of the new commit: its migrations, still in the checkout, bring it down
+        # to the last one the old site knows.
+        log "Migrations ramenées à $(cat "$DIR/.ancienne-migration")"
+        host_console doctrine:migrations:migrate "$(cat "$DIR/.ancienne-migration")" --no-interaction --allow-no-migration
+        rm -f "$DIR/.opened"
+    else
+        compose stop app 2>/dev/null || true
+    fi
+    if [ "$(as_owner git -C "$SRC" rev-parse HEAD)" != "$(cat "$DIR/.ancien-commit")" ]; then
+        log "Checkout ramené à $(cat "$DIR/.ancien-commit")"
+        as_owner git -C "$SRC" checkout -q -B main "$(cat "$DIR/.ancien-commit")"
+        # As the old site's own release did.
+        as_owner bash -c 'cd "$1" && composer install --no-interaction --no-progress && yarn install --immutable && yarn build' _ "$SRC"
+        rm -rf "$SRC/var/cache/prod"
+        host_console cache:clear
+    fi
+    log "Caddy vers l'ancien site"
+    switch_caddy "$CADDYFILE.avant-bascule"
+    systemctl reload php8.5-fpm
+    log "Revenu à l'ancien site."
+}
+
+PHASE=${1:-}
+shift || true
+case "$PHASE" in
+    prepare|freeze|data|start|open|rollback) "phase_$PHASE" "$@" ;;
+    *) sed -n '2,14p' "$0" | sed 's/^# \{0,1\}//'; exit 1 ;;
+esac

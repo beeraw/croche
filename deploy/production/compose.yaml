@@ -1,0 +1,67 @@
+# Production on rossem. /srv/croche-production holds this file, its .env (passwords, CROCHE_SRC, ports) and the database
+# files in mysql/. The code is the git checkout of the previous installation, mounted over /app with its .env.local, and
+# croche-deploy releases a commit there by git pull. The image carries PHP and the tools only, and is built here, from
+# that checkout, when Dockerfile or docker/ change.
+#
+# As on Stetboard, the database runs in its own container: the MariaDB of the host, shared with the other sites of
+# rossem, no longer serves Croche once deploy/production/cutover has moved the data. The containers talk over the
+# network of the project; FrankenPHP is published on 127.0.0.1:CROCHE_PORT only, where the host's Caddy forwards
+# croche.beeraw.yt, and the database on 127.0.0.1:CROCHE_DB_PORT, for an administrator on the server.
+#
+# No worker and no cron container: Croche has no Messenger transport, no mailer and no scheduled job.
+
+name: croche-production
+
+x-app: &app
+    image: croche:system
+    build:
+        context: ${CROCHE_SRC:-/var/www/croche.beeraw.yt/_online}
+    # deploy:www-data, the identity of the former PHP-FPM pool, which owns the checkout and var/.
+    user: "1001:33"
+    volumes:
+        - ${CROCHE_SRC:-/var/www/croche.beeraw.yt/_online}:/app
+    environment:
+        APP_ENV: prod
+        # Wins over the DATABASE_URL of the checkout's .env.local, which still names the host's MariaDB.
+        DATABASE_URL: mysql://croche:${DB_PASSWORD}@database:3306/croche?serverVersion=mariadb-12.3.3&charset=utf8mb4
+        # The host's Caddy comes through the Docker gateway.
+        CROCHE_BIND: 0.0.0.0
+        SYMFONY_TRUSTED_PROXIES: 127.0.0.1,PRIVATE_SUBNETS
+        # In the checkout, so that a release's composer install only downloads what changed.
+        COMPOSER_CACHE_DIR: /app/var/composer-cache
+    depends_on:
+        database:
+            condition: service_healthy
+    restart: unless-stopped
+
+services:
+    app:
+        <<: *app
+        ports:
+            - 127.0.0.1:${CROCHE_PORT:-8101}:8101
+        healthcheck:
+            test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:8101/healthz || exit 1"]
+            interval: 10s
+            timeout: 5s
+            start_period: 20s
+            retries: 3
+
+    database:
+        image: mariadb:12.3
+        environment:
+            TZ: Indian/Mayotte
+            MARIADB_DATABASE: croche
+            MARIADB_USER: croche
+            MARIADB_PASSWORD: ${DB_PASSWORD}
+            MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+        command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+        volumes:
+            - ./mysql:/var/lib/mysql
+        ports:
+            - 127.0.0.1:${CROCHE_DB_PORT:-3317}:3306
+        healthcheck:
+            test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+            interval: 5s
+            timeout: 5s
+            retries: 20
+        restart: unless-stopped
