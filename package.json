@@ -1,7 +1,7 @@
 {
     "name": "croche",
     "description": "Music notation web app for children",
-    "packageManager": "yarn@4.16.0",
+    "packageManager": "yarn@4.18.0",
     "license": "MIT",
     "private": true,
     "type": "module",
@@ -17,26 +17,26 @@
         "lint": "yarn lint:js && yarn lint:css"
     },
     "devDependencies": {
-        "@babel/core": "^7.29.7",
-        "@babel/preset-env": "^7.29.7",
+        "@babel/core": "^8.0.7",
+        "@babel/preset-env": "^8.0.7",
         "@eslint/js": "^10.0.1",
         "@hotwired/stimulus": "^3.2.2",
-        "@playwright/test": "^1.61.1",
-        "@symfony/stimulus-bridge": "^4.0.1",
-        "@symfony/webpack-encore": "^5.3.1",
+        "@playwright/test": "^1.64.1",
+        "@symfony/stimulus-bridge": "^4.0.2",
+        "@symfony/webpack-encore": "^7.2.0",
         "babel-plugin-polyfill-corejs3": "^1.0.0",
-        "core-js": "^3.49.0",
-        "eslint": "^10.7.0",
+        "core-js": "^3.51.0",
+        "eslint": "^10.13.0",
         "regenerator-runtime": "^0.14.1",
-        "sass": "^1.101.7",
-        "sass-loader": "^16.0.8",
-        "stylelint": "^17.14.1",
+        "sass": "^1.106.1",
+        "sass-loader": "^17.0.1",
+        "stylelint": "^17.16.0",
         "stylelint-config-standard-scss": "^17.0.0",
-        "webpack": "^5.109.0",
-        "webpack-cli": "^5.1.4"
+        "webpack": "^5.112.1",
+        "webpack-cli": "^7.2.3"
     },
     "dependencies": {
-        "driver.js": "^1.8.0",
+        "driver.js": "^1.10.2",
         "vexflow": "^5.0.0"
     }
 }

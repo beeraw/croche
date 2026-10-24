@@ -22,7 +22,7 @@ Encore
     .enableVersioning(true)
 
     .configureBabel((config) => {
-        config.plugins.push(['polyfill-corejs3', { method: 'usage-global', version: '3.49' }]);
+        config.plugins.push(['polyfill-corejs3', { method: 'usage-global', version: '3.51' }]);
     })
 
     .enableSassLoader()

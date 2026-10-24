@@ -399,13 +399,15 @@ tests/
 
 Calls made along the way, free to revisit.
 
-- **Symfony 7.4 (LTS)** rather than an older 7.x: it is the last of the 7
-  branch and it officially supports PHP 8.4 and 8.5.
+- **Symfony 8.1**, on PHP 8.5, like the other projects on the same server
+  (it was 7.4 LTS until the move to Docker).
 - **Yarn 4, but with `nodeLinker: node-modules`.** The default Plug'n'Play mode
   does away with `node_modules`; Encore, Babel and Playwright all expect to find
   their packages on disk, and changing their minds costs patches this project
   has no reason to carry.
-- **The Yarn version is pinned**, through `packageManager` in `package.json`.
+- **The Yarn version is pinned**, through `packageManager` in `package.json`
+  and, versioned in the repository, `yarnPath` in `.yarnrc.yml` (`.yarn/releases/`):
+  whatever Yarn 2+ is installed globally runs the pinned release.
   It was left open at first, on the idea that any 4.x would do. What actually
   happened is that the production server still had the Yarn 1.22 from before the
   migration: it does not know `--immutable`, ignores it, and quietly rewrote

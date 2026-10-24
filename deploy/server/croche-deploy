@@ -67,7 +67,7 @@ else
     log "3/6 Dépendances PHP inchangées"
 fi
 
-if changed '^(assets/|package\.json$|yarn\.lock$|\.yarnrc\.yml$|webpack\.config\.js$)' || [ ! -f "$SRC/public/build/entrypoints.json" ]; then
+if changed '^(assets/|package\.json$|yarn\.lock$|\.yarnrc\.yml$|webpack\.config\.js$|\.yarn/releases/)' || [ ! -f "$SRC/public/build/entrypoints.json" ]; then
     log "4/6 Fichiers front"
     as_owner bash -c 'cd "$1" && yarn install --immutable && yarn build' _ "$SRC"
 else

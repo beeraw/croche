@@ -22,9 +22,11 @@ yarn-error.log
 ###< friendsofphp/php-cs-fixer ###
 
 ###> yarn ###
-# Only the lockfile is versioned. .yarn/ holds the local install state, and
+# The lockfile and the pinned Yarn release (.yarn/releases, named by yarnPath in
+# .yarnrc.yml) are versioned; the rest of .yarn/ is local install state, and
 # .pnp.* would appear if the linker ever switched to Plug'n'Play.
-/.yarn/
+/.yarn/*
+!/.yarn/releases
 /.pnp.*
 ###< yarn ###
 
