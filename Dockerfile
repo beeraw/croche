@@ -23,7 +23,9 @@ RUN apt-get update \
 
 # ctype, iconv, json and mbstring are compiled into the base image; Croche needs intl (translations, twig/intl-extra)
 # and pdo_mysql on top.
-RUN install-php-extensions intl opcache pdo_mysql
+# zip: composer install extracts the packages with it (the image has no unzip either); without it every release that
+# changes composer.lock fails at the composer step.
+RUN install-php-extensions intl opcache pdo_mysql zip
 
 COPY docker/php/croche.ini $PHP_INI_DIR/conf.d/zz-croche.ini
 COPY docker/frankenphp/Caddyfile /etc/frankenphp/Caddyfile
