@@ -65,7 +65,7 @@ EOF
 # The Caddyfile of before the cutover with the block of the site, from its address line to the first closing brace at
 # the start of a line, replaced.
 caddyfile_with() {
-    python3 - "$CADDYFILE.avant-bascule" "$SITE" "$1" <<'EOF'
+    python3 - "$DIR/Caddyfile.avant-bascule" "$SITE" "$1" <<'EOF'
 import sys
 lines = open(sys.argv[1], encoding='utf-8').read().split('\n')
 block = open(sys.argv[3], encoding='utf-8').read().rstrip('\n')
@@ -119,7 +119,7 @@ EOF
     log "Base vide"
     compose up -d --wait database
 
-    [ -f "$CADDYFILE.avant-bascule" ] || cp -p "$CADDYFILE" "$CADDYFILE.avant-bascule"
+    [ -f "$DIR/Caddyfile.avant-bascule" ] || cp -p "$CADDYFILE" "$DIR/Caddyfile.avant-bascule"
     container_block > "$DIR/block-containers.caddy"
     maintenance_block > "$DIR/block-maintenance.caddy"
     caddyfile_with "$DIR/block-containers.caddy" > "$DIR/Caddyfile.containers"
@@ -191,7 +191,7 @@ phase_rollback() {
         host_console cache:clear
     fi
     log "Caddy vers l'ancien site"
-    switch_caddy "$CADDYFILE.avant-bascule"
+    switch_caddy "$DIR/Caddyfile.avant-bascule"
     systemctl reload php8.5-fpm
     log "Revenu à l'ancien site."
 }
