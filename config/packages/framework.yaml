@@ -3,6 +3,10 @@ framework:
     secret: '%env(APP_SECRET)%'
 
     session:
+        # Files in the checkout rather than PHP's default directory, which lives inside the container and would be
+        # lost, signing her out, at each release.
+        handler_id: session.handler.native_file
+        save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
         # A week. She should not have to re-enter her code every afternoon,
         # and iPad Safari discards short-lived sessions eagerly.
         cookie_lifetime: 604800

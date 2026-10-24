@@ -35,6 +35,8 @@ security:
     # Only the first matching rule applies.
     access_control:
         - { path: '^/$', roles: PUBLIC_ACCESS }
+        # Liveness probe of the release script and the container health check.
+        - { path: '^/healthz$', roles: PUBLIC_ACCESS }
         # Safari reads the manifest when the visitor adds Croche to the home
         # screen, which they may well do before ever signing in.
         - { path: '^/manifest\.webmanifest$', roles: PUBLIC_ACCESS }
