@@ -15,6 +15,12 @@ security:
         dev:
             pattern: ^/(_profiler|_wdt|_error|assets|build)/
             security: false
+        # Backup API: no session; the controller checks the shared secret itself. Limited to its three exact paths, so
+        # the session-protected /api/scores stays under "main".
+        backup:
+            pattern: ^/api/(database/dump|media/(files|download))$
+            stateless: true
+            security: false
         main:
             lazy: true
             provider: app_user_provider

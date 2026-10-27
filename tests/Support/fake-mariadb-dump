@@ -1,0 +1,5 @@
+#!/bin/sh
+# Stands in for mariadb-dump in the tests: the test database is SQLite, which it cannot read.
+echo "-- Fake dump of $*"
+echo "CREATE TABLE \`score\` (id int);"
+echo "-- Dump completed"

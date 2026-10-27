@@ -15,10 +15,12 @@ ENV TZ=Indian/Mayotte \
     XDG_DATA_HOME=/data \
     COMPOSER_HOME=/tmp/composer
 
+# mariadb-client: mariadb-dump, for the database dump of the backup API (CROCHE-17).
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         tzdata \
         curl \
+        mariadb-client \
     && rm -rf /var/lib/apt/lists/*
 
 # ctype, iconv, json and mbstring are compiled into the base image; Croche needs intl (translations, twig/intl-extra)

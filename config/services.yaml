@@ -10,6 +10,10 @@ parameters:
     # Where the source lives. Shown on the landing page and in the footer.
     app.repository_url: 'https://github.com/beeraw/croche'
     app.repository_label: 'github.com/beeraw/croche'
+    # Shared secret of the backup API. Empty keeps the API closed.
+    env(BACKUP_SECRET): ''
+    # The mariadb-dump client used by the backup API.
+    env(MARIADB_DUMP): 'mariadb-dump'
 
 services:
     # default configuration for services in *this* file
