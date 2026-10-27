@@ -87,4 +87,13 @@ final class BackupApiTest extends DatabaseTestCase
 
         self::assertResponseRedirects();
     }
+
+    public function testABearerTokenOpensTheApiAndAWrongOneDoesNot(): void
+    {
+        $this->client->request('GET', '/api/media/files?min=0', server: ['HTTP_AUTHORIZATION' => 'Bearer '.self::SECRET]);
+        self::assertResponseIsSuccessful();
+
+        $this->client->request('GET', '/api/media/files?min=0', server: ['HTTP_AUTHORIZATION' => 'Bearer wrong']);
+        self::assertResponseStatusCodeSame(404);
+    }
 }
